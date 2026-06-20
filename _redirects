@@ -1,0 +1,4 @@
+# Cloudflare Pages redirects
+# Domain-level redirects (www, subdomain) → set in Cloudflare Dashboard
+
+# Legacy paths (if any old URLs exist)

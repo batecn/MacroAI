@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroAI - Windows 桌面宏自动化工具</title>
+  <meta name="description" content="基于图像识别、OCR 和 Lua 脚本的 Windows 桌面宏自动化工具">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="#hero" class="navbar-logo">
+        <img src="assets/logo.svg" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="#hero" class="active" data-i18n="nav.home">首页</a>
+        <a href="#features" data-i18n="nav.features">功能特性</a>
+        <a href="#scenarios" data-i18n="nav.scenarios">适用场景</a>
+        <a href="#download" data-i18n="nav.download">下载</a>
+        <a href="#docs" data-i18n="nav.docs">文档</a>
+        <button id="lang-toggle">English</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <section class="full-section" id="hero">
+    <div class="section-content">
+      <div class="reveal">
+        <div class="hero-badge" data-i18n="home.hero.subtitle">Windows 桌面宏自动化工具</div>
+      </div>
+      <h1 class="hero-title reveal reveal-delay-1">MacroAI</h1>
+      <p class="hero-desc reveal reveal-delay-2" style="margin: 0 auto 44px;" data-i18n="home.hero.desc">基于图像识别、OCR 文字识别和 Lua 脚本的可视化宏自动化平台，让重复工作一键完成。</p>
+      <div class="hero-actions reveal reveal-delay-3">
+        <a href="#download" class="btn btn-primary" data-i18n="home.hero.cta">免费下载</a>
+        <a href="#features" class="btn btn-secondary" data-i18n="home.hero.learn">了解更多</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint reveal reveal-delay-4">
+      <span data-i18n="home.hero.scroll">向下滚动</span>
+      <div class="arrow"></div>
+    </div>
+  </section>
+
+  <!-- ===== Features Overview ===== -->
+  <section class="full-section" id="features">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label" data-i18n="home.features.title">核心特性</div>
+        <h2 class="section-title" data-i18n="home.features.heading">强大能力，灵活掌控</h2>
+        <p class="section-desc" data-i18n="home.features.desc">视觉识别与脚本编程完美融合，为桌面自动化而生</p>
+      </div>
+      <div class="features-grid stagger-children">
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">⚡</div>
+          <h3 data-i18n="home.features.node.title">可视化节点编辑器</h3>
+          <p data-i18n="home.features.node.desc">拖拽式工作流编排，19 种节点类型，LOOP/CONDITION 容器节点，无需编程即可搭建自动化流程。</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">👁</div>
+          <h3 data-i18n="home.features.image.title">图像识别</h3>
+          <p data-i18n="home.features.image.desc">OpenCV 模板匹配，自定义区域、阈值可调、多图同时匹配，精准定位目标元素。</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">📝</div>
+          <h3 data-i18n="home.features.ocr.title">OCR 文字识别</h3>
+          <p data-i18n="home.features.ocr.desc">Windows OCR 引擎，识别屏幕指定区域文字，支持文字比对与条件触发。</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">🔍</div>
+          <h3 data-i18n="home.features.change.title">界面变化检测</h3>
+          <p data-i18n="home.features.change.desc">网格比对检测变化，条形图颜色追踪（血条/进度条），周期性变化自动过滤。</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">🔧</div>
+          <h3 data-i18n="home.features.script.title">Lua 脚本引擎</h3>
+          <p data-i18n="home.features.script.desc">节点操作自动生成 Lua 代码。代码编辑器只读，为开发者提供 API 参考。</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">🖥</div>
+          <h3 data-i18n="home.features.bg.title">后台模式</h3>
+          <p data-i18n="home.features.bg.desc">Win32 PostMessage 后台输入，不抢占焦点。支持后台截图识别，脚本静默执行。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Scenarios ===== -->
+  <section class="full-section" id="scenarios">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label" data-i18n="home.scenarios.title">适用场景</div>
+        <h2 class="section-title" data-i18n="home.scenarios.heading">解决真实问题</h2>
+        <p class="section-desc" data-i18n="home.scenarios.desc">从办公到运维，MacroAI 让重复劳动自动化</p>
+      </div>
+      <div class="scenarios-grid stagger-children">
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">📊</span>
+          <h4 data-i18n="home.scenarios.office.title">办公自动化</h4>
+          <p data-i18n="home.scenarios.office.desc">重复性表单填写、数据录入、报表生成，释放人力。</p>
+        </div>
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">🧪</span>
+          <h4 data-i18n="home.scenarios.testing.title">软件测试</h4>
+          <p data-i18n="home.scenarios.testing.desc">GUI 自动化回归测试，图像比对验证界面正确性。</p>
+        </div>
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">🎮</span>
+          <h4 data-i18n="home.scenarios.game.title">游戏辅助</h4>
+          <p data-i18n="home.scenarios.game.desc">图像识别和变化检测的自动化操作，精准定位。</p>
+        </div>
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">🔄</span>
+          <h4 data-i18n="home.scenarios.rpa.title">RPA 流程自动化</h4>
+          <p data-i18n="home.scenarios.rpa.desc">跨应用流程自动化，打通数据孤岛。</p>
+        </div>
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">⚙</span>
+          <h4 data-i18n="home.scenarios.ops.title">运维管理</h4>
+          <p data-i18n="home.scenarios.ops.desc">定时任务、批量文件处理、远程操作编排。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Download ===== -->
+  <section class="full-section" id="download">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label" data-i18n="download.title">下载 MacroAI</div>
+        <h2 class="section-title" data-i18n="download.desc">选择适合您的版本，开始自动化之旅</h2>
+      </div>
+      <div class="version-info reveal" style="text-align:center; color:var(--text-muted); font-size:0.9rem; margin-bottom:32px;">
+        <span data-i18n="download.version">当前版本</span>: <strong style="color:var(--text-secondary);">v1.1.5</strong> &nbsp;|&nbsp;
+        <span data-i18n="download.date">更新日期</span>: 2026-06-09
+      </div>
+      <div class="download-options reveal stagger-children">
+        <div class="glass-card download-card stagger-item">
+          <div style="font-size: 2.8rem; margin-bottom: 16px;">📦</div>
+          <h3 data-i18n="download.installer">安装包下载</h3>
+          <p data-i18n="download.installer.desc">Inno Setup 安装包，包含完整组件，推荐新用户使用</p>
+          <a href="#" class="btn btn-primary">Download .exe</a>
+        </div>
+        <div class="glass-card download-card stagger-item">
+          <div style="font-size: 2.8rem; margin-bottom: 16px;">🗜</div>
+          <h3 data-i18n="download.portable">绿色便携版</h3>
+          <p data-i18n="download.portable.desc">解压即用，无需安装，适合临时或便携使用</p>
+          <a href="#" class="btn btn-primary">Download .7z</a>
+        </div>
+      </div>
+      <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
+        <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.requirements">系统要求</h3>
+        <ul style="list-style:disc; padding-left:20px;">
+          <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item1">Windows 10 / Windows 11（64 位）</li>
+          <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item2">4GB 及以上内存</li>
+          <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item3">200MB 及以上磁盘空间</li>
+          <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item4">支持 DirectX 11 的显卡</li>
+        </ul>
+      </div>
+      <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
+        <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.changelog">更新日志</h3>
+        <div class="changelog-item" data-i18n="download.changelog.v115"><strong>v1.1.5</strong> — 修复节点编辑器拖拽重排问题，优化跨容器拖拽体验</div>
+        <div class="changelog-item" data-i18n="download.changelog.v114"><strong>v1.1.4</strong> — 优化 OCR 识别稳定性，修复多分辨率坐标缩放问题</div>
+        <div class="changelog-item" data-i18n="download.changelog.v113"><strong>v1.1.3</strong> — 新增条形图变化检测节点，优化图像识别性能</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Docs ===== -->
+  <section class="full-section" id="docs">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label" data-i18n="docs.title">文档与帮助</div>
+        <h2 class="section-title" data-i18n="docs.desc">快速上手 MacroAI，释放自动化潜能</h2>
+      </div>
+      <div class="docs-grid stagger-children">
+        <div class="glass-card docs-card reveal stagger-item">
+          <h3 data-i18n="docs.quickstart.title">快速开始</h3>
+          <p data-i18n="docs.quickstart.desc">从安装到运行第一个自动化流程，10 分钟快速上手。</p>
+          <div class="quickstart-steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div>
+                <h4 data-i18n="docs.quickstart.step1">下载并安装 MacroAI</h4>
+                <p data-i18n="docs.quickstart.step1.desc">从下载页面获取安装包，按指引完成安装。</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div>
+                <h4 data-i18n="docs.quickstart.step2">打开节点编辑器</h4>
+                <p data-i18n="docs.quickstart.step2.desc">主界面默认进入节点编辑标签页，拖拽左侧节点到画布。</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div>
+                <h4 data-i18n="docs.quickstart.step3">搭建自动化流程</h4>
+                <p data-i18n="docs.quickstart.step3.desc">按顺序连接节点，配置每个节点的参数。</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <div>
+                <h4 data-i18n="docs.quickstart.step4">运行与调试</h4>
+                <p data-i18n="docs.quickstart.step4.desc">点击运行按钮，查看自动化执行过程，利用调试模式排查问题。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="/macroai/docs/zh/user-guide.html" class="glass-card docs-card reveal stagger-item" data-i18n-href="docs.manual.link">
+          <h3 data-i18n="docs.manual.title">使用手册</h3>
+          <p data-i18n="docs.manual.desc">完整的使用指南，涵盖所有功能和配置说明。</p>
+        </a>
+        <a href="/macroai/docs/zh/api-reference.html" class="glass-card docs-card reveal stagger-item" data-i18n-href="docs.api.link">
+          <h3 data-i18n="docs.api.title">API 参考</h3>
+          <p data-i18n="docs.api.desc">Lua 脚本 API 参考文档，涵盖所有可用函数和系统变量。</p>
+        </a>
+        <div class="glass-card docs-card full reveal stagger-item">
+          <h3 data-i18n="docs.faq.title">常见问题</h3>
+          <div class="faq-item">
+            <div class="faq-question" data-i18n="docs.faq.q1">MacroAI 是否免费？</div>
+            <div class="faq-answer" data-i18n="docs.faq.a1">MacroAI 提供免费版本，包含核心功能。部分高级功能需许可证解锁。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" data-i18n="docs.faq.q2">支持哪些语言？</div>
+            <div class="faq-answer" data-i18n="docs.faq.a2">目前支持中文和英文界面，可在设置中切换。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" data-i18n="docs.faq.q3">如何反馈问题或建议？</div>
+            <div class="faq-answer" data-i18n="docs.faq.a3">您可以通过 GitHub Issues 提交问题反馈，或发送邮件至 support@macroai.dev。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="full-section" id="cta-section">
+    <div class="section-content">
+      <div class="cta-box reveal">
+        <h2 data-i18n="home.cta.title">开始自动化您的桌面操作</h2>
+        <p data-i18n="home.cta.desc">免费下载 MacroAI，体验可视化宏自动化的强大能力</p>
+        <a href="#download" class="btn" data-i18n="home.cta.btn">立即下载</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p data-i18n="footer.copyright">© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#hero" data-i18n="nav.home">首页</a>
+      <a href="macroai/battle-demo.html">血条演示Demo</a>
+      <a href="macroai/pengpeng-demo.html">对对碰演示Demo</a>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

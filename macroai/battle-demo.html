@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroAI - 战斗演示</title>
+  <meta name="description" content="MacroAI 战斗演示——配合 MacroAI 桌面端演示自动血条监控与图像识别功能">
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .demo-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 28px; max-width: 800px; margin: 0 auto;
+    }
+    .demo-topbar a {
+      color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; gap: 6px;
+    }
+    .demo-topbar a:hover { color: var(--accent); }
+
+    .game-arena {
+      max-width: 800px; margin: 0 auto; padding: 0 28px 40px;
+    }
+    .game-battlefield {
+      border-radius: var(--radius); padding: 32px;
+      position: relative; overflow: hidden;
+    }
+    .combatants {
+      display: flex; justify-content: space-between; align-items: center; gap: 24px;
+    }
+    .combatant { flex: 1; text-align: center; }
+    .combatant-avatar { font-size: 4rem; margin-bottom: 12px; display: block; line-height: 1; transition: transform 0.1s; }
+    .combatant-avatar.hit { animation: shake 0.3s ease; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+    .combatant-name { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .combatant-name .hp-text { color: var(--text-muted); font-weight: 400; font-size: 0.85rem; }
+
+    .hp-bar-container {
+      width: 100%; max-width: 240px; height: 28px;
+      background: rgba(255,255,255,0.05); border-radius: 6px;
+      overflow: hidden; position: relative; margin: 0 auto;
+      border: 1px solid var(--border);
+    }
+    .hp-bar-fill { height: 100%; border-radius: 5px; transition: width 0.4s ease, background 0.4s ease; position: relative; }
+    .hp-bar-fill.player-hp { background: linear-gradient(90deg, #e74c3c, #f39c12, #2ecc71); }
+    .hp-bar-fill.monster-hp { background: linear-gradient(90deg, #8e44ad, #e74c3c); }
+    .hp-bar-text {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 600; color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6); letter-spacing: 0.5px;
+    }
+
+    .battle-center { flex: 0 0 auto; text-align: center; padding: 0 16px; }
+    .vs-text { font-size: 1.5rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; }
+    .damage-fly { font-size: 1.1rem; font-weight: 700; color: #e74c3c; min-height: 1.6em; }
+    .damage-fly.heal { color: #2ecc71; }
+
+    .game-controls { display: flex; justify-content: center; gap: 16px; margin-top: 24px; flex-wrap: wrap; }
+    .potion-btn {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 36px; border: none; border-radius: 50px;
+      font-size: 1.1rem; font-weight: 700; font-family: var(--font-sans);
+      cursor: pointer; transition: all 0.2s;
+      background: linear-gradient(135deg, #e74c3c, #c0392b); color: #fff;
+      box-shadow: 0 4px 20px rgba(231,76,60,0.3);
+    }
+    .potion-btn:hover:not(:disabled) { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 30px rgba(231,76,60,0.4); }
+    .potion-btn:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+    .potion-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .potion-btn .potion-icon { font-size: 1.4rem; }
+    .potion-btn .cooldown-note { font-weight: 400; font-size: 0.8rem; opacity: 0.8; }
+
+    .game-log {
+      margin-top: 20px; background: var(--bg-deep); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px 16px; height: 120px;
+      overflow-y: auto; font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.7;
+    }
+    .game-log::-webkit-scrollbar { width: 4px; }
+    .game-log div { color: var(--text-secondary); }
+    .game-log .log-damage { color: #e74c3c; }
+    .game-log .log-heal { color: #2ecc71; }
+    .game-log .log-info { color: var(--accent); }
+    .game-log .log-kill { color: #f1c40f; }
+    .game-log .log-death { color: #e74c3c; font-weight: 600; }
+
+    .game-stats { display: flex; justify-content: center; gap: 32px; margin-top: 16px; font-size: 0.85rem; color: var(--text-muted); }
+    .game-stats span strong { color: var(--text-secondary); }
+
+    .game-reset-overlay {
+      display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,10,15,0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      border-radius: var(--radius); justify-content: center; align-items: center;
+      flex-direction: column; gap: 16px; z-index: 10;
+    }
+    .game-reset-overlay.show { display: flex; }
+    .game-reset-overlay h2 { font-size: 2rem; color: #e74c3c; }
+    .game-reset-overlay p { color: var(--text-secondary); }
+    .game-reset-overlay .btn { margin-top: 8px; }
+
+    .usage-tip { max-width: 800px; margin: 0 auto; padding: 0 28px 80px; }
+    .usage-tip-box { border-radius: var(--radius); padding: 24px 28px; }
+    .usage-tip-box h3 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: var(--accent); }
+    .usage-tip-box ol { padding-left: 20px; }
+    .usage-tip-box li { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8; }
+
+    @media (max-width: 600px) {
+      .combatants { flex-direction: column; gap: 16px; }
+      .battle-center { order: -1; padding: 8px 0; }
+      .vs-text { display: none; }
+      .combatant-avatar { font-size: 3rem; }
+      .hp-bar-container { max-width: 180px; height: 24px; }
+      .game-battlefield { padding: 20px; }
+      .potion-btn { padding: 12px 24px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="grid-overlay"></div>
+
+  <div class="demo-topbar">
+    <a href="index.html">← <span data-i18n="nav.home">首页</span></a>
+  </div>
+
+  <section style="text-align: center; padding: 20px 28px 0;">
+    <div class="reveal">
+      <h1 class="hero-title" style="font-size: clamp(1.8rem,3.5vw,2.5rem);" data-i18n="game.title">战斗演示</h1>
+      <p class="hero-desc" style="margin: 8px auto 0; font-size: 0.95rem;" data-i18n="game.desc">打开 MacroAI 桌面端，用条块变化检测和图像识别来自动操作这个场景</p>
+    </div>
+  </section>
+
+  <div class="game-arena reveal">
+    <div class="game-battlefield glass-card">
+      <div class="combatants">
+        <div class="combatant" id="player-side">
+          <span class="combatant-avatar" id="player-avatar">⚔️</span>
+          <div class="combatant-name">
+            <span data-i18n="game.player">勇者</span>
+            <span class="hp-text" id="player-hp-text">100 / 100</span>
+          </div>
+          <div class="hp-bar-container">
+            <div class="hp-bar-fill player-hp" id="player-hp-fill" style="width:100%">
+              <span class="hp-bar-text" id="player-hp-pct">100%</span>
+            </div>
+          </div>
+        </div>
+        <div class="battle-center">
+          <div class="vs-text">⚡</div>
+          <div class="damage-fly" id="damage-fly"></div>
+        </div>
+        <div class="combatant" id="monster-side">
+          <span class="combatant-avatar" id="monster-avatar">👹</span>
+          <div class="combatant-name">
+            <span data-i18n="game.monster">怪物</span>
+            <span class="hp-text" id="monster-hp-text">80 / 80</span>
+          </div>
+          <div class="hp-bar-container">
+            <div class="hp-bar-fill monster-hp" id="monster-hp-fill" style="width:100%">
+              <span class="hp-bar-text" id="monster-hp-pct">100%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-controls">
+        <button class="potion-btn" id="potion-btn">
+          <span class="potion-icon">🧪</span>
+          <span data-i18n="game.potion">使用药水</span>
+          <span class="cooldown-note" id="potion-cooldown"></span>
+        </button>
+      </div>
+
+      <div class="game-stats">
+        <span data-i18n="game.wave">波次</span>: <strong id="wave-count">1</strong>
+        <span data-i18n="game.kills">击杀</span>: <strong id="kill-count">0</strong>
+      </div>
+
+      <div class="game-log" id="game-log"></div>
+
+      <div class="game-reset-overlay" id="reset-overlay">
+        <h2 data-i18n="game.defeated">你被击败了！</h2>
+        <p data-i18n="game.defeated.desc">让 MacroAI 来帮你自动战斗吧</p>
+        <button class="btn btn-primary" onclick="resetGame()" data-i18n="game.restart">重新开始</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-tip reveal">
+    <div class="usage-tip-box glass-card">
+      <h3 data-i18n="game.tip.title">🎯 配合 MacroAI 使用</h3>
+      <ol>
+        <li data-i18n="game.tip.step1">将此页面在浏览器中打开，调整窗口至合适位置</li>
+        <li data-i18n="game.tip.step2">在 MacroAI 中新建项目，设定设计区域覆盖游戏窗口</li>
+        <li data-i18n="game.tip.step3">使用「条块变化检测」监控勇者血条，设置阈值 30%</li>
+        <li data-i18n="game.tip.step4">使用「查找图像」识别药水按钮，条件触发时自动点击使用</li>
+        <li data-i18n="game.tip.step5">运行宏，观察 MacroAI 自动为你恢复血量！</li>
+      </ol>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p data-i18n="footer.copyright">© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="../index.html" data-i18n="nav.home">首页</a>
+      <a href="battle-demo.html">血条演示Demo</a>
+      <a href="pengpeng-demo.html">对对碰演示Demo</a>
+    </div>
+  </footer>
+
+  <script src="../js/i18n.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    var game = {
+      player: { hp: 100, maxHp: 100, minDmg: 5, maxDmg: 15, atkInterval: 1500 },
+      monster: { hp: 80, maxHp: 80, minDmg: 3, maxDmg: 10, atkInterval: 2000 },
+      potion: { cooldown: 0, duration: 5000, healAmount: 40 },
+      wave: 1, kills: 0, running: true, logs: []
+    };
+    var playerTimer, monsterTimer, potionTimer;
+    var avatarEmojis = ['👹', '🐉', '👾', '🧟', '🦹', '🕷️', '🐺', '🤖'];
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function updateHpBar(e, id) {
+      var pct = Math.max(0, Math.min(100, (e.hp / e.maxHp) * 100));
+      var fill = document.getElementById(id + '-hp-fill');
+      var text = document.getElementById(id + '-hp-pct');
+      var hpText = document.getElementById(id + '-hp-text');
+      fill.style.width = pct + '%'; text.textContent = Math.round(pct) + '%';
+      hpText.textContent = Math.max(0, e.hp) + ' / ' + e.maxHp;
+    }
+    function log(msg, cls) {
+      var el = document.getElementById('game-log');
+      var div = document.createElement('div');
+      div.textContent = msg; if (cls) div.className = 'log-' + cls;
+      el.appendChild(div); el.scrollTop = el.scrollHeight;
+      if (el.children.length > 50) el.removeChild(el.firstChild);
+    }
+    function showDamage(text, isHeal) {
+      var el = document.getElementById('damage-fly');
+      el.textContent = text; el.className = isHeal ? 'damage-fly heal' : 'damage-fly';
+      setTimeout(function(){ if (el.textContent === text) el.textContent = ''; }, 1200);
+    }
+    function shakeAvatar(side) {
+      var a = document.getElementById(side + '-avatar');
+      a.classList.remove('hit'); void a.offsetWidth; a.classList.add('hit');
+    }
+    function healPlayer(amount) {
+      if (!game.running) return;
+      game.player.hp = Math.min(game.player.maxHp, game.player.hp + amount);
+      updateHpBar(game.player, 'player');
+      log('\u52c7\u8005 \u4f7f\u7528\u836f\u6c34\uff0c\u6062\u590d +' + amount + ' HP', 'heal');
+      showDamage('+' + amount + ' HP', true);
+    }
+    function usePotion() {
+      if (game.potion.cooldown > 0 || !game.running) return;
+      if (game.player.hp >= game.player.maxHp) { log('\u8840\u91cf\u5df2\u6ee1\uff0c\u65e0\u9700\u4f7f\u7528\u836f\u6c34', 'info'); return; }
+      healPlayer(game.potion.healAmount); game.potion.cooldown = game.potion.duration;
+      updatePotionBtn();
+      if (potionTimer) clearInterval(potionTimer);
+      potionTimer = setInterval(function() {
+        game.potion.cooldown = Math.max(0, game.potion.cooldown - 100);
+        updatePotionBtn();
+        if (game.potion.cooldown <= 0) { clearInterval(potionTimer); potionTimer = null; }
+      }, 100);
+    }
+    function updatePotionBtn() {
+      var btn = document.getElementById('potion-btn');
+      var cdEl = document.getElementById('potion-cooldown');
+      if (game.potion.cooldown > 0) { btn.disabled = true; cdEl.textContent = ' (' + (game.potion.cooldown / 1000).toFixed(1) + 's)'; }
+      else { btn.disabled = false; cdEl.textContent = ''; }
+    }
+    function spawnMonster() {
+      var baseHp = 60 + game.wave * 20;
+      game.monster.maxHp = Math.min(baseHp, 200); game.monster.hp = game.monster.maxHp;
+      var idx = rand(0, avatarEmojis.length - 1);
+      document.getElementById('monster-avatar').textContent = avatarEmojis[idx];
+      updateHpBar(game.monster, 'monster'); document.getElementById('wave-count').textContent = game.wave;
+      log('\u7b2c ' + game.wave + ' \u6ce2\u602a\u7269\u51fa\u73b0\uff01', 'info');
+    }
+    function playerAttack() {
+      if (!game.running || game.player.hp <= 0) return;
+      var dmg = rand(game.player.minDmg, game.player.maxDmg);
+      game.monster.hp -= dmg; showDamage('-' + dmg); shakeAvatar('monster');
+      log('\u52c7\u8005 \u653b\u51fb\u602a\u7269\uff0c\u9020\u6210 ' + dmg + ' \u70b9\u4f24\u5bb3', 'damage');
+      updateHpBar(game.monster, 'monster');
+      if (game.monster.hp <= 0) { game.kills++; game.wave++; document.getElementById('kill-count').textContent = game.kills; log('\u602a\u7269\u88ab\u51fb\u8d25\uff01', 'kill'); spawnMonster(); }
+    }
+    function monsterAttack() {
+      if (!game.running || game.monster.hp <= 0) return;
+      var dmg = rand(game.monster.minDmg, game.monster.maxDmg);
+      game.player.hp -= dmg; showDamage('-' + dmg); shakeAvatar('player');
+      log('\u602a\u7269 \u653b\u51fb\u52c7\u8005\uff0c\u9020\u6210 ' + dmg + ' \u70b9\u4f24\u5bb3', 'damage');
+      updateHpBar(game.player, 'player');
+      if (game.player.hp <= 0) { game.player.hp = 0; updateHpBar(game.player, 'player'); gameOver(); }
+    }
+    function gameOver() {
+      game.running = false;
+      if (playerTimer) { clearInterval(playerTimer); playerTimer = null; }
+      if (monsterTimer) { clearInterval(monsterTimer); monsterTimer = null; }
+      if (potionTimer) { clearInterval(potionTimer); potionTimer = null; }
+      document.getElementById('potion-btn').disabled = true;
+      document.getElementById('reset-overlay').classList.add('show');
+      log('\u52c7\u8005\u88ab\u51fb\u8d25\u4e86\uff01\u6e38\u620f\u7ed3\u675f', 'death');
+    }
+    function resetGame() {
+      game.player.hp = game.player.maxHp; game.wave = 1; game.kills = 0; game.running = true; game.potion.cooldown = 0;
+      document.getElementById('reset-overlay').classList.remove('show');
+      document.getElementById('kill-count').textContent = '0'; document.getElementById('wave-count').textContent = '1';
+      updateHpBar(game.player, 'player'); spawnMonster(); updatePotionBtn();
+      if (playerTimer) clearInterval(playerTimer); if (monsterTimer) clearInterval(monsterTimer);
+      playerTimer = setInterval(playerAttack, game.player.atkInterval);
+      monsterTimer = setInterval(monsterAttack, game.monster.atkInterval);
+      log('\u6e38\u620f\u91cd\u65b0\u5f00\u59cb\uff01', 'info');
+    }
+    document.getElementById('potion-btn').addEventListener('click', usePotion);
+    resetGame();
+  </script>
+</body>
+</html>

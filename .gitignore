@@ -1,0 +1,9 @@
+# Build tools (local only, not needed in distribution repo)
+build_docs.py
+
+# Source markdown (maintained in source repo, not in distribution)
+locale/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Reference - MacroAI</title>
+  <meta name="description" content="MacroAI Lua scripting API reference documentation">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/logo.svg" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">Home</a>
+        <a href="/#features">Features</a>
+        <a href="/#scenarios">Use Cases</a>
+        <a href="/#download">Download</a>
+        <a href="/macroai/docs/zh/api-reference.html">中文</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">API Reference</div>
+      <h1 class="section-title">API Reference</h1>
+      <div class="docs-tabs">
+        <a href="/macroai/docs/en/user-guide.html">User Guide</a>
+        <a href="/macroai/docs/en/api-reference.html" class="active">API Reference</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content docs-layout">
+      <aside class="docs-toc">
+        <div class="toc-label">Contents</div>
+        <a href="#image-recognition" class="toc-h2">Image Recognition</a>
+<a href="#ocr" class="toc-h2">OCR</a>
+<a href="#mouse" class="toc-h2">Mouse</a>
+<a href="#keyboard" class="toc-h2">Keyboard</a>
+<a href="#screen" class="toc-h2">Screen</a>
+<a href="#wait" class="toc-h2">Wait</a>
+<a href="#variables" class="toc-h2">Variables</a>
+<a href="#regions" class="toc-h2">Regions</a>
+<a href="#change-detection" class="toc-h2">Change Detection</a>
+  <a href="#detect_change-wait_change-parameters" class="toc-h3">detect_change / wait_change Parameters</a>
+  <a href="#wait_bar_change-parameters" class="toc-h3">wait_bar_change Parameters</a>
+<a href="#audio" class="toc-h2">Audio</a>
+<a href="#logging" class="toc-h2">Logging</a>
+<a href="#other" class="toc-h2">Other</a>
+<a href="#check-stop" class="toc-h2">Check Stop</a>
+<a href="#common-conventions" class="toc-h2">Common Conventions</a>
+  <a href="#coordinate-system" class="toc-h3">Coordinate System</a>
+  <a href="#return-value-convention" class="toc-h3">Return Value Convention</a>
+
+      </aside>
+      <main class="docs-content">
+        <h1 id="macroai-api-reference">MacroAI API Reference</h1>
+<h2 id="image-recognition">Image Recognition</h2>
+<pre><code>image_find(tmpl, region?, threshold?) -&gt; ImageMatchResult | nil
+image_wait(tmpl, timeout?, region?, threshold?) -&gt; ImageMatchResult | nil
+image_find_all(tmpl, region?, threshold?) -&gt; table | nil
+image_wait_all(tmpl, timeout?, region?, threshold?) -&gt; table | nil
+image_save_template(img, path) -&gt; void
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>tmpl</code> (string) — template image filename (e.g. <code>"button.png"</code>), must be uploaded in Image Manager; also supports variable references (e.g. <code>var_get('btn_name')</code>) or function parameter names
+- <code>region</code> (table, optional) — search area <code>{left, top, width, height}</code>, defaults to full screen
+- <code>threshold</code> (number, optional) — match threshold 0~1, default <code>0.85</code>, lower = more tolerant
+- <code>timeout</code> (number, optional) — timeout in seconds, default <code>10</code>
+- <code>img</code> — image data (numpy array)</p>
+<p><strong>Return Value (ImageMatchResult):</strong>
+- <code>.success</code> (boolean) — whether found
+- <code>.x</code>, <code>.y</code> (number) — top-left corner of match
+- <code>.center_x</code>, <code>.center_y</code> (number) — center of match
+- <code>.width</code>, <code>.height</code> (number) — match dimensions
+- <code>.confidence</code> (number) — confidence score
+- <code>.rect</code> (table) — <code>{left, top, width, height}</code>
+- <code>.template_name</code> (string) — the matched template filename (useful in multi-template search to identify which template matched)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">local r = image_find(&quot;login_btn.png&quot;, {100, 200, 800, 600}, 0.8)
+if r and r.success then
+    mouse_click(r.center_x, r.center_y)
+end
+</code></pre>
+<p><strong>Returning all matches:</strong></p>
+<pre><code>image_find_all(tmpl, region?, threshold?) -&gt; table | nil
+image_wait_all(tmpl, timeout?, region?, threshold?) -&gt; table | nil
+</code></pre>
+<ul>
+<li>Returns a table (array) of all match results, or <code>nil</code> if no matches found</li>
+<li>Each element has the same fields as <code>ImageMatchResult</code></li>
+<li>Useful when multiple instances of the same template exist on screen</li>
+<li><code>image_wait_all</code> polls until at least one match is found, then returns all matches</li>
+</ul>
+<p><strong>Example (find and click all matches):</strong></p>
+<pre><code class="language-lua">local results = image_find_all(&quot;icon.png&quot;)
+if results then
+    for _, r in ipairs(results) do
+        mouse_click(r.center_x, r.center_y)
+        wait(500)  -- pause between clicks
+    end
+end
+</code></pre>
+<p><strong>Multi-template example:</strong></p>
+<pre><code class="language-lua">local r1 = image_find(&quot;btn_ok.png&quot;, nil, 0.85)
+local r2 = image_find(&quot;btn_cancel.png&quot;, nil, 0.85)
+local best = nil
+local best_conf = 0
+for _, r in ipairs({r1, r2}) do
+    if r and r.success and r.confidence &gt; best_conf then
+        best = r
+        best_conf = r.confidence
+    end
+end
+if best then
+    if best.template_name == &quot;btn_ok.png&quot; then
+        -- OK button found
+    else
+        -- Cancel button found
+    end
+end
+</code></pre>
+<hr />
+<h2 id="ocr">OCR</h2>
+<pre><code>ocr_recognize(region?, lang?) -&gt; string
+ocr_compare(text, region?, threshold?, lang?) -&gt; OcrCompareResult
+ocr_find_text(text, region?, lang?) -&gt; number, number
+ocr_log(msg) -&gt; void
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>region</code> (table, optional) — recognition area <code>{left, top, width, height}</code>, defaults to full screen
+- <code>lang</code> (string, optional) — language code, e.g. <code>"zh-CN"</code>, <code>"en-US"</code>, defaults to system language
+- <code>text</code> (string) — text to match
+- <code>threshold</code> (number, optional) — similarity threshold, default <code>0.8</code>
+- <code>msg</code> (string) — log message</p>
+<p><strong>Return Value (OcrCompareResult):</strong>
+- <code>.matched</code> (boolean) — whether text matched
+- <code>.found_text</code> (string) — recognized text
+- <code>.similarity</code> (number) — similarity score
+- <code>.confidence</code> (number) — confidence score</p>
+<p><strong>ocr_find_text returns:</strong>
+- Success: <code>center_x, center_y</code> (number, number)
+- Failure: <code>nil, nil</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">local text = ocr_recognize({100, 100, 500, 100}, &quot;en-US&quot;)
+ocr_log(&quot;Recognized: &quot; .. text)
+
+local r = ocr_compare(&quot;Submit&quot;, {100, 100, 500, 100})
+if r and r.matched then
+    log(&quot;Match found, similarity: &quot; .. r.similarity)
+end
+
+local x, y = ocr_find_text(&quot;OK&quot;, {100, 100, 500, 100})
+if x then mouse_click(x, y) end
+</code></pre>
+<hr />
+<h2 id="mouse">Mouse</h2>
+<pre><code>mouse_click(x?, y?, button?, clicks?) -&gt; void
+mouse_move(x?, y?) -&gt; void
+mouse_double_click(x?, y?) -&gt; void
+mouse_right_click(x?, y?) -&gt; void
+mouse_scroll(clicks, x?, y?) -&gt; void
+mouse_drag(sx, sy, ex, ey, button?, duration?) -&gt; void
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>x</code>, <code>y</code> (number, optional) — screen coordinates, uses current position if omitted
+- <code>button</code> (string, optional) — mouse button: <code>"left"</code> (default), <code>"right"</code>, <code>"middle"</code>
+- <code>clicks</code> (number) — scroll wheel clicks, positive = up, negative = down
+- <code>sx</code>, <code>sy</code> (number) — drag start point
+- <code>ex</code>, <code>ey</code> (number) — drag end point
+- <code>duration</code> (number, optional) — drag duration (seconds), default <code>0.3</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">mouse_click(500, 300)                -- left click at (500,300)
+mouse_click(500, 300, &quot;right&quot;)       -- right click
+mouse_double_click(500, 300)         -- double click
+mouse_move(100, 200)                 -- move to (100,200)
+mouse_drag(100, 100, 500, 300)       -- drag from (100,100) to (500,300)
+mouse_scroll(3)                      -- scroll down 3 clicks
+</code></pre>
+<hr />
+<h2 id="keyboard">Keyboard</h2>
+<pre><code>key_press(key) -&gt; void
+key_type(text) -&gt; void
+key_hotkey(key1, key2, ...) -&gt; void
+key_shortcut(combo) -&gt; void
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>key</code> (string) — key name, e.g. <code>"enter"</code>, <code>"tab"</code>, <code>"escape"</code>, <code>"a"</code>, <code>"ctrl"</code>
+- <code>text</code> (string) — text to type, newlines are converted to Enter
+- <code>key1, key2, ...</code> (string...) — sequential key combination, e.g. <code>("ctrl", "c")</code>
+- <code>combo</code> (string) — shortcut notation, e.g. <code>"ctrl+c"</code>, <code>"alt+tab"</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">key_press(&quot;enter&quot;)                   -- press Enter
+key_type(&quot;Hello, World!&quot;)            -- type text
+key_hotkey(&quot;ctrl&quot;, &quot;c&quot;)             -- Ctrl+C (sequential)
+key_shortcut(&quot;ctrl+c&quot;)              -- Ctrl+C (chord)
+</code></pre>
+<hr />
+<h2 id="screen">Screen</h2>
+<pre><code>screen_capture(region?) -&gt; Image (numpy array)
+screen_size() -&gt; width, height
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>region</code> (table, optional) — capture area <code>{left, top, width, height}</code>, defaults to full screen</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">local w, h = screen_size()
+log(&quot;Screen resolution: &quot; .. w .. &quot;x&quot; .. h)
+
+local img = screen_capture({0, 0, 100, 100})  -- capture top-left 100x100
+image_save_template(img, &quot;screenshot.png&quot;)
+</code></pre>
+<hr />
+<h2 id="wait">Wait</h2>
+<pre><code>wait(milliseconds) -&gt; void
+wait_seconds(seconds) -&gt; void
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">wait(1000)         -- wait 1000 ms (1 second)
+wait_seconds(2.5)  -- wait 2.5 seconds
+</code></pre>
+<hr />
+<h2 id="variables">Variables</h2>
+<pre><code>var_set(name, value, scope?) -&gt; void
+var_get(name) -&gt; any
+var_has(name) -&gt; boolean
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>name</code> (string) — variable name
+- <code>value</code> (any) — variable value (string, number, boolean, table)
+- <code>scope</code> (string, optional) — variable scope: <code>"local"</code> (default, script-local), <code>"global"</code> (shared across scripts)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">var_set(&quot;count&quot;, 10)
+var_set(&quot;name&quot;, &quot;MacroAI&quot;, &quot;global&quot;)
+
+local c = var_get(&quot;count&quot;)
+log(&quot;count = &quot; .. c)
+
+if var_has(&quot;name&quot;) then
+    log(&quot;name variable exists&quot;)
+end
+</code></pre>
+<hr />
+<h2 id="regions">Regions</h2>
+<pre><code>region_set(name, left, top, width, height) -&gt; void
+region_get(name) -&gt; Region | nil
+getRegion(name?) -&gt; {left, top, width, height} | nil
+to_runtime_region(region) -&gt; {left, top, width, height}
+to_runtime_point(x, y) -&gt; number, number
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>name</code> (string) — region name
+- <code>left</code>, <code>top</code>, <code>width</code>, <code>height</code> (number) — region rectangle (design-space coordinates)
+- <code>region</code> (table) — <code>{left, top, width, height}</code> format</p>
+<p><strong>Notes:</strong>
+- <code>region_get</code> returns a Region object with <code>.left</code>, <code>.top</code>, <code>.width</code>, <code>.height</code> properties
+- <code>getRegion</code> returns a Lua table; omit name or use <code>"__effective__"</code> for the default search area
+- <code>to_runtime_region</code> / <code>to_runtime_point</code> convert design-space coordinates to runtime (for multi-resolution support)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">region_set(&quot;dialog&quot;, 100, 200, 500, 300)
+local r = region_get(&quot;dialog&quot;)
+if r then
+    log(&quot;Region: &quot; .. r.left .. &quot;,&quot; .. r.top)
+end
+
+local rt = getRegion(&quot;dialog&quot;)            -- {left, top, width, height}
+local eff = getRegion()                   -- default search area
+local px, py = to_runtime_point(500, 300) -- convert to runtime coordinates
+</code></pre>
+<hr />
+<h2 id="change-detection">Change Detection</h2>
+<pre><code>detect_change(kwargs?) -&gt; table
+wait_change(kwargs?) -&gt; table
+wait_bar_change(kwargs?) -&gt; table
+</code></pre>
+<h3 id="detect_change-wait_change-parameters">detect_change / wait_change Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>region</code></td>
+<td>table</td>
+<td>full screen</td>
+<td>detection area <code>{left, top, width, height}</code></td>
+</tr>
+<tr>
+<td><code>block_size</code></td>
+<td>number</td>
+<td>50</td>
+<td>grid block size (pixels)</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>number</td>
+<td>30.0</td>
+<td>change threshold (grayscale diff)</td>
+</tr>
+<tr>
+<td><code>min_area</code></td>
+<td>number</td>
+<td>900</td>
+<td>minimum change area</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>number</td>
+<td>30</td>
+<td>timeout in seconds (wait_change only)</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>number</td>
+<td>1.0</td>
+<td>poll interval in seconds (wait_change only)</td>
+</tr>
+<tr>
+<td><code>track_frames</code></td>
+<td>number</td>
+<td>10</td>
+<td>tracking frames for cyclic filtering (wait_change only)</td>
+</tr>
+<tr>
+<td><code>cyclic_ratio</code></td>
+<td>number</td>
+<td>0.7</td>
+<td>cyclic filter ratio (wait_change only)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="wait_bar_change-parameters">wait_bar_change Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>region</code></td>
+<td>table</td>
+<td>full screen</td>
+<td>detection area</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>number</td>
+<td>30</td>
+<td>timeout in seconds</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>number</td>
+<td>0.5</td>
+<td>poll interval in seconds</td>
+</tr>
+<tr>
+<td><code>min_change</code></td>
+<td>number</td>
+<td>0.1</td>
+<td>minimum change ratio</td>
+</tr>
+<tr>
+<td><code>match_threshold</code></td>
+<td>number</td>
+<td>0.85</td>
+<td>template similarity threshold</td>
+</tr>
+<tr>
+<td><code>orientation</code></td>
+<td>string</td>
+<td>"auto"</td>
+<td>bar orientation: <code>"horizontal"</code>, <code>"vertical"</code>, <code>"auto"</code></td>
+</tr>
+<tr>
+<td><code>reset</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>reset all tracking (use when switching scenes)</td>
+</tr>
+<tr>
+<td><code>colors</code></td>
+<td>table[]</td>
+<td>required</td>
+<td>template configurations (see below)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>colors format:</strong></p>
+<pre><code class="language-lua">{
+    {
+        label = &quot;hp_full&quot;,             -- template name (also filename)
+        template_path = &quot;resources/bar_templates/hp_full.png&quot;,
+        color_swatch = {255, 50, 50}   -- auto-computed, can omit
+    },
+    {
+        label = &quot;hp_half&quot;,
+        template_path = &quot;resources/bar_templates/hp_half.png&quot;,
+        color_swatch = {50, 50, 255}
+    }
+}
+</code></pre>
+<p><strong>Return Values:</strong>
+- <code>detect_change</code> / <code>wait_change</code> return an array of changed regions:
+  <code>lua
+  {
+      { center_x = 350, center_y = 250, rect = {340, 240, 20, 20} },
+      ...
+  }</code>
+- <code>wait_bar_change</code> returns an array of bar changes:
+  <code>lua
+  {
+      {
+          rect = {100, 200, 300, 20},       -- bar bounding box
+          center_x = 250,                     -- bar center X
+          center_y = 210,                     -- bar center Y
+          color = "hp_full",                  -- matched template label
+          state = "changed",                  -- changed/resized/disappeared/appeared
+          delta = 0.5,                        -- width ratio change (new label / old label)
+          reference_value = 1.0,              -- old label width ratio
+          curr_value = 0.5,                   -- new label width ratio
+          orientation = "horizontal"
+      },
+      ...
+  }</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">-- Detect bar value change (upload two templates with different widths)
+local bar_changes = wait_bar_change({
+    region = {100, 50, 300, 20},
+    timeout = 15,
+    colors = {
+        {
+            label = &quot;full&quot;,
+            template_path = &quot;resources/bar_templates/full.png&quot;,
+        },
+        {
+            label = &quot;half&quot;,
+            template_path = &quot;resources/bar_templates/half.png&quot;,
+        }
+    }
+})
+
+-- Filter: only process real changes, ignore enter/leave
+for _, bc in ipairs(bar_changes) do
+    if bc.state == &quot;changed&quot; or bc.state == &quot;resized&quot; then
+        log(&quot;bar changed: &quot; .. bc.color .. &quot; delta=&quot; .. bc.delta)
+    end
+end
+</code></pre>
+<pre><code>reset_bar_detector() -&gt; void
+</code></pre>
+<p>Reset all bar tracking cache. Call before entering a new scene to prevent stale state from interfering.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>none</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">-- Reset tracking when entering a new scene
+reset_bar_detector()
+
+local bars = wait_bar_change({
+    region = {100, 50, 300, 20},
+    colors = {
+        { label=&quot;full&quot;, template_path=&quot;resources/bar_templates/full.png&quot; },
+        { label=&quot;half&quot;, template_path=&quot;resources/bar_templates/half.png&quot; },
+    }
+})
+</code></pre>
+<hr />
+<hr />
+<h2 id="audio">Audio</h2>
+<pre><code>play_warning(sound_type, custom_file?) -&gt; void
+play_music(filepath) -&gt; void
+is_music_playing() -&gt; boolean
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>sound_type</code> (string) — sound type:
+  - System sounds: <code>"ding"</code>, <code>"error"</code>, <code>"warning"</code>, <code>"question"</code>, <code>"info"</code>
+  - Windows media: <code>"startup"</code>, <code>"shutdown"</code>, <code>"chimes"</code>, <code>"tada"</code>
+  - Musical notes: <code>"do"</code>, <code>"re"</code>, <code>"mi"</code>, <code>"fa"</code>, <code>"sol"</code>, <code>"la"</code>, <code>"si"</code> (PC speaker beeps)
+  - Custom: <code>"custom"</code>
+- <code>custom_file</code> (string, optional) — custom WAV file path (when <code>sound_type</code> is <code>"custom"</code>)
+- <code>filepath</code> (string) — music file path (supports MP3, WAV, etc.)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">play_warning(&quot;ding&quot;)                         -- play ding sound
+play_warning(&quot;custom&quot;, &quot;C:\\alert.wav&quot;)      -- play custom WAV
+
+play_music(&quot;C:\\bgm.mp3&quot;)                   -- play background music
+if is_music_playing() then
+    log(&quot;Music is playing&quot;)
+end
+</code></pre>
+<hr />
+<h2 id="logging">Logging</h2>
+<pre><code>log(message) -&gt; void
+ocr_log(msg) -&gt; void
+print(...) -&gt; void
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">log(&quot;Script started&quot;)
+ocr_log(&quot;OCR result: &quot; .. text)
+print(&quot;Values:&quot;, x, y, z)  -- output: Values: 100 200 300
+</code></pre>
+<hr />
+<h2 id="other">Other</h2>
+<pre><code>macro_call(macro_id) -&gt; void
+</code></pre>
+<p><strong>Notes:</strong>
+- <code>macro_id</code> (string) — recorded macro ID to replay
+- Replays all recorded events (mouse clicks, key presses, waits, etc.)
+- Coordinates are automatically scaled to fit the current run area</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">macro_call(&quot;macro_12345678&quot;)  -- replay a recorded macro
+</code></pre>
+<hr />
+<h2 id="check-stop">Check Stop</h2>
+<pre><code>check_stop() -&gt; void
+</code></pre>
+<p>Call during long loops or long-running operations to make the script responsive to pause and stop signals. If the user clicks pause or stop during execution, <code>check_stop()</code> will immediately interrupt the current operation.</p>
+<p>The engine automatically injects this call in some long-running operations, but it's recommended to call it explicitly in custom loops.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">for i = 1, 100 do
+    check_stop()  -- allow the user to abort at any time
+    -- perform operations...
+    wait(500)
+end
+</code></pre>
+<hr />
+<h2 id="common-conventions">Common Conventions</h2>
+<h3 id="coordinate-system">Coordinate System</h3>
+<ul>
+<li>All coordinates are in pixels</li>
+<li>Region format: <code>{left, top, width, height}</code></li>
+<li>Coordinates are automatically scaled between design area and run area (multi-resolution)</li>
+</ul>
+<h3 id="return-value-convention">Return Value Convention</h3>
+<ul>
+<li>Success returns a valid value, failure returns <code>nil</code></li>
+<li>For <code>ImageMatchResult</code>, check <code>if r and r.success</code> to determine match status</li>
+</ul>
+      </main>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/macroai/battle-demo.html">HP Bar Demo</a>
+      <a href="/macroai/pengpeng-demo.html">Match Game Demo</a>
+    </div>
+  </footer>
+
+  <script src="/js/i18n.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/docs.js"></script>
+</body>
+</html>

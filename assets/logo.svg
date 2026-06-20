@@ -1,0 +1,42 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 霓虹青渐变 -->
+    <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00FFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0088FF;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 外发光滤镜 -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- 背景：深邃的科技黑 -->
+  <rect width="512" height="512" rx="110" fill="#0A0A12" />
+
+  <!-- 数字化之眼：由四组扫描角线组成 -->
+  <g filter="url(#neonGlow)" stroke="url(#neonGradient)" fill="none" stroke-width="16" stroke-linecap="round">
+    <!-- 左上角 -->
+    <path d="M150,200 L100,200 L100,250" />
+    <!-- 右上角 -->
+    <path d="M362,200 L412,200 L412,250" />
+    <!-- 左下角 -->
+    <path d="M150,312 L100,312 L100,262" />
+    <!-- 右下角 -->
+    <path d="M362,312 L412,312 L412,262" />
+  </g>
+
+  <!-- 中心：闪电符号 (执行力) -->
+  <path d="M270,180 L210,260 L260,260 L230,340 L300,230 L250,230 L290,180 Z" 
+        fill="url(#neonGradient)" 
+        filter="url(#neonGlow)" />
+
+  <!-- 数字化装饰：模拟扫描线 -->
+  <line x1="120" y1="256" x2="392" y2="256" stroke="#00FFFF" stroke-width="2" opacity="0.3" />
+  <line x1="256" y1="180" x2="256" y2="332" stroke="#00FFFF" stroke-width="1" opacity="0.2" />
+  
+  <!-- 瞳孔外环 (极简圆环) -->
+  <circle cx="256" cy="256" r="80" stroke="url(#neonGradient)" stroke-width="4" fill="none" opacity="0.4" stroke-dasharray="20,10" />
+</svg>
