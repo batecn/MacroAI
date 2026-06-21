@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroAI - 匹配游戏演示</title>
+  <style>
+    :root {
+      --bg-deep: #07060b;
+      --bg-surface: #0d0c14;
+      --bg-card: rgba(255,255,255,0.04);
+      --border-glass: rgba(255,255,255,0.08);
+      --text-primary: #f0f0f8;
+      --text-secondary: #9494b8;
+      --text-muted: #5c5c7a;
+      --accent: #4777ff;
+      --gradient-primary: linear-gradient(135deg, #4777ff 0%, #8b5cf6 100%);
+      --radius: 16px;
+      --shadow-glass: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; background: var(--bg-deep); }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: var(--bg-deep); color: var(--text-primary);
+      line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .demo-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 28px; max-width: 800px; margin: 0 auto;
+    }
+    .demo-topbar a { color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+    .demo-topbar a:hover { color: var(--accent); text-decoration: none; }
+
+    .hero-title {
+      font-size: clamp(1.8rem,3.5vw,2.5rem); font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #8b5cf6 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.2;
+    }
+    .hero-desc { color: var(--text-secondary); font-size: 0.95rem; max-width: 600px; margin: 8px auto 0; }
+
+    .game-arena {
+      width: 533px; margin: 0 auto; padding: 0 0 40px;
+      transform-origin: top center;
+      transition: transform 0.1s ease;
+    }
+    .game-field {
+      border-radius: var(--radius); padding: 20px;
+      background: var(--bg-surface); box-shadow: var(--shadow-glass);
+      border: 1px solid var(--border-glass);
+    }
+    .game-controls {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-glass);
+    }
+    .game-stats { display: flex; gap: 24px; font-size: 0.95rem; color: var(--text-secondary); }
+    .game-stats strong { color: var(--text-primary); }
+
+    .card-grid {
+      display: grid; grid-template-columns: repeat(6, 1fr);
+      gap: 8px; margin-bottom: 16px;
+    }
+    .card {
+      aspect-ratio: 1; width: 100%; border-radius: 10px;
+      background: linear-gradient(135deg, #4a5568, #2d3748);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; cursor: pointer;
+      transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      position: relative; user-select: none; border: 2px solid transparent;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+    .card.face-up {
+      background: linear-gradient(135deg, #f7fafc, #edf2f7);
+      border-color: var(--accent);
+    }
+    .card.face-up .card-emoji { color: #2d3748; }
+    .card.selected {
+      border-color: #f472b6;
+      box-shadow: 0 0 16px rgba(244,114,182,0.4);
+    }
+    .card.matched {
+      opacity: 0; transform: scale(0.5); pointer-events: none;
+      transition: all 0.5s ease;
+    }
+    .card-emoji { font-size: 1.6rem; line-height: 1; z-index: 2; }
+    .card-back .card-emoji { display: none; }
+    .card-back::after {
+      content: '?'; font-size: 1.8rem; font-weight: 700;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .game-result {
+      text-align: center; padding: 24px; background: var(--bg-card);
+      border-radius: var(--radius); margin-top: 20px;
+      border: 1px solid var(--border-glass); display: none;
+    }
+    .game-result.show { display: block; }
+    .game-result h3 { color: var(--text-primary); margin-bottom: 8px; font-size: 1.3rem; }
+    .game-result p { color: var(--text-secondary); margin-bottom: 16px; }
+
+    .game-log {
+      margin-top: 20px; padding: 12px 16px; background: var(--bg-card);
+      border-radius: var(--radius); min-height: 40px; max-height: 150px;
+      overflow-y: auto; font-size: 0.85rem; border: 1px solid var(--border-glass);
+    }
+    .log-item { padding: 4px 0; border-bottom: 1px solid var(--border-glass); color: var(--text-secondary); }
+    .log-item:last-child { border-bottom: none; }
+    .log-item.success { color: #4ade80; }
+    .log-item.error { color: #f87171; }
+
+    .btn {
+      padding: 12px 28px; font-size: 1rem;
+      background: var(--gradient-primary); color: white;
+      border: none; border-radius: var(--radius); cursor: pointer;
+      font-weight: 600; transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(71,119,255,0.3);
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(71,119,255,0.4); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .footer {
+      text-align: center; padding: 40px 28px; color: var(--text-muted); font-size: 0.85rem;
+    }
+    .footer-links { margin-top: 8px; display: flex; justify-content: center; gap: 20px; }
+    .footer-links a { color: var(--text-muted); font-size: 0.85rem; }
+    .footer-links a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <div class="demo-topbar">
+    <a href="../index.html">&larr; 首页</a>
+  </div>
+
+  <section style="text-align:center; padding: 20px 28px 0;">
+    <h1 class="hero-title">匹配游戏演示</h1>
+    <p class="hero-desc">点击开始按钮，卡牌全部翻开。连续点击两张相同动物，即可消除。</p>
+  </section>
+
+  <div class="game-arena">
+    <div class="game-field">
+      <div class="game-controls">
+        <button class="btn" id="start-btn">开始游戏</button>
+        <div class="game-stats">
+          <span>剩余: <strong id="card-count">36</strong></span>
+          <span>用时: <strong id="elapsed-time">0</strong>秒</span>
+        </div>
+      </div>
+
+      <div class="card-grid" id="card-grid"></div>
+
+      <div class="game-result" id="game-result">
+        <h3>游戏结束!</h3>
+        <p id="result-text">你成功消除了所有卡牌</p>
+        <button class="btn" id="restart-btn">重新开始</button>
+      </div>
+
+      <div class="game-log" id="game-log">
+        <div class="log-item">准备就绪，点击「开始游戏」</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="../index.html">首页</a>
+      <a href="battle-demo.html">血条演示Demo</a>
+      <a href="pengpeng-demo.html">对对碰演示Demo</a>
+    </div>
+  </footer>
+
+  <script>
+    var ANIMALS = [
+      {id:1,  emoji:'🐯'}, {id:2,  emoji:'🐘'}, {id:3,  emoji:'🐼'},
+      {id:4,  emoji:'🦓'}, {id:5,  emoji:'🦒'}, {id:6,  emoji:'🦁'},
+      {id:7,  emoji:'🐒'}, {id:8,  emoji:'🐻'}, {id:9,  emoji:'🐱'},
+      {id:10, emoji:'🐕'}, {id:11, emoji:'🐇'}, {id:12, emoji:'🦊'},
+      {id:13, emoji:'🦌'}, {id:14, emoji:'🐄'}, {id:15, emoji:'🐖'},
+      {id:16, emoji:'🐑'}, {id:17, emoji:'🐴'}, {id:18, emoji:'🐔'}
+    ];
+
+    var DESIGN_WIDTH = 589;
+
+    function updateScale() {
+      var arena = document.querySelector('.game-arena');
+      if (!arena) return;
+      var avail = window.innerWidth;
+      if (avail >= DESIGN_WIDTH) {
+        arena.style.transform = '';
+        arena.style.marginBottom = '';
+      } else {
+        var scale = avail / DESIGN_WIDTH;
+        arena.style.transform = 'scale(' + scale + ')';
+        var h = arena.offsetHeight;
+        arena.style.marginBottom = -(h * (1 - scale)) + 'px';
+      }
+    }
+
+    var game = {
+      cards: [],
+      selected: null,
+      eliminatedCount: 0,
+      startTime: 0,
+      timerHandle: null,
+      isRunning: false,
+
+      init: function() {
+        document.getElementById('start-btn').onclick = function() { game.start(); };
+        document.getElementById('restart-btn').onclick = function() { game.start(); };
+        this.createCards();
+        this.renderBacks();
+      },
+
+      createCards: function() {
+        var list = [];
+        for (var i = 0; i < ANIMALS.length; i++) {
+          list.push({animalId: ANIMALS[i].id, emoji: ANIMALS[i].emoji, pairIdx: i});
+          list.push({animalId: ANIMALS[i].id, emoji: ANIMALS[i].emoji, pairIdx: i});
+        }
+        for (var i = list.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = list[i]; list[i] = list[j]; list[j] = tmp;
+        }
+        this.cards = list.map(function(item, idx) {
+          return {idx: idx, animalId: item.animalId, emoji: item.emoji, pairIdx: item.pairIdx, eliminated: false};
+        });
+        this.eliminatedCount = 0;
+      },
+
+      renderBacks: function() {
+        var grid = document.getElementById('card-grid');
+        grid.innerHTML = '';
+        var self = this;
+        this.cards.forEach(function(card) {
+          var el = document.createElement('div');
+          el.className = 'card card-back';
+          el.setAttribute('data-idx', card.idx);
+          el.onclick = function() { self.onCardClick(card.idx); };
+          grid.appendChild(el);
+        });
+        document.getElementById('card-count').textContent = '36';
+        document.getElementById('elapsed-time').textContent = '0';
+      },
+
+      start: function() {
+        if (this.timerHandle) { clearInterval(this.timerHandle); this.timerHandle = null; }
+        document.getElementById('game-result').classList.remove('show');
+        this.createCards();
+        this.selected = null;
+        this.isRunning = true;
+        this.startTime = Date.now();
+        this.eliminatedCount = 0;
+
+        var grid = document.getElementById('card-grid');
+        grid.innerHTML = '';
+        var self = this;
+        this.cards.forEach(function(card) {
+          var el = document.createElement('div');
+          el.className = 'card face-up';
+          el.setAttribute('data-idx', card.idx);
+          el.innerHTML = '<span class="card-emoji">' + card.emoji + '</span>';
+          el.onclick = function() { self.onCardClick(card.idx); };
+          grid.appendChild(el);
+        });
+
+        document.getElementById('start-btn').disabled = true;
+        document.getElementById('card-count').textContent = '36';
+        document.getElementById('elapsed-time').textContent = '0';
+        this.addLog('游戏开始，所有卡牌已翻开', '');
+
+        var self2 = this;
+        this.timerHandle = setInterval(function() {
+          if (!self2.isRunning) return;
+          var s = Math.floor((Date.now() - self2.startTime) / 1000);
+          document.getElementById('elapsed-time').textContent = s;
+        }, 500);
+      },
+
+      onCardClick: function(idx) {
+        if (!this.isRunning) return;
+        var card = this.cards[idx];
+        if (card.eliminated) return;
+
+        var el = document.querySelector('[data-idx="' + idx + '"]');
+        if (!el) return;
+
+        if (this.selected === null) {
+          this.selected = idx;
+          el.classList.add('selected');
+          return;
+        }
+
+        if (this.selected === idx) {
+          el.classList.remove('selected');
+          this.selected = null;
+          return;
+        }
+
+        var prevIdx = this.selected;
+        var prevCard = this.cards[prevIdx];
+        var prevEl = document.querySelector('[data-idx="' + prevIdx + '"]');
+        this.selected = null;
+
+        if (prevCard.pairIdx === card.pairIdx) {
+          card.eliminated = true;
+          prevCard.eliminated = true;
+          this.eliminatedCount += 2;
+          el.classList.add('matched');
+          prevEl.classList.remove('selected');
+          prevEl.classList.add('matched');
+          document.getElementById('card-count').textContent = (36 - this.eliminatedCount);
+          this.addLog('匹配成功! ' + card.emoji + ' 消除', 'success');
+          if (this.eliminatedCount >= 36) { this.onWin(); }
+        } else {
+          prevEl.classList.remove('selected');
+          this.addLog('不匹配', 'error');
+        }
+      },
+
+      onWin: function() {
+        this.isRunning = false;
+        if (this.timerHandle) { clearInterval(this.timerHandle); this.timerHandle = null; }
+        var s = Math.floor((Date.now() - this.startTime) / 1000);
+        document.getElementById('result-text').textContent = '用时 ' + s + ' 秒，消除所有卡牌!';
+        document.getElementById('game-result').classList.add('show');
+        document.getElementById('start-btn').disabled = false;
+        this.addLog('游戏结束，用时 ' + s + ' 秒', 'success');
+      },
+
+      addLog: function(msg, cls) {
+        var logEl = document.getElementById('game-log');
+        var div = document.createElement('div');
+        div.className = 'log-item' + (cls ? ' ' + cls : '');
+        div.textContent = msg;
+        logEl.insertBefore(div, logEl.firstChild);
+        if (logEl.children.length > 30) { logEl.removeChild(logEl.lastChild); }
+      }
+    };
+
+    game.init();
+    updateScale();
+    window.addEventListener('resize', updateScale);
+  </script>
+</body>
+</html>

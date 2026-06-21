@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API 参考 - MacroAI</title>
+  <meta name="description" content="MacroAI Lua 脚本 API 参考文档">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#scenarios">适用场景</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/en/api-reference.html">English</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">API 参考</div>
+      <h1 class="section-title">API 参考</h1>
+      <div class="docs-tabs">
+        <a href="/macroai/docs/zh/user-guide.html">使用说明</a>
+        <a href="/macroai/docs/zh/api-reference.html" class="active">API 参考</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content docs-layout">
+      <aside class="docs-toc">
+        <div class="toc-label">目录</div>
+        <a href="#图像识别" class="toc-h2">图像识别</a>
+<a href="#ocr" class="toc-h2">OCR</a>
+<a href="#鼠标" class="toc-h2">鼠标</a>
+<a href="#键盘" class="toc-h2">键盘</a>
+<a href="#屏幕" class="toc-h2">屏幕</a>
+<a href="#等待" class="toc-h2">等待</a>
+<a href="#变量" class="toc-h2">变量</a>
+<a href="#区域" class="toc-h2">区域</a>
+<a href="#变化检测" class="toc-h2">变化检测</a>
+  <a href="#detect_change-wait_change-通用参数" class="toc-h3">detect_change / wait_change 通用参数</a>
+  <a href="#wait_bar_change-参数" class="toc-h3">wait_bar_change 参数</a>
+<a href="#音频" class="toc-h2">音频</a>
+<a href="#日志" class="toc-h2">日志</a>
+<a href="#其他" class="toc-h2">其他</a>
+<a href="#检查停止" class="toc-h2">检查停止</a>
+<a href="#通用约定" class="toc-h2">通用约定</a>
+  <a href="#坐标系统" class="toc-h3">坐标系统</a>
+  <a href="#返回值约定" class="toc-h3">返回值约定</a>
+
+      </aside>
+      <main class="docs-content">
+        <h1 id="macroai-api-参考">MacroAI API 参考</h1>
+<h2 id="图像识别">图像识别</h2>
+<pre><code>image_find(tmpl, region?, threshold?) -&gt; ImageMatchResult | nil
+image_wait(tmpl, timeout?, region?, threshold?) -&gt; ImageMatchResult | nil
+image_find_all(tmpl, region?, threshold?) -&gt; table | nil
+image_wait_all(tmpl, timeout?, region?, threshold?) -&gt; table | nil
+image_save_template(img, path) -&gt; void
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>tmpl</code> (string) — 模板图片文件名（如 <code>"button.png"</code>），图片需先在图像管理标签页中上传；也支持变量引用（如 <code>var_get('btn_name')</code>）或函数参数名
+- <code>region</code> (table, 可选) — 搜索区域 <code>{left, top, width, height}</code>，不传则搜索全屏或默认区域
+- <code>threshold</code> (number, 可选) — 匹配阈值，范围 0~1，默认 <code>0.85</code>，越低越容易匹配
+- <code>timeout</code> (number, 可选) — 超时秒数，默认 <code>10</code>
+- <code>img</code> — 图像数据（numpy 数组）</p>
+<p><strong>返回值 (ImageMatchResult)：</strong>
+- <code>.success</code> (boolean) — 是否找到
+- <code>.x</code>, <code>.y</code> (number) — 匹配区域左上角坐标
+- <code>.center_x</code>, <code>.center_y</code> (number) — 匹配区域中心坐标
+- <code>.width</code>, <code>.height</code> (number) — 匹配区域尺寸
+- <code>.confidence</code> (number) — 置信度
+- <code>.rect</code> (table) — <code>{left, top, width, height}</code>
+- <code>.template_name</code> (string) — 匹配成功的模板文件名（多图查找时可判断哪个模板匹配上）</p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">local r = image_find(&quot;login_btn.png&quot;, {100, 200, 800, 600}, 0.8)
+if r and r.success then
+    mouse_click(r.center_x, r.center_y)
+end
+</code></pre>
+<p><strong>返回全部匹配结果：</strong></p>
+<pre><code>image_find_all(tmpl, region?, threshold?) -&gt; table | nil
+image_wait_all(tmpl, timeout?, region?, threshold?) -&gt; table | nil
+</code></pre>
+<ul>
+<li>返回所有匹配结果的数组，无匹配则返回 <code>nil</code></li>
+<li>每个元素字段与 <code>ImageMatchResult</code> 相同</li>
+<li>适用于同一模板在屏幕上出现多次的场景</li>
+<li><code>image_wait_all</code> 轮询直到至少一个匹配出现，然后返回全部匹配</li>
+</ul>
+<p><strong>示例（查找并点击全部匹配）：</strong></p>
+<pre><code class="language-lua">local results = image_find_all(&quot;icon.png&quot;)
+if results then
+    for _, r in ipairs(results) do
+        mouse_click(r.center_x, r.center_y)
+        wait(500)  -- 点击间隔
+    end
+end
+</code></pre>
+<p><strong>多图查找示例：</strong></p>
+<pre><code class="language-lua">local r1 = image_find(&quot;btn_ok.png&quot;, nil, 0.85)
+local r2 = image_find(&quot;btn_cancel.png&quot;, nil, 0.85)
+local best = nil
+local best_conf = 0
+for _, r in ipairs({r1, r2}) do
+    if r and r.success and r.confidence &gt; best_conf then
+        best = r
+        best_conf = r.confidence
+    end
+end
+if best then
+    -- 通过 template_name 判断匹配的是哪个模板
+    if best.template_name == &quot;btn_ok.png&quot; then
+        -- 确认按钮
+    else
+        -- 取消按钮
+    end
+end
+</code></pre>
+<hr />
+<h2 id="ocr">OCR</h2>
+<pre><code>ocr_recognize(region?, lang?) -&gt; string
+ocr_compare(text, region?, threshold?, lang?) -&gt; OcrCompareResult
+ocr_find_text(text, region?, lang?) -&gt; number, number
+ocr_log(msg) -&gt; void
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>region</code> (table, 可选) — 识别区域 <code>{left, top, width, height}</code>，不传则全屏
+- <code>lang</code> (string, 可选) — 语言代码，如 <code>"zh-CN"</code>、<code>"en-US"</code>，不传则使用系统默认
+- <code>text</code> (string) — 要匹配的文字
+- <code>threshold</code> (number, 可选) — 相似度阈值，默认 <code>0.8</code>
+- <code>msg</code> (string) — 日志消息</p>
+<p><strong>返回值 (OcrCompareResult)：</strong>
+- <code>.matched</code> (boolean) — 是否匹配
+- <code>.found_text</code> (string) — 识别到的文字
+- <code>.similarity</code> (number) — 相似度
+- <code>.confidence</code> (number) — 置信度</p>
+<p><strong>ocr_find_text 返回值：</strong>
+- 成功: <code>center_x, center_y</code> (number, number)
+- 失败: <code>nil, nil</code></p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">local text = ocr_recognize({100, 100, 500, 100}, &quot;zh-CN&quot;)
+ocr_log(&quot;识别到文字: &quot; .. text)
+
+local r = ocr_compare(&quot;确定&quot;, {100, 100, 500, 100})
+if r and r.matched then
+    log(&quot;匹配成功，相似度: &quot; .. r.similarity)
+end
+
+local x, y = ocr_find_text(&quot;提交&quot;, {100, 100, 500, 100})
+if x then mouse_click(x, y) end
+</code></pre>
+<hr />
+<h2 id="鼠标">鼠标</h2>
+<pre><code>mouse_click(x?, y?, button?, clicks?) -&gt; void
+mouse_move(x?, y?) -&gt; void
+mouse_double_click(x?, y?) -&gt; void
+mouse_right_click(x?, y?) -&gt; void
+mouse_scroll(clicks, x?, y?) -&gt; void
+mouse_drag(sx, sy, ex, ey, button?, duration?) -&gt; void
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>x</code>, <code>y</code> (number, 可选) — 屏幕坐标，不传则在当前位置操作
+- <code>button</code> (string, 可选) — 鼠标键，可选：<code>"left"</code>（默认）、<code>"right"</code>、<code>"middle"</code>
+- <code>clicks</code> (number) — 滚轮滚动格数，正数向上，负数向下
+- <code>sx</code>, <code>sy</code> (number) — 拖拽起点
+- <code>ex</code>, <code>ey</code> (number) — 拖拽终点
+- <code>duration</code> (number, 可选) — 拖拽持续时间（秒），默认 <code>0.3</code></p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">mouse_click(500, 300)              -- 左键点击 (500,300)
+mouse_click(500, 300, &quot;right&quot;)     -- 右键点击
+mouse_double_click(500, 300)       -- 双击
+mouse_move(100, 200)               -- 移动到 (100,200)
+mouse_drag(100, 100, 500, 300)     -- 从 (100,100) 拖拽到 (500,300)
+mouse_scroll(3)                    -- 向下滚动 3 格
+</code></pre>
+<hr />
+<h2 id="键盘">键盘</h2>
+<pre><code>key_press(key) -&gt; void
+key_type(text) -&gt; void
+key_hotkey(key1, key2, ...) -&gt; void
+key_shortcut(combo) -&gt; void
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>key</code> (string) — 按键名，如 <code>"enter"</code>、<code>"tab"</code>、<code>"escape"</code>、<code>"a"</code>、<code>"ctrl"</code> 等
+- <code>text</code> (string) — 要输入的文本，换行符将自动转为 Enter
+- <code>key1, key2, ...</code> (string...) — 组合键序列，如 <code>("ctrl", "c")</code>
+- <code>combo</code> (string) — 快捷键组合，如 <code>"ctrl+c"</code>、<code>"alt+tab"</code></p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">key_press(&quot;enter&quot;)                  -- 按回车
+key_type(&quot;Hello, World!&quot;)           -- 输入文本
+key_hotkey(&quot;ctrl&quot;, &quot;c&quot;)            -- 按 Ctrl+C（序列按键）
+key_shortcut(&quot;ctrl+c&quot;)             -- 按 Ctrl+C（组合键）
+</code></pre>
+<hr />
+<h2 id="屏幕">屏幕</h2>
+<pre><code>screen_capture(region?) -&gt; Image (numpy array)
+screen_size() -&gt; width, height
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>region</code> (table, 可选) — 捕获区域 <code>{left, top, width, height}</code>，不传则捕获全屏</p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">local w, h = screen_size()
+log(&quot;屏幕分辨率: &quot; .. w .. &quot;x&quot; .. h)
+
+local img = screen_capture({0, 0, 100, 100})  -- 捕获左上角 100x100
+image_save_template(img, &quot;screenshot.png&quot;)
+</code></pre>
+<hr />
+<h2 id="等待">等待</h2>
+<pre><code>wait(milliseconds) -&gt; void
+wait_seconds(seconds) -&gt; void
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">wait(1000)        -- 等待 1000 毫秒（1 秒）
+wait_seconds(2.5) -- 等待 2.5 秒
+</code></pre>
+<hr />
+<h2 id="变量">变量</h2>
+<pre><code>var_set(name, value, scope?) -&gt; void
+var_get(name) -&gt; any
+var_has(name) -&gt; boolean
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>name</code> (string) — 变量名
+- <code>value</code> (any) — 变量值（支持 string、number、boolean、table）
+- <code>scope</code> (string, 可选) — 作用域，可选：<code>"local"</code>（默认，仅当前脚本可见）、<code>"global"</code>（跨脚本共享）</p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">var_set(&quot;count&quot;, 10)
+var_set(&quot;name&quot;, &quot;MacroAI&quot;, &quot;global&quot;)
+
+local c = var_get(&quot;count&quot;)
+log(&quot;count = &quot; .. c)
+
+if var_has(&quot;name&quot;) then
+    log(&quot;name 变量存在&quot;)
+end
+</code></pre>
+<hr />
+<h2 id="区域">区域</h2>
+<pre><code>region_set(name, left, top, width, height) -&gt; void
+region_get(name) -&gt; Region | nil
+getRegion(name?) -&gt; {left, top, width, height} | nil
+to_runtime_region(region) -&gt; {left, top, width, height}
+to_runtime_point(x, y) -&gt; number, number
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>name</code> (string) — 区域名称
+- <code>left</code>, <code>top</code>, <code>width</code>, <code>height</code> (number) — 区域矩形（设计区域坐标）
+- <code>region</code> (table) — <code>{left, top, width, height}</code> 格式的区域</p>
+<p><strong>说明：</strong>
+- <code>region_get</code> 返回 Region 对象（带 <code>.left</code>, <code>.top</code>, <code>.width</code>, <code>.height</code> 属性）
+- <code>getRegion</code> 返回 Lua table，可指定名称，不传或传 <code>"__effective__"</code> 返回默认搜索区域
+- <code>to_runtime_region</code> / <code>to_runtime_point</code> 将设计区域坐标转换为运行时坐标（多分辨率适配）</p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">region_set(&quot;dialog&quot;, 100, 200, 500, 300)
+local r = region_get(&quot;dialog&quot;)
+if r then
+    log(&quot;区域: &quot; .. r.left .. &quot;,&quot; .. r.top)
+end
+
+local rt = getRegion(&quot;dialog&quot;)           -- {left, top, width, height}
+local eff = getRegion()                  -- 默认搜索区域
+local pt_x, pt_y = to_runtime_point(500, 300)  -- 转换为运行区域坐标
+</code></pre>
+<hr />
+<h2 id="变化检测">变化检测</h2>
+<pre><code>detect_change(kwargs?) -&gt; table
+wait_change(kwargs?) -&gt; table
+wait_bar_change(kwargs?) -&gt; table
+</code></pre>
+<p><strong>kwargs 参数表：</strong></p>
+<h3 id="detect_change-wait_change-通用参数">detect_change / wait_change 通用参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>region</code></td>
+<td>table</td>
+<td>全屏</td>
+<td>检测区域 <code>{left, top, width, height}</code></td>
+</tr>
+<tr>
+<td><code>block_size</code></td>
+<td>number</td>
+<td>50</td>
+<td>网格大小（像素）</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>number</td>
+<td>30.0</td>
+<td>变化阈值（灰度差值）</td>
+</tr>
+<tr>
+<td><code>min_area</code></td>
+<td>number</td>
+<td>900</td>
+<td>最小变化面积</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>number</td>
+<td>30</td>
+<td>超时秒数（仅 wait_change）</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>number</td>
+<td>1.0</td>
+<td>轮询间隔秒数（仅 wait_change）</td>
+</tr>
+<tr>
+<td><code>track_frames</code></td>
+<td>number</td>
+<td>10</td>
+<td>跟踪帧数（仅 wait_change，用于过滤周期性变化）</td>
+</tr>
+<tr>
+<td><code>cyclic_ratio</code></td>
+<td>number</td>
+<td>0.7</td>
+<td>周期性过滤比例（仅 wait_change）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="wait_bar_change-参数">wait_bar_change 参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>region</code></td>
+<td>table</td>
+<td>全屏</td>
+<td>检测区域</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>number</td>
+<td>30</td>
+<td>超时秒数</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>number</td>
+<td>0.5</td>
+<td>轮询间隔秒数</td>
+</tr>
+<tr>
+<td><code>min_change</code></td>
+<td>number</td>
+<td>0.1</td>
+<td>最小变化比例</td>
+</tr>
+<tr>
+<td><code>match_threshold</code></td>
+<td>number</td>
+<td>0.85</td>
+<td>模版匹配相似度阈值</td>
+</tr>
+<tr>
+<td><code>orientation</code></td>
+<td>string</td>
+<td>"auto"</td>
+<td>条块方向：<code>"horizontal"</code>、<code>"vertical"</code>、<code>"auto"</code></td>
+</tr>
+<tr>
+<td><code>reset</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>是否重置历史追踪（场景切换时使用）</td>
+</tr>
+<tr>
+<td><code>colors</code></td>
+<td>table[]</td>
+<td>必填</td>
+<td>颜色配置数组（见下方）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>colors 配置格式：</strong></p>
+<pre><code class="language-lua">{
+    {
+        label = &quot;hp_full&quot;,             -- 模版名称，同时也是文件名
+        template_path = &quot;resources/bar_templates/hp_full.png&quot;,
+        color_swatch = {255, 50, 50}   -- 由系统自动生成，可不填
+    },
+    {
+        label = &quot;hp_half&quot;,
+        template_path = &quot;resources/bar_templates/hp_half.png&quot;,
+        color_swatch = {50, 50, 255}
+    }
+}
+</code></pre>
+<p><strong>返回值：</strong>
+- <code>detect_change</code> / <code>wait_change</code> 返回变化区域数组：
+  <code>lua
+  {
+      { center_x = 350, center_y = 250, rect = {340, 240, 20, 20} },
+      ...
+  }</code>
+- <code>wait_bar_change</code> 返回条块变化数组：
+  <code>lua
+  {
+      {
+          rect = {100, 200, 300, 20},       -- 条块边界框
+          center_x = 250,                     -- 条块中心 X
+          center_y = 210,                     -- 条块中心 Y
+          color = "hp_full",                  -- 匹配上的模版标签
+          state = "changed",                  -- changed/resized/disappeared/appeared
+          delta = 0.5,                        -- 宽度比例变化（新 label 宽度 / 旧 label 宽度）
+          reference_value = 1.0,              -- 旧 label 宽度比例
+          curr_value = 0.5,                   -- 新 label 宽度比例
+          orientation = "horizontal"
+      },
+      ...
+  }</code></p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">-- 检测条块变化（上传两个宽度不同的模版，引擎自动匹配）
+local bar_changes = wait_bar_change({
+    region = {100, 50, 300, 20},
+    timeout = 15,
+    colors = {
+        {
+            label = &quot;full&quot;,
+            template_path = &quot;resources/bar_templates/full.png&quot;,
+        },
+        {
+            label = &quot;half&quot;,
+            template_path = &quot;resources/bar_templates/half.png&quot;,
+        }
+    }
+})
+
+-- 只处理真实变化，忽略移入移出
+for _, bc in ipairs(bar_changes) do
+    if bc.state == &quot;changed&quot; or bc.state == &quot;resized&quot; then
+        log(&quot;条块变化: &quot; .. bc.color .. &quot; delta=&quot; .. bc.delta)
+    end
+end
+</code></pre>
+<pre><code>reset_bar_detector() -&gt; void
+</code></pre>
+<p>重置所有条块追踪缓存。进入新界面时调用，避免旧追踪状态干扰新场景。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">-- 进入新场景时重置追踪
+reset_bar_detector()
+
+local bars = wait_bar_change({
+    region = {100, 50, 300, 20},
+    colors = {
+        { label=&quot;full&quot;, template_path=&quot;resources/bar_templates/full.png&quot; },
+        { label=&quot;half&quot;, template_path=&quot;resources/bar_templates/half.png&quot; },
+    }
+})
+</code></pre>
+<hr />
+<hr />
+<h2 id="音频">音频</h2>
+<pre><code>play_warning(sound_type, custom_file?) -&gt; void
+play_music(filepath) -&gt; void
+is_music_playing() -&gt; boolean
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>sound_type</code> (string) — 音效类型：
+  - 系统音效：<code>"ding"</code>、<code>"error"</code>、<code>"warning"</code>、<code>"question"</code>、<code>"info"</code>
+  - 系统声音：<code>"startup"</code>、<code>"shutdown"</code>、<code>"chimes"</code>、<code>"tada"</code>
+  - 音符：<code>"do"</code>、<code>"re"</code>、<code>"mi"</code>、<code>"fa"</code>、<code>"sol"</code>、<code>"la"</code>、<code>"si"</code>（蜂鸣器）
+  - 自定义：<code>"custom"</code>
+- <code>custom_file</code> (string, 可选) — 自定义 WAV 文件路径（sound_type 为 <code>"custom"</code> 时使用）
+- <code>filepath</code> (string) — 音乐文件路径（支持 MP3、WAV 等格式）</p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">play_warning(&quot;ding&quot;)              -- 播放提示音
+play_warning(&quot;custom&quot;, &quot;C:\\alert.wav&quot;)  -- 播放自定义 WAV
+
+play_music(&quot;C:\\bgm.mp3&quot;)        -- 播放背景音乐
+if is_music_playing() then
+    log(&quot;音乐正在播放&quot;)
+end
+</code></pre>
+<hr />
+<h2 id="日志">日志</h2>
+<pre><code>log(message) -&gt; void
+ocr_log(msg) -&gt; void
+print(...) -&gt; void
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">log(&quot;脚本开始执行&quot;)
+ocr_log(&quot;OCR 识别结果: &quot; .. text)
+print(&quot;变量值:&quot;, x, y, z)  -- 输出: 变量值: 100 200 300
+</code></pre>
+<hr />
+<h2 id="其他">其他</h2>
+<pre><code>macro_call(macro_id) -&gt; void
+</code></pre>
+<p><strong>说明：</strong>
+- <code>macro_id</code> (string) — 要调用的录制宏 ID
+- 在运行时会回放该宏中记录的所有事件（鼠标点击、按键、等待等）
+- 坐标会自动根据当前运行区域缩放适配</p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">macro_call(&quot;macro_12345678&quot;)  -- 回放指定录制宏
+</code></pre>
+<hr />
+<h2 id="检查停止">检查停止</h2>
+<pre><code>check_stop() -&gt; void
+</code></pre>
+<p>在执行循环或长时间操作时调用，使脚本能够响应暂停和停止信号。如果用户在运行中点击了暂停或停止，<code>check_stop()</code> 会立即中断当前操作。</p>
+<p>引擎在部分长时间操作中会自动注入此调用，但自定义循环中建议主动调用。</p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">for i = 1, 100 do
+    check_stop()  -- 让用户可以随时中止
+    -- 执行操作...
+    wait(500)
+end
+</code></pre>
+<hr />
+<h2 id="通用约定">通用约定</h2>
+<h3 id="坐标系统">坐标系统</h3>
+<ul>
+<li>所有坐标单位为像素</li>
+<li>区域格式统一为 <code>{left, top, width, height}</code></li>
+<li>坐标会自动根据设计区域和运行区域缩放适配（多分辨率）</li>
+</ul>
+<h3 id="返回值约定">返回值约定</h3>
+<ul>
+<li>成功返回有效值，失败返回 <code>nil</code></li>
+<li><code>ImageMatchResult</code> 可通过 <code>if r and r.success</code> 判断是否匹配成功</li>
+</ul>
+      </main>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/battle-demo.html">血条演示Demo</a>
+      <a href="/macroai/pengpeng-demo.html">对对碰演示Demo</a>
+    </div>
+  </footer>
+
+  <script src="/js/i18n.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/docs.js"></script>
+</body>
+</html>
