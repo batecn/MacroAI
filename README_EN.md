@@ -12,7 +12,8 @@ Core positioning: **Visual node-based workflow + Background execution + Reusable
 
 ## 📥 Download
 
-Get the latest release: [/batecn/MacroAI/releases](/batecn/MacroAI/releases)
+**GitHub**: [Releases](https://github.com/batecn/MacroAI/releases)
+**Gitee**: [Releases](https://gitee.com/batecn/MacroAI/releases)
 
 ---
 

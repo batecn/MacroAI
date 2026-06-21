@@ -12,7 +12,8 @@
 
 ## 📥 下载
 
-获取最新版本安装包：[/batecn/MacroAI/releases](/batecn/MacroAI/releases)
+**GitHub**：[Releases](https://github.com/batecn/MacroAI/releases)
+**Gitee**：[Releases](https://gitee.com/batecn/MacroAI/releases)
 
 ---
 
