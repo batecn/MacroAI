@@ -27,7 +27,7 @@
   text-align: center;
   padding: 10px 20px;
   border-radius: calc(var(--radius) - 4px);
-  color: var(--text-muted);
+  color: #8888aa;
   font-size: 0.9rem;
   font-weight: 500;
   transition: all var(--transition);
@@ -70,7 +70,7 @@
 .toc-label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: #6c6c8a;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 16px;
@@ -80,7 +80,7 @@
 
 .docs-toc a {
   display: block;
-  color: var(--text-muted);
+  color: #8888aa;
   font-size: 0.85rem;
   line-height: 1.5;
   padding: 5px 0;
@@ -109,7 +109,7 @@
   flex: 1;
   min-width: 0;
   max-width: 800px;
-  color: var(--text-secondary);
+  color: #d4d4e8;
   font-size: 0.95rem;
   line-height: 1.8;
 }
@@ -180,7 +180,7 @@
 }
 
 .docs-content pre code {
-  color: var(--text-secondary);
+  color: #c0c0d8;
   background: none;
   border: none;
   padding: 0;
@@ -199,6 +199,10 @@
   padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid var(--border-glass);
+}
+
+.docs-content td {
+  color: #d4d4e8;
 }
 
 .docs-content th {
@@ -220,6 +224,7 @@
 
 .docs-content li {
   margin-bottom: 6px;
+  color: #d4d4e8;
 }
 
 .docs-content hr {
@@ -235,7 +240,7 @@
   margin: 20px 0;
   background: rgba(139, 92, 246, 0.04);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  color: var(--text-secondary);
+  color: #d4d4e8;
 }
 
 /* --- Responsive --- */
