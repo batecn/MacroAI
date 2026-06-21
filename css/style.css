@@ -670,6 +670,19 @@ ul { list-style: none; }
 .download-card h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 12px; }
 .download-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; }
 
+.download-mirror {
+  margin-top: 12px;
+  font-size: 0.82rem;
+}
+.download-mirror a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.download-mirror a:hover {
+  color: var(--text-secondary);
+  text-decoration: underline;
+}
+
 .version-info {
   text-align: center;
   color: var(--text-muted);
