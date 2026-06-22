@@ -104,6 +104,7 @@
   "download.mirror.notice": "国内用户如果无法访问 GitHub，可通过 Gitee 镜像下载",
   "download.mirror.btn": "Gitee 镜像下载",
   "download.changelog": "更新日志",
+  "download.changelog.v122": "v1.2.2 — 修复宏录制在不同 DPI 时坐标转换的 bug",
   "download.changelog.v121": "v1.2.1 — 大幅优化图像匹配的准确度",
   "download.changelog.v115": "v1.1.5 — 修复节点编辑器拖拽重排问题，优化跨容器拖拽体验",
   "download.changelog.v114": "v1.1.4 — 优化 OCR 识别稳定性，修复多分辨率坐标缩放问题",
