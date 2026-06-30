@@ -179,8 +179,9 @@
           <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item4">支持 DirectX 11 的显卡</li>
         </ul>
       </div>
-      <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
+<div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
         <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.changelog">更新日志</h3>
+        <div class="changelog-item" data-i18n="download.changelog.v130"><strong>v1.3.0</strong> — 设计/运行模式分离，完善脚本分发，多图查找重构大幅提升性能，新增追踪模式，代码预览支持语法高亮及代码折叠，修正宏录制坐标丢失的bug</div>
         <div class="changelog-item" data-i18n="download.changelog.v122"><strong>v1.2.2</strong> — 修复宏录制在不同 DPI 时坐标转换的 bug</div>
         <div class="changelog-item" data-i18n="download.changelog.v121"><strong>v1.2.1</strong> — 大幅优化图像匹配的准确度</div>
         <div class="changelog-item" data-i18n="download.changelog.v115"><strong>v1.1.5</strong> — 修复节点编辑器拖拽重排问题，优化跨容器拖拽体验</div>
@@ -232,9 +233,13 @@
             </div>
           </div>
         </div>
-        <a href="/macroai/docs/zh/user-guide.html" class="glass-card docs-card reveal stagger-item" data-i18n-href="docs.manual.link">
-          <h3 data-i18n="docs.manual.title">使用手册</h3>
-          <p data-i18n="docs.manual.desc">完整的使用指南，涵盖所有功能和配置说明。</p>
+        <a href="/macroai/docs/zh/user-guide.html" class="glass-card docs-card reveal stagger-item" data-i18n-href="docs.user-guide.link">
+          <h3 data-i18n="docs.user-guide.title">使用者指南</h3>
+          <p data-i18n="docs.user-guide.desc">完整的使用指南，涵盖导入、配置和运行自动化脚本。</p>
+        </a>
+        <a href="/macroai/docs/zh/designer-guide.html" class="glass-card docs-card reveal stagger-item" data-i18n-href="docs.designer-guide.link">
+          <h3 data-i18n="docs.designer-guide.title">设计者指南</h3>
+          <p data-i18n="docs.designer-guide.desc">创建脚本、定义用户配置、导出分发包的完整指引。</p>
         </a>
         <a href="/macroai/docs/zh/api-reference.html" class="glass-card docs-card reveal stagger-item" data-i18n-href="docs.api.link">
           <h3 data-i18n="docs.api.title">API 参考</h3>
@@ -276,6 +281,7 @@
       <a href="#hero" data-i18n="nav.home">首页</a>
       <a href="macroai/battle-demo.html">血条演示Demo</a>
       <a href="macroai/pengpeng-demo.html">对对碰演示Demo</a>
+      <a href="mailto:macroai@sowe.com">macroai@sowe.com</a>
     </div>
   </footer>
 

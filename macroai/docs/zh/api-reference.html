@@ -39,7 +39,8 @@
       <div class="section-label">API 参考</div>
       <h1 class="section-title">API 参考</h1>
       <div class="docs-tabs">
-        <a href="/macroai/docs/zh/user-guide.html">使用说明</a>
+        <a href="/macroai/docs/zh/user-guide.html">使用者手册</a>
+        <a href="/macroai/docs/zh/designer-guide.html">设计者指南</a>
         <a href="/macroai/docs/zh/api-reference.html" class="active">API 参考</a>
       </div>
     </div>
@@ -60,9 +61,11 @@
 <a href="#变化检测" class="toc-h2">变化检测</a>
   <a href="#detect_change-wait_change-通用参数" class="toc-h3">detect_change / wait_change 通用参数</a>
   <a href="#wait_bar_change-参数" class="toc-h3">wait_bar_change 参数</a>
+<a href="#颜色检测" class="toc-h2">颜色检测</a>
 <a href="#音频" class="toc-h2">音频</a>
 <a href="#日志" class="toc-h2">日志</a>
-<a href="#其他" class="toc-h2">其他</a>
+<a href="#通知" class="toc-h2">通知</a>
+<a href="#用户配置变量" class="toc-h2">用户配置变量</a>
 <a href="#检查停止" class="toc-h2">检查停止</a>
 <a href="#通用约定" class="toc-h2">通用约定</a>
   <a href="#坐标系统" class="toc-h3">坐标系统</a>
@@ -72,17 +75,25 @@
       <main class="docs-content">
         <h1 id="macroai-api-参考">MacroAI API 参考</h1>
 <h2 id="图像识别">图像识别</h2>
-<pre><code>image_find(tmpl, region?, threshold?) -&gt; ImageMatchResult | nil
-image_wait(tmpl, timeout?, region?, threshold?) -&gt; ImageMatchResult | nil
-image_find_all(tmpl, region?, threshold?) -&gt; table | nil
-image_wait_all(tmpl, timeout?, region?, threshold?) -&gt; table | nil
+<pre><code>image_find(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
+image_wait(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
+image_find_all(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; table | nil
+image_wait_all(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; table | nil
 image_save_template(img, path) -&gt; void
 </code></pre>
 <p><strong>参数说明：</strong>
-- <code>tmpl</code> (string) — 模板图片文件名（如 <code>"button.png"</code>），图片需先在图像管理标签页中上传；也支持变量引用（如 <code>var_get('btn_name')</code>）或函数参数名
+- <code>tmpl</code> (string | table) — 模板图片，支持以下格式：
+  - 单模板字符串（如 <code>"button.png"</code> 或 <code>"button"</code>），自动在 <code>resources/images/</code> 下查找
+  - 相对路径 <code>"resources/images/icon.png"</code>，相对项目目录解析
+  - 绝对路径 <code>"D:/images/icon.png"</code>，直接使用
+  - 多模板 Lua 表 <code>{"a.png", "b.png"}</code>，截屏一次遍历匹配，返回最佳结果
+  - 变量引用 <code>var_get('btn_name')</code>、参数引用或 <code>u|var_id</code> 用户配置引用
 - <code>region</code> (table, 可选) — 搜索区域 <code>{left, top, width, height}</code>，不传则搜索全屏或默认区域
 - <code>threshold</code> (number, 可选) — 匹配阈值，范围 0~1，默认 <code>0.85</code>，越低越容易匹配
-- <code>timeout</code> (number, 可选) — 超时秒数，默认 <code>10</code>
+- <code>timeout</code> (number, 可选) — 超时秒数，默认 <code>10</code>（仅 image_wait / image_wait_all）
+- <code>interval</code> (number, 可选) — 轮询间隔秒数，默认 <code>0.2</code>（仅 image_wait / image_wait_all）
+- <code>match_mode</code> (string, 可选) — 匹配模式：<code>"grayscale"</code>（灰度，默认）、<code>"luminance"</code>（感知亮度）、<code>"oklab"</code>（OKLab 色彩）
+- <code>transform_policy</code> (string, 可选) — 坐标转换策略：<code>"default"</code>（跟随项目设置，默认）
 - <code>img</code> — 图像数据（numpy 数组）</p>
 <p><strong>返回值 (ImageMatchResult)：</strong>
 - <code>.success</code> (boolean) — 是否找到
@@ -91,7 +102,7 @@ image_save_template(img, path) -&gt; void
 - <code>.width</code>, <code>.height</code> (number) — 匹配区域尺寸
 - <code>.confidence</code> (number) — 置信度
 - <code>.rect</code> (table) — <code>{left, top, width, height}</code>
-- <code>.template_name</code> (string) — 匹配成功的模板文件名（多图查找时可判断哪个模板匹配上）</p>
+- <code>.template_name</code> (string) — 匹配成功的模板文件名（仅含文件名，不含路径。多图查找时可判断哪个模板匹配上）</p>
 <p><strong>示例：</strong></p>
 <pre><code class="language-lua">local r = image_find(&quot;login_btn.png&quot;, {100, 200, 800, 600}, 0.8)
 if r and r.success then
@@ -117,24 +128,26 @@ if results then
     end
 end
 </code></pre>
-<p><strong>多图查找示例：</strong></p>
-<pre><code class="language-lua">local r1 = image_find(&quot;btn_ok.png&quot;, nil, 0.85)
-local r2 = image_find(&quot;btn_cancel.png&quot;, nil, 0.85)
-local best = nil
-local best_conf = 0
-for _, r in ipairs({r1, r2}) do
-    if r and r.success and r.confidence &gt; best_conf then
-        best = r
-        best_conf = r.confidence
+<p><strong>多模板查找（一次截屏遍历多个模板，返回最佳匹配）：</strong></p>
+<pre><code class="language-lua">local r = image_find({&quot;btn_ok.png&quot;, &quot;btn_cancel.png&quot;})
+if r and r.success then
+    -- 通过 template_name 判断匹配的是哪个模板
+    if r.template_name == &quot;btn_ok.png&quot; then
+        log(&quot;确认按钮&quot;)
     end
 end
-if best then
-    -- 通过 template_name 判断匹配的是哪个模板
-    if best.template_name == &quot;btn_ok.png&quot; then
-        -- 确认按钮
-    else
-        -- 取消按钮
-    end
+</code></pre>
+<p><strong>多模板 + user_config_list 混合：</strong></p>
+<pre><code class="language-lua">-- 在节点编辑器中多图列表填写: icon.png, u|uc_avatar
+-- 生成代码自动构建混合列表
+local _tmpls = {}
+table.insert(_tmpls, 'icon.png')
+for _, _v in ipairs(user_config_list('uc_avatar')) do
+    table.insert(_tmpls, _v)
+end
+local r = image_find(_tmpls)
+if r and r.success then
+    log(&quot;匹配成功: &quot; .. r.template_name)
 end
 </code></pre>
 <hr />
@@ -200,19 +213,23 @@ mouse_scroll(3)                    -- 向下滚动 3 格
 key_type(text) -&gt; void
 key_hotkey(key1, key2, ...) -&gt; void
 key_shortcut(combo) -&gt; void
+key_stroke(vk, scan, is_down?) -&gt; void
 </code></pre>
 <p><strong>参数说明：</strong>
 - <code>key</code> (string) — 按键名，如 <code>"enter"</code>、<code>"tab"</code>、<code>"escape"</code>、<code>"a"</code>、<code>"ctrl"</code> 等
 - <code>text</code> (string) — 要输入的文本，换行符将自动转为 Enter
 - <code>key1, key2, ...</code> (string...) — 组合键序列，如 <code>("ctrl", "c")</code>
-- <code>combo</code> (string) — 快捷键组合，如 <code>"ctrl+c"</code>、<code>"alt+tab"</code></p>
+- <code>combo</code> (string) — 快捷键组合，如 <code>"ctrl+c"</code>、<code>"alt+tab"</code>
+- <code>vk</code> (number) — 虚拟键码（Virtual-Key Code）
+- <code>scan</code> (number) — 扫描码
+- <code>is_down</code> (boolean, 可选) — <code>true</code> 按下，<code>false</code> 释放，不传则执行一次按下+释放</p>
 <p><strong>示例：</strong></p>
 <pre><code class="language-lua">key_press(&quot;enter&quot;)                  -- 按回车
 key_type(&quot;Hello, World!&quot;)           -- 输入文本
 key_hotkey(&quot;ctrl&quot;, &quot;c&quot;)            -- 按 Ctrl+C（序列按键）
 key_shortcut(&quot;ctrl+c&quot;)             -- 按 Ctrl+C（组合键）
+key_stroke(0x70, 0x3B)            -- 按下 F1 键（虚拟键码 0x70）
 </code></pre>
-<hr />
 <h2 id="屏幕">屏幕</h2>
 <pre><code>screen_capture(region?) -&gt; Image (numpy array)
 screen_size() -&gt; width, height
@@ -258,8 +275,7 @@ end
 </code></pre>
 <hr />
 <h2 id="区域">区域</h2>
-<pre><code>region_set(name, left, top, width, height) -&gt; void
-region_get(name) -&gt; Region | nil
+<pre><code>region_get(name) -&gt; Region | nil
 getRegion(name?) -&gt; {left, top, width, height} | nil
 to_runtime_region(region) -&gt; {left, top, width, height}
 to_runtime_point(x, y) -&gt; number, number
@@ -273,8 +289,7 @@ to_runtime_point(x, y) -&gt; number, number
 - <code>getRegion</code> 返回 Lua table，可指定名称，不传或传 <code>"__effective__"</code> 返回默认搜索区域
 - <code>to_runtime_region</code> / <code>to_runtime_point</code> 将设计区域坐标转换为运行时坐标（多分辨率适配）</p>
 <p><strong>示例：</strong></p>
-<pre><code class="language-lua">region_set(&quot;dialog&quot;, 100, 200, 500, 300)
-local r = region_get(&quot;dialog&quot;)
+<pre><code class="language-lua">local r = region_get(&quot;dialog&quot;)
 if r then
     log(&quot;区域: &quot; .. r.left .. &quot;,&quot; .. r.top)
 end
@@ -405,14 +420,14 @@ wait_bar_change(kwargs?) -&gt; table
 <td>是否重置历史追踪（场景切换时使用）</td>
 </tr>
 <tr>
-<td><code>colors</code></td>
+<td><code>templates</code></td>
 <td>table[]</td>
 <td>必填</td>
-<td>颜色配置数组（见下方）</td>
+<td>模板配置数组（见下方）</td>
 </tr>
 </tbody>
 </table>
-<p><strong>colors 配置格式：</strong></p>
+<p><strong>templates 配置格式：</strong></p>
 <pre><code class="language-lua">{
     {
         label = &quot;hp_full&quot;,             -- 模版名称，同时也是文件名
@@ -440,7 +455,7 @@ wait_bar_change(kwargs?) -&gt; table
           rect = {100, 200, 300, 20},       -- 条块边界框
           center_x = 250,                     -- 条块中心 X
           center_y = 210,                     -- 条块中心 Y
-          color = "hp_full",                  -- 匹配上的模版标签
+           label = "hp_full",                  -- 匹配上的模版标签
           state = "changed",                  -- changed/resized/disappeared/appeared
           delta = 0.5,                        -- 宽度比例变化（新 label 宽度 / 旧 label 宽度）
           reference_value = 1.0,              -- 旧 label 宽度比例
@@ -454,7 +469,7 @@ wait_bar_change(kwargs?) -&gt; table
 local bar_changes = wait_bar_change({
     region = {100, 50, 300, 20},
     timeout = 15,
-    colors = {
+    templates = {
         {
             label = &quot;full&quot;,
             template_path = &quot;resources/bar_templates/full.png&quot;,
@@ -469,7 +484,7 @@ local bar_changes = wait_bar_change({
 -- 只处理真实变化，忽略移入移出
 for _, bc in ipairs(bar_changes) do
     if bc.state == &quot;changed&quot; or bc.state == &quot;resized&quot; then
-        log(&quot;条块变化: &quot; .. bc.color .. &quot; delta=&quot; .. bc.delta)
+        log(&quot;条块变化: &quot; .. bc.label .. &quot; delta=&quot; .. bc.delta)
     end
 end
 </code></pre>
@@ -498,13 +513,59 @@ reset_bar_detector()
 
 local bars = wait_bar_change({
     region = {100, 50, 300, 20},
-    colors = {
+    templates = {
         { label=&quot;full&quot;, template_path=&quot;resources/bar_templates/full.png&quot; },
         { label=&quot;half&quot;, template_path=&quot;resources/bar_templates/half.png&quot; },
     }
 })
 </code></pre>
 <hr />
+<h2 id="颜色检测">颜色检测</h2>
+<pre><code>color_get_pixel(x, y) -&gt; table
+color_get_dominant(region?, kwargs?) -&gt; table
+color_find(kwargs?) -&gt; table
+color_is(detected, target, threshold?) -&gt; boolean
+color_distance(c1, c2) -&gt; number
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>x</code>, <code>y</code> (number) — 屏幕坐标
+- <code>region</code> (table, 可选) — 检测区域 <code>{left, top, width, height}</code>，不传则全屏
+- <code>kwargs</code> (table, 可选) — 参数字典：
+  - <code>region</code> — 搜索区域
+  - <code>color</code> — 目标颜色 <code>{r, g, b}</code>（color_find 使用）
+- <code>detected</code> (table) — 检测到的颜色值 <code>{r, g, b}</code>
+- <code>target</code> (table) — 目标颜色值 <code>{r, g, b}</code>
+- <code>threshold</code> (number, 可选) — 颜色距离阈值，默认 <code>30</code>
+- <code>c1</code>, <code>c2</code> (table) — 两个颜色值 <code>{r, g, b}</code></p>
+<p><strong>color_get_pixel 返回值：</strong>
+- <code>{r, g, b}</code> 形式，各分量范围 0~255</p>
+<p><strong>color_get_dominant 返回值：</strong>
+- <code>{r, g, b}</code> 形式的主色调</p>
+<p><strong>color_find 返回值：</strong>
+- 找到返回 <code>{x, y}</code>，未找到返回 <code>nil</code></p>
+<p><strong>color_is 返回值：</strong>
+- <code>true</code> / <code>false</code></p>
+<p><strong>color_distance 返回值：</strong>
+- 颜色距离值（数值，越小越接近）</p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">local pixel = color_get_pixel(500, 300)
+log(&quot;像素颜色: &quot; .. pixel.r .. &quot;,&quot; .. pixel.g .. &quot;,&quot; .. pixel.b)
+
+local dominant = color_get_dominant({100, 100, 200, 200})
+log(&quot;主色调: &quot; .. dominant.r .. &quot;,&quot; .. dominant.g .. &quot;,&quot; .. dominant.b)
+
+local found = color_find({region={0, 0, 1920, 1080}, color={255, 0, 0}})
+if found then
+    log(&quot;找到红色位置: &quot; .. found.x .. &quot;,&quot; .. found.y)
+end
+
+if color_is({255, 50, 50}, {255, 0, 0}, 60) then
+    log(&quot;颜色近似匹配&quot;)
+end
+
+local dist = color_distance({255, 0, 0}, {200, 0, 0})
+log(&quot;颜色距离: &quot; .. dist)
+</code></pre>
 <hr />
 <h2 id="音频">音频</h2>
 <pre><code>play_warning(sound_type, custom_file?) -&gt; void
@@ -532,6 +593,7 @@ end
 <h2 id="日志">日志</h2>
 <pre><code>log(message) -&gt; void
 ocr_log(msg) -&gt; void
+trace_log(msg) -&gt; void
 print(...) -&gt; void
 </code></pre>
 <p><strong>示例：</strong></p>
@@ -540,15 +602,46 @@ ocr_log(&quot;OCR 识别结果: &quot; .. text)
 print(&quot;变量值:&quot;, x, y, z)  -- 输出: 变量值: 100 200 300
 </code></pre>
 <hr />
-<h2 id="其他">其他</h2>
-<pre><code>macro_call(macro_id) -&gt; void
+<h2 id="通知">通知</h2>
+<pre><code>show_dialog(text, image?, btn_text?) -&gt; void
+show_toast(text, image?, duration?) -&gt; void
 </code></pre>
+<p><strong>参数说明：</strong>
+- <code>text</code> (string) — 通知文本内容
+- <code>image</code> (string, 可选) — 显示的图片路径
+- <code>btn_text</code> (string, 可选) — 对话框按钮文字（默认 "确定"）
+- <code>duration</code> (number, 可选) — Toast 显示时长（秒），默认 <code>3</code></p>
 <p><strong>说明：</strong>
-- <code>macro_id</code> (string) — 要调用的录制宏 ID
-- 在运行时会回放该宏中记录的所有事件（鼠标点击、按键、等待等）
-- 坐标会自动根据当前运行区域缩放适配</p>
+- <code>show_dialog</code> 弹出模态对话框，需用户确认后继续
+- <code>show_toast</code> 显示系统 Toast 通知，自动消失</p>
 <p><strong>示例：</strong></p>
-<pre><code class="language-lua">macro_call(&quot;macro_12345678&quot;)  -- 回放指定录制宏
+<pre><code class="language-lua">show_dialog(&quot;操作完成！&quot;)
+show_toast(&quot;任务执行成功&quot;, 5)
+show_dialog(&quot;请确认操作&quot;, &quot;C:\\image.png&quot;, &quot;好的&quot;)
+</code></pre>
+<hr />
+<h2 id="用户配置变量">用户配置变量</h2>
+<pre><code>user_config(var_id) -&gt; string
+user_config_list(var_id) -&gt; table
+</code></pre>
+<p><strong>参数说明：</strong>
+- <code>var_id</code> (string) — 用户配置变量的 ID（定义时自动添加 <code>uc_</code> 前缀，引用时以 <code>u|</code> 开头）</p>
+<p><strong>说明：</strong>
+- <code>user_config</code> 返回用户配置变量的值（文本字符串或图片的绝对路径）
+- <code>user_config_list</code> 返回图像类型用户配置的文件绝对路径列表（用于多图展开）
+- 图片存储在 <code>resources/user_config/</code> 目录，引擎自动解析 name_id 为绝对路径
+- 单图类型配合 <code>image_find</code> 的 <code>u|var_id</code> 引用在生成代码层展开</p>
+<p><strong>示例：</strong></p>
+<pre><code class="language-lua">local nickname = user_config(&quot;uc_nickname&quot;)
+log(&quot;用户昵称: &quot; .. nickname)
+
+local images = user_config_list(&quot;uc_avatar&quot;)
+for _, path in ipairs(images) do
+    log(&quot;图片绝对路径: &quot; .. path)
+end
+
+-- 在 image_find 中直接使用（生成代码自动处理）
+-- image_find({&quot;fixed.png&quot;, user_config(&quot;uc_avatar&quot;)})
 </code></pre>
 <hr />
 <h2 id="检查停止">检查停止</h2>

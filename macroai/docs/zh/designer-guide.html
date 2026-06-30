@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设计者指南 - MacroAI</title>
+  <meta name="description" content="MacroAI 设计者指南 — 创建脚本、定义用户配置、导出分发包">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#scenarios">适用场景</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/en/designer-guide.html">English</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">设计者指南</div>
+      <h1 class="section-title">设计者指南</h1>
+      <div class="docs-tabs">
+        <a href="/macroai/docs/zh/user-guide.html">使用者手册</a>
+        <a href="/macroai/docs/zh/designer-guide.html" class="active">设计者指南</a>
+        <a href="/macroai/docs/zh/api-reference.html">API 参考</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content docs-layout">
+      <aside class="docs-toc">
+        <div class="toc-label">目录</div>
+        <a href="#一简介" class="toc-h2">一、简介</a>
+<a href="#二快速上手" class="toc-h2">二、快速上手</a>
+  <a href="#1-新建项目" class="toc-h3">1. 新建项目</a>
+  <a href="#2-认识主界面" class="toc-h3">2. 认识主界面</a>
+  <a href="#3-录制并回放宏" class="toc-h3">3. 录制并回放宏</a>
+  <a href="#4-用节点编辑器增强流程" class="toc-h3">4. 用节点编辑器增强流程</a>
+  <a href="#5-运行项目" class="toc-h3">5. 运行项目</a>
+<a href="#三设计模式与运行模式" class="toc-h2">三、设计模式与运行模式</a>
+  <a href="#31-两种模式" class="toc-h3">3.1 两种模式</a>
+  <a href="#32-切换方式" class="toc-h3">3.2 切换方式</a>
+  <a href="#33-设计模式（创作脚本）" class="toc-h3">3.3 设计模式（创作脚本）</a>
+  <a href="#34-运行模式（使用者视角）" class="toc-h3">3.4 运行模式（使用者视角）</a>
+  <a href="#35-分发包机制" class="toc-h3">3.5 分发包机制</a>
+<a href="#四核心能力" class="toc-h2">四、核心能力</a>
+  <a href="#图像识别" class="toc-h3">图像识别</a>
+  <a href="#ocr-文字识别" class="toc-h3">OCR 文字识别</a>
+  <a href="#界面变化检测" class="toc-h3">界面变化检测</a>
+  <a href="#颜色检测" class="toc-h3">颜色检测</a>
+  <a href="#键盘鼠标模拟" class="toc-h3">键盘鼠标模拟</a>
+  <a href="#流程控制" class="toc-h3">流程控制</a>
+  <a href="#变量与数据传递" class="toc-h3">变量与数据传递</a>
+  <a href="#音频与通知" class="toc-h3">音频与通知</a>
+<a href="#五用户配置变量" class="toc-h2">五、用户配置变量</a>
+  <a href="#51-概念" class="toc-h3">5.1 概念</a>
+  <a href="#52-定义变量" class="toc-h3">5.2 定义变量</a>
+  <a href="#53-在节点中引用" class="toc-h3">5.3 在节点中引用</a>
+  <a href="#54-类型详解" class="toc-h3">5.4 类型详解</a>
+  <a href="#55-使用者视角" class="toc-h3">5.5 使用者视角</a>
+<a href="#六导出与分发" class="toc-h2">六、导出与分发</a>
+  <a href="#61-导出项目" class="toc-h3">6.1 导出项目</a>
+  <a href="#62-分发包-vs-普通项目" class="toc-h3">6.2 分发包 vs 普通项目</a>
+  <a href="#63-分发最佳实践" class="toc-h3">6.3 分发最佳实践</a>
+<a href="#七日志级别控制" class="toc-h2">七、日志级别控制</a>
+<a href="#八进阶功能" class="toc-h2">八、进阶功能</a>
+  <a href="#函数与自定义动作" class="toc-h3">函数与自定义动作</a>
+  <a href="#区域与多分辨率适配" class="toc-h3">区域与多分辨率适配</a>
+  <a href="#调试工具" class="toc-h3">调试工具</a>
+  <a href="#设置" class="toc-h3">设置</a>
+<a href="#九界面参考" class="toc-h2">九、界面参考</a>
+  <a href="#工具栏" class="toc-h3">工具栏</a>
+  <a href="#9-个标签页" class="toc-h3">9 个标签页</a>
+  <a href="#浮动控制面板" class="toc-h3">浮动控制面板</a>
+  <a href="#系统托盘" class="toc-h3">系统托盘</a>
+  <a href="#快捷键速查" class="toc-h3">快捷键速查</a>
+<a href="#十常见问题" class="toc-h2">十、常见问题</a>
+<a href="#十一演示项目" class="toc-h2">十一、演示项目</a>
+
+      </aside>
+      <main class="docs-content">
+        <h1 id="macroai-设计者指南">MacroAI 设计者指南</h1>
+<h2 id="一简介">一、简介</h2>
+<p>MacroAI 是一款支持脚本创作与分发的 Windows 宏自动化平台。</p>
+<p>通过<strong>可视化节点编辑器</strong>（20+ 种节点，树形容器架构）或 <strong>Lua 脚本</strong>搭建自动化流程，覆盖鼠标键盘、图像识别、OCR 文字识别、屏幕变化检测等操作。内置<strong>多分辨率适配</strong>机制，同一脚本可在不同屏幕和缩放比的设备上稳定运行——这是脚本可分发给他人使用的核心能力。</p>
+<p>支持<strong>后台输入模拟</strong>（不抢占焦点）、<strong>Windows OCR（零安装）</strong>、<strong>屏幕变化检测</strong>和<strong>多线程并发执行</strong>。基础功能永久免费，无广告。</p>
+<p>核心流程：<strong>设计者制作脚本 → 导出分发包 → 使用者导入运行</strong>。</p>
+<p><strong>适用场景：</strong> 游戏辅助 · 办公自动化 · 软件测试 · 运维管理 · RPA</p>
+<hr />
+<h2 id="二快速上手">二、快速上手</h2>
+<p>MacroAI 以<strong>项目</strong>为单位组织所有内容（节点、脚本、图片、录制的宏等），因此使用前必须先创建一个项目。</p>
+<h3 id="1-新建项目">1. 新建项目</h3>
+<p>点击菜单 <strong>项目 → 新建项目</strong>（或按 <code>Ctrl+N</code>）：</p>
+<ol>
+<li>首次使用会引导选择<strong>工作目录</strong>（项目文件的存放位置）</li>
+<li>输入项目名称</li>
+<li><strong>设定设计区域</strong> — 宏操作的有效范围：</li>
+<li><strong>全屏</strong>：以当前屏幕分辨率为范围</li>
+<li><strong>自定义选择</strong>：鼠标拖拽框选一个窗口或区域</li>
+</ol>
+<h3 id="2-认识主界面">2. 认识主界面</h3>
+<p>主界面中央是 <strong>9 个标签页</strong>（<code>Ctrl+1</code>~<code>Ctrl+9</code> 切换）：</p>
+<table>
+<thead>
+<tr>
+<th>标签页</th>
+<th>快捷键</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>节点编辑</strong></td>
+<td><code>Ctrl+1</code></td>
+<td>可视化拖拽搭建流程（最常用）</td>
+</tr>
+<tr>
+<td><strong>代码预览</strong></td>
+<td><code>Ctrl+2</code></td>
+<td>查看自动生成的 Lua 脚本（只读）</td>
+</tr>
+<tr>
+<td><strong>变量</strong></td>
+<td><code>Ctrl+3</code></td>
+<td>定义脚本中使用的变量</td>
+</tr>
+<tr>
+<td><strong>图像管理</strong></td>
+<td><code>Ctrl+4</code></td>
+<td>管理模板图片（上传/截图）</td>
+</tr>
+<tr>
+<td><strong>函数</strong></td>
+<td><code>Ctrl+5</code></td>
+<td>管理可复用的子流程</td>
+</tr>
+<tr>
+<td><strong>自定义动作</strong></td>
+<td><code>Ctrl+6</code></td>
+<td>绑定函数到浮动面板的一键按钮</td>
+</tr>
+<tr>
+<td><strong>宏管理</strong></td>
+<td><code>Ctrl+7</code></td>
+<td>管理录制的宏</td>
+</tr>
+<tr>
+<td><strong>区域</strong></td>
+<td><code>Ctrl+8</code></td>
+<td>管理自定义区域</td>
+</tr>
+<tr>
+<td><strong>用户配置</strong></td>
+<td><code>Ctrl+9</code></td>
+<td>定义使用者可配置的变量（详见第五章）</td>
+</tr>
+</tbody>
+</table>
+<p>工具栏提供<strong>模式切换</strong>（🔧设计/🏃运行）、运行/停止、后台/前台、点击可视化（🔴）和日志级别控制等。</p>
+<h3 id="3-录制并回放宏">3. 录制并回放宏</h3>
+<p>录制是创建宏最直接的方式——先录再改，快速出活：</p>
+<ol>
+<li>切换到<strong>宏管理</strong>标签页（<code>Ctrl+7</code>），点击 <strong>+ 新建录制</strong></li>
+<li>设计区域出现绿色边框，左下角有 <strong>「■ 停止录制」</strong> 按钮</li>
+<li>正常执行你想自动化的操作（点击、输入文字等）</li>
+<li>点击 <strong>「■ 停止录制」</strong> 结束录制，保存到项目</li>
+<li>在宏列表中选中刚录制的宏，点击 <strong>▶ 播放</strong> 即可回放</li>
+</ol>
+<h3 id="4-用节点编辑器增强流程">4. 用节点编辑器增强流程</h3>
+<p>录制的宏只能原样回放。想加入<strong>条件判断、循环、图像识别</strong>等逻辑？用节点编辑器：</p>
+<ol>
+<li>切换到<strong>节点编辑</strong>标签页（<code>Ctrl+1</code>）</li>
+<li>在左侧面板中点击 <strong>调用录制宏</strong> 节点，添加到流程中</li>
+<li>双击节点打开配置，选择刚才录制的宏</li>
+<li>在它前后添加其他节点（如<strong>等待</strong>、<strong>查找图像</strong>），打造更智能的自动化</li>
+<li>直接拖拽节点调整顺序，也可将节点拖入<strong>条件判断</strong>或<strong>循环</strong>中组合使用</li>
+</ol>
+<p>节点编辑器的操作会自动生成脚本代码，可在代码预览中查看（当前为只读，由节点编辑器单向同步）。</p>
+<h3 id="5-运行项目">5. 运行项目</h3>
+<p>点击 <strong>▶ 运行</strong>（或按 <code>F5</code>）执行当前项目的节点工作流/脚本代码。点击 <strong>■ 停止</strong>（或按 <code>Shift+F5</code>）随时终止。</p>
+<hr />
+<h2 id="三设计模式与运行模式">三、设计模式与运行模式</h2>
+<p>MacroAI 引入<strong>双模式机制</strong>，将设计者和使用者的界面彻底分离。</p>
+<h3 id="31-两种模式">3.1 两种模式</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>设计模式</th>
+<th>运行模式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>目标用户</td>
+<td>设计者（制作脚本）</td>
+<td>使用者（运行脚本）</td>
+</tr>
+<tr>
+<td>界面内容</td>
+<td>9 个设计 Tab + 完整菜单/工具栏</td>
+<td>项目信息 + 区域校准 + 个性化配置 + 运行按钮</td>
+</tr>
+<tr>
+<td>配置方式</td>
+<td>项目设置对话框</td>
+<td>嵌入主窗口，实时保存</td>
+</tr>
+<tr>
+<td>状态提示</td>
+<td>无（设计者了解项目）</td>
+<td>有（配置完整度指示器）</td>
+</tr>
+<tr>
+<td>日志级别</td>
+<td>简洁/追踪/调试 3 级</td>
+<td>简洁/追踪/调试 3 级</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-切换方式">3.2 切换方式</h3>
+<p>工具栏上的 <strong>模式切换下拉菜单</strong>（🔧 设计 / 🏃 运行）一键切换，两种模式始终可见。</p>
+<ul>
+<li><strong>新建项目</strong> → 默认进入设计模式</li>
+<li><strong>导入普通项目</strong> → 恢复上次使用的模式</li>
+<li><strong>导入分发包</strong> → 自动进入运行模式（设计模式入口灰色不可点击）</li>
+</ul>
+<h3 id="33-设计模式（创作脚本）">3.3 设计模式（创作脚本）</h3>
+<p>设计模式拥有完整的编辑能力：</p>
+<ul>
+<li>9 个标签页覆盖节点编辑、代码、变量、图像、函数、自定义动作、宏、区域、用户配置</li>
+<li>菜单 <strong>项目 → 项目设置</strong> 打开设置对话框</li>
+<li>日志以独立窗口显示</li>
+</ul>
+<h3 id="34-运行模式（使用者视角）">3.4 运行模式（使用者视角）</h3>
+<p>运行模式为使用者提供精简的运行界面，隐藏所有编辑工具：</p>
+<ul>
+<li><strong>项目信息区</strong>：显示项目名称、设计分辨率、坐标策略和项目描述（可折叠）</li>
+<li><strong>区域校准卡片</strong>：醒目显示运行区域状态，提供校准按钮（始终可见）</li>
+<li><strong>个性化配置区</strong>：使用者填写设计者定义的用户配置变量（详见第五章）</li>
+<li><strong>配置完整度指示器</strong> 🟢🟡🔴：在工具栏实时反映配置状态</li>
+<li><strong>运行日志</strong>：底部可折叠面板，运行时自动展开</li>
+</ul>
+<h3 id="35-分发包机制">3.5 分发包机制</h3>
+<p>设计者导出项目时，可选择<strong>标记为分发包</strong>：</p>
+<ul>
+<li>分发包导入后默认进入运行模式，设计模式入口灰色不可点击</li>
+<li>此标记用于标识项目来源，为未来功能（如加密导出、权限控制）预留</li>
+<li>设计者在自己机器上创建的项目无此标记</li>
+</ul>
+<hr />
+<h2 id="四核心能力">四、核心能力</h2>
+<h3 id="图像识别">图像识别</h3>
+<p>在屏幕上查找指定图片并执行操作：</p>
+<ol>
+<li>在<strong>图像管理</strong>标签页（<code>Ctrl+4</code>）上传或截图保存模板图片</li>
+<li>在节点编辑器中添加 <strong>查找图像</strong> 或 <strong>查找并点击</strong> 节点</li>
+<li>配置：选择模板图片、搜索区域、匹配程度（默认 0.85）、匹配方式</li>
+<li>开启"启用点击"可在找到后自动点击；设置超时时间可让节点持续等待图像出现</li>
+<li>运行结果通过变量引用：<code>result.center_x</code>、<code>result.center_y</code> 等</li>
+</ol>
+<p><strong>节点类型：</strong></p>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>查找图像</td>
+<td>在屏幕上查找指定图片，返回位置</td>
+</tr>
+<tr>
+<td>查找图像（全部匹配）</td>
+<td>返回所有匹配位置，适用于多处出现同一图案的场景</td>
+</tr>
+<tr>
+<td>查找并点击</td>
+<td>查找图片并自动点击</td>
+</tr>
+</tbody>
+</table>
+<p>三种匹配模式：灰度（经典，速度快）、感知亮度（抗光照变化）、OKLab 色彩（抗色偏，模板无需重新截图）。</p>
+<h3 id="ocr-文字识别">OCR 文字识别</h3>
+<p>识别屏幕上的文字：</p>
+<ul>
+<li><strong>OCR 识别</strong>：框选区域，识别其中的文字内容</li>
+<li><strong>OCR 比对</strong>：判断指定文字是否出现在区域中，开启"启用点击"可自动点击</li>
+<li><strong>查找文字</strong>：在区域内找到指定文字并返回其位置</li>
+<li>可在设置（<code>Ctrl+,</code>）中配置默认识别语言</li>
+</ul>
+<h3 id="界面变化检测">界面变化检测</h3>
+<p>等待屏幕出现特定变化，常用于监控界面状态：</p>
+<ul>
+<li><strong>等待界面变化</strong>：检测指定区域内的内容变化。支持灵敏度调节、周期性变化过滤（如闪烁按钮）、超时设置</li>
+<li><strong>等待条块变化</strong>：追踪条块长短变化（血条、进度条）。支持自动识别横向/纵向、滚动条干扰过滤</li>
+</ul>
+<h3 id="颜色检测">颜色检测</h3>
+<ul>
+<li><strong>获取颜色</strong>：获取指定位置的颜色值</li>
+<li><strong>查找颜色</strong>：在区域内搜索指定的颜色</li>
+<li><strong>主色调检测</strong>：分析指定区域的主色调</li>
+</ul>
+<h3 id="键盘鼠标模拟">键盘鼠标模拟</h3>
+<ul>
+<li><strong>鼠标点击 / 鼠标移动 / 鼠标拖拽</strong>：支持坐标输入和变量引用，可直接框选获取坐标</li>
+<li><strong>按键 / 输入文本</strong>：模拟键盘操作，支持快捷键组合</li>
+<li>坐标字段支持：直接输入数字、引用变量（如 <code>result.center_x</code>）、点击获取</li>
+</ul>
+<p><strong>后台模式</strong>（默认）：在后台模拟操作，不干扰正常使用。
+<strong>前台模式</strong>：真实控制鼠标键盘，会抢占控制权。后台模式无效时可切换。</p>
+<h3 id="流程控制">流程控制</h3>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>等待</strong></td>
+<td>在两个动作之间插入延迟（毫秒）</td>
+</tr>
+<tr>
+<td><strong>条件判断</strong></td>
+<td>根据条件（上一步成功/失败、自定义表达式）执行不同分支，可放入其他节点</td>
+</tr>
+<tr>
+<td><strong>循环</strong></td>
+<td>重复执行，可放入其他节点，支持跳出循环</td>
+</tr>
+<tr>
+<td><strong>跳出循环</strong></td>
+<td>在循环中提前跳出</td>
+</tr>
+<tr>
+<td><strong>调用函数</strong></td>
+<td>执行已定义的可复用子流程</td>
+</tr>
+<tr>
+<td><strong>调用录制宏</strong></td>
+<td>在节点流程中回放录制的宏</td>
+</tr>
+<tr>
+<td><strong>注释</strong></td>
+<td>添加说明文字，不执行</td>
+</tr>
+</tbody>
+</table>
+<p>每个节点可设置执行条件（上一步成功/失败、自定义表达式）。拖拽即可调整节点顺序和层级。</p>
+<h3 id="变量与数据传递">变量与数据传递</h3>
+<p>在<strong>变量</strong>标签页（<code>Ctrl+3</code>）定义变量（名称、类型、默认值），节点配置中通过 <code>▼</code> 菜单插入引用：</p>
+<table>
+<thead>
+<tr>
+<th>常用变量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>result.success</code></td>
+<td>上一步是否成功</td>
+</tr>
+<tr>
+<td><code>result.x</code> / <code>result.y</code></td>
+<td>目标左上角坐标</td>
+</tr>
+<tr>
+<td><code>result.center_x</code> / <code>result.center_y</code></td>
+<td>目标中心坐标</td>
+</tr>
+<tr>
+<td><code>ocr_text</code> / <code>ocr_result</code></td>
+<td>OCR 识别结果</td>
+</tr>
+</tbody>
+</table>
+<p>变量作用域分为 <code>local</code>（当前脚本可见）和 <code>global</code>（跨脚本共享）。</p>
+<h3 id="音频与通知">音频与通知</h3>
+<ul>
+<li><strong>播放音效</strong>：系统提示音、do~si 蜂鸣、自定义音频文件</li>
+<li><strong>播放音乐</strong>：常见格式的背景音乐，浮动面板自动显示控制按钮（暂停/继续/静音），播放音效时自动降低背景音乐音量</li>
+<li><strong>弹出提示</strong>：执行到指定步骤时显示通知消息</li>
+</ul>
+<hr />
+<h2 id="五用户配置变量">五、用户配置变量</h2>
+<p>设计者通过用户配置变量，让使用者在无需接触脚本的情况下完成个性化设置。</p>
+<h3 id="51-概念">5.1 概念</h3>
+<p>用户配置变量（UserConfigVar）允许设计者定义一些"空位"，使用者在运行前填入自己的值：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>变量ID</td>
+<td>内部标识，脚本中通过 <code>u|var_id</code> 引用</td>
+</tr>
+<tr>
+<td>显示名</td>
+<td>使用者看到的标题名称</td>
+</tr>
+<tr>
+<td>说明</td>
+<td>辅助使用者理解该配置用途</td>
+</tr>
+<tr>
+<td>类型</td>
+<td><code>text</code>（文本）或 <code>image</code>（图像）</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td>设计者提供的参考示例值</td>
+</tr>
+<tr>
+<td>是否必填</td>
+<td>使用者是否必须设置</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-定义变量">5.2 定义变量</h3>
+<p>在<strong>用户配置</strong>标签页（<code>Ctrl+9</code>）中管理变量定义：</p>
+<ol>
+<li>点击 <strong>+ 新增</strong> 打开编辑对话框</li>
+<li>填写变量ID（自动添加 <code>uc_</code> 前缀）、标题、说明文字</li>
+<li>选择类型：文本或图像</li>
+<li>设置默认值（作为使用者的参考示例）</li>
+<li>对于图像类型，可勾选"允许多图"</li>
+</ol>
+<h3 id="53-在节点中引用">5.3 在节点中引用</h3>
+<p>在节点配置对话框中，通过 <code>◎</code> 按钮弹出<strong>三段式菜单</strong>：</p>
+<pre><code>变量段
+  my_var (变量)
+  other_var (变量)
+───
+参数段
+  param1 (参数)
+───
+用户配置段
+  🖼 你的头像 (uc_avatar)
+  📝 消息内容 (uc_message)
+</code></pre>
+<p>选中后字段中插入 <code>u|var_id</code> 格式的引用，运行时引擎自动解析为使用者配置的实际值。</p>
+<h3 id="54-类型详解">5.4 类型详解</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>适用字段</th>
+<th>使用者输入方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文本</td>
+<td>输入文本节点的内容、日志消息等</td>
+<td>输入框 + 恢复默认</td>
+</tr>
+<tr>
+<td>图像</td>
+<td>查找图像节点的目标图片、通知节点的显示图片</td>
+<td>截图框选 / 上传文件 / 清除</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55-使用者视角">5.5 使用者视角</h3>
+<p>使用者在<strong>运行模式</strong>的个性化配置区中看到这些变量：</p>
+<ul>
+<li>✅ 已个性化：使用者已填写自己的值</li>
+<li>⚠️ 使用默认值：未修改，使用设计者的示例值</li>
+<li>❌ 未设置：无值且无默认值（仅影响必填项）</li>
+</ul>
+<p>所有修改实时保存。</p>
+<hr />
+<h2 id="六导出与分发">六、导出与分发</h2>
+<h3 id="61-导出项目">6.1 导出项目</h3>
+<p>点击菜单 <strong>项目 → 导出</strong>（<code>Ctrl+E</code>）：</p>
+<ol>
+<li>选择导出路径</li>
+<li>填写版本号</li>
+<li><strong>勾选"标记为分发包"</strong>：导出的项目导入后默认进入运行模式</li>
+<li>不勾选则导出普通项目，使用者导入后可切换设计模式查看编辑</li>
+</ol>
+<h3 id="62-分发包-vs-普通项目">6.2 分发包 vs 普通项目</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>分发包</th>
+<th>普通项目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>导入默认模式</td>
+<td>运行模式</td>
+<td>恢复上次模式</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>分发给他人使用</td>
+<td>团队协作、学习交流</td>
+</tr>
+<tr>
+<td>模式切换</td>
+<td>设计模式入口灰色不可点击</td>
+<td>可自由切换</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-分发最佳实践">6.3 分发最佳实践</h3>
+<ol>
+<li><strong>撰写详细的项目描述</strong>：在项目设置中填写说明文字，帮助使用者了解脚本用途</li>
+<li><strong>设计友好的用户配置变量</strong>：使用清晰的显示名和说明，提供合理的默认值</li>
+<li><strong>测试分发包</strong>：导出前先在本地测试，确保所有 <code>u|</code> 引用正确</li>
+<li><strong>注意图片资源</strong>：确保分发包包含所有必需的模板图片</li>
+<li><strong>版本管理</strong>：导出时填写版本号，方便使用者识别更新</li>
+</ol>
+<hr />
+<h2 id="七日志级别控制">七、日志级别控制</h2>
+<p>工具栏提供三级日志控制，帮助排查问题：</p>
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>内容</th>
+<th>默认</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>简洁</strong></td>
+<td>日志节点输出 + 运行错误</td>
+<td><strong>默认</strong></td>
+</tr>
+<tr>
+<td><strong>追踪</strong></td>
+<td>简洁 + 每个节点的执行过程描述</td>
+<td>关</td>
+</tr>
+<tr>
+<td><strong>调试</strong></td>
+<td>追踪 + 引擎内部 debug 信息（匹配分数、候选框等）</td>
+<td>关</td>
+</tr>
+</tbody>
+</table>
+<p><strong>追踪模式输出示例：</strong></p>
+<pre><code>[图像查找] 找到「头像」位置=(520,340) 相似度=0.95
+[鼠标点击] 点击 (520,340) 左键
+[鼠标移动] 移动到 (100,200)
+[输入文本] 输入「你好」
+[等待]     等待 500ms
+[条件判断] 条件: result.success → true
+[循环]     循环开始 (次数: 10)
+[OCR识别]  识别结果: &quot;hello&quot; 置信度: 0.92
+[颜色检测] ✓ 找到匹配颜色
+[设置变量] my_var = hello
+[弹出提示] 操作完成 (3s)
+[等待界面变化] ✓ 检测到变化 3 处
+</code></pre>
+<p>设计模式下日志以独立窗口显示，运行模式下日志以底部折叠面板显示，运行时自动展开，运行结束后可手动收起。</p>
+<hr />
+<h2 id="八进阶功能">八、进阶功能</h2>
+<h3 id="函数与自定义动作">函数与自定义动作</h3>
+<p><strong>函数</strong>：将一组节点打包成可复用的子流程，支持参数传递。在<strong>函数</strong>标签页（<code>Ctrl+5</code>）新建和编辑。</p>
+<p><strong>自定义动作</strong>：将函数绑定到浮动面板的一键按钮。在<strong>自定义动作</strong>标签页（<code>Ctrl+6</code>）中设置，运行宏时面板自动显示对应按钮。</p>
+<h3 id="区域与多分辨率适配">区域与多分辨率适配</h3>
+<p>区域是屏幕上的命名矩形范围：</p>
+<ul>
+<li><strong>设计区域</strong>：创建项目时设定的基准坐标空间</li>
+<li><strong>运行区域</strong>：运行时实际对应的屏幕区域（可与设计区域不同）</li>
+<li><strong>自定义区域</strong>：自行命名的区域，可在节点配置中引用</li>
+<li><strong>坐标策略</strong>：决定坐标从设计区域映射到运行区域的方式</li>
+</ul>
+<h4 id="坐标策略">坐标策略</h4>
+<p>通过 <strong>项目 → 设置 → 区域设置</strong>（<code>Ctrl+,</code>）切换：</p>
+<ul>
+<li><strong>等比缩放 (uniform)</strong> — 游戏、全屏应用：坐标按设计/运行区域的宽高比例缩放。校准时自由框选，保持与设计区域相同的宽高比</li>
+<li><strong>平移适配 (desktop)</strong> — 浏览器、Office 窗口：坐标仅做平移偏移，不做缩放。校准时仅能调整位置，宽高固定等于设计区域</li>
+</ul>
+<p>切换策略会影响所有已有坐标点的解释方式，切换时会有警告提示，可能需要重新调节已有坐标点。</p>
+<h4 id="校准运行区域">校准运行区域</h4>
+<p>当脚本在一个分辨率下制作、在另一个分辨率下运行时（或窗口位置偏移时），点击 <strong>项目 → 设置 → 区域设置 → 校准</strong> 重新设定运行区域：</p>
+<ol>
+<li>如果设计区域是<strong>全屏</strong>：自动将运行区域设为当前屏幕全屏，无需手动框选</li>
+<li>如果设计区域是<strong>自定义框选</strong>：</li>
+<li><strong>等比缩放模式</strong>：拖拽框选运行区域，保持与设计区域相同的宽高比</li>
+<li><strong>平移适配模式</strong>：鼠标点击或拖拽指定运行区域的位置（左上角），宽高固定等于设计区域</li>
+</ol>
+<p>校准后，所有坐标自动按当前坐标策略重新计算，无需手动调整。</p>
+<p>每个<strong>查找图像</strong>节点可独立设置坐标策略，覆盖项目全局设定（跟随项目/等比缩放/平移适配）。</p>
+<h3 id="调试工具">调试工具</h3>
+<ul>
+<li><strong>🔴 点击可视化</strong>：开启后每次点击位置显示红色圆点（0.5 秒后消失），用于验证坐标</li>
+<li><strong>日志级别控制</strong>：切换简洁/追踪/调试三级</li>
+<li><strong>日志输出</strong> 节点：在关键步骤后输出自定义日志信息</li>
+</ul>
+<h3 id="设置">设置</h3>
+<p>点击菜单 <strong>项目 → 设置</strong>（<code>Ctrl+,</code>）打开设置面板：</p>
+<ul>
+<li><strong>工作目录</strong>：项目文件的默认保存位置</li>
+<li><strong>界面语言</strong>：中文 / English</li>
+<li><strong>OCR 语言</strong>：选择文字识别的默认语言</li>
+<li><strong>自动保存</strong>：内容变化时自动写入磁盘</li>
+</ul>
+<hr />
+<h2 id="九界面参考">九、界面参考</h2>
+<h3 id="工具栏">工具栏</h3>
+<pre><code>[ 🔧 设计 ▼ ]  [▶ 运行]  [■ 停止]  [🔄 后台]  [🔴 点击可视化]  [🐞 调试: 简洁 | 追踪 | 调试]
+</code></pre>
+<ul>
+<li><strong>模式切换</strong>：下拉菜单，设计模式/运行模式一键切换</li>
+<li><strong>运行/停止</strong>：执行或终止当前项目</li>
+<li><strong>后台/前台</strong>：切换输入模拟方式</li>
+<li><strong>点击可视化</strong>：显示点击位置的红色圆点</li>
+<li><strong>日志级别</strong>：三段按钮控制日志输出详细程度</li>
+<li><strong>配置完整度指示器</strong>（运行模式）：🟢 就绪 / 🟡 部分默认 / 🔴 待校准</li>
+</ul>
+<h3 id="9-个标签页">9 个标签页</h3>
+<table>
+<thead>
+<tr>
+<th>标签页</th>
+<th>快捷键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>节点编辑</td>
+<td><code>Ctrl+1</code></td>
+<td>可视化节点编辑器，拖拽搭建工作流</td>
+</tr>
+<tr>
+<td>代码预览</td>
+<td><code>Ctrl+2</code></td>
+<td>自动生成的 Lua 脚本（只读）</td>
+</tr>
+<tr>
+<td>变量</td>
+<td><code>Ctrl+3</code></td>
+<td>定义变量名称、类型和默认值</td>
+</tr>
+<tr>
+<td>图像管理</td>
+<td><code>Ctrl+4</code></td>
+<td>上传/截图管理模板图片</td>
+</tr>
+<tr>
+<td>函数</td>
+<td><code>Ctrl+5</code></td>
+<td>创建可复用的子流程函数</td>
+</tr>
+<tr>
+<td>自定义动作</td>
+<td><code>Ctrl+6</code></td>
+<td>将函数绑定到浮动面板按钮</td>
+</tr>
+<tr>
+<td>宏管理</td>
+<td><code>Ctrl+7</code></td>
+<td>录制、管理和回放宏</td>
+</tr>
+<tr>
+<td>区域</td>
+<td><code>Ctrl+8</code></td>
+<td>管理命名区域</td>
+</tr>
+<tr>
+<td>用户配置</td>
+<td><code>Ctrl+9</code></td>
+<td>定义用户配置变量（设计者用）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="浮动控制面板">浮动控制面板</h3>
+<p>运行宏时自动弹出，始终置顶，支持拖拽。提供暂停/继续、自定义动作按钮、背景音乐控制（播放音乐时显示），可关闭面板停止执行。</p>
+<h3 id="系统托盘">系统托盘</h3>
+<p>关闭窗口时最小化到系统托盘，双击图标显示主窗口。托盘菜单：显示主窗口 / 运行当前宏 / 停止 / 退出。</p>
+<h3 id="快捷键速查">快捷键速查</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+N</code></td>
+<td>新建项目</td>
+</tr>
+<tr>
+<td><code>Ctrl+O</code></td>
+<td>打开项目</td>
+</tr>
+<tr>
+<td><code>Ctrl+S</code></td>
+<td>保存项目</td>
+</tr>
+<tr>
+<td><code>Ctrl+Shift+O</code></td>
+<td>切换项目</td>
+</tr>
+<tr>
+<td><code>Ctrl+I</code></td>
+<td>导入项目</td>
+</tr>
+<tr>
+<td><code>Ctrl+E</code></td>
+<td>导出项目</td>
+</tr>
+<tr>
+<td><code>Ctrl+,</code></td>
+<td>打开设置</td>
+</tr>
+<tr>
+<td><code>F5</code></td>
+<td>运行项目</td>
+</tr>
+<tr>
+<td><code>Shift+F5</code></td>
+<td>停止</td>
+</tr>
+<tr>
+<td><code>F1</code></td>
+<td>设计者指南</td>
+</tr>
+<tr>
+<td><code>Ctrl+1</code>~<code>Ctrl+9</code></td>
+<td>切换标签页</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="十常见问题">十、常见问题</h2>
+<p><strong>录制的宏总是点偏位置？</strong></p>
+<p>创建项目时确保框选了正确的设计区域。换了显示器或调整了分辨率后，使用<strong>校准</strong>功能重新设定运行区域。</p>
+<p><strong>图像查找总是失败？</strong></p>
+<ul>
+<li>降低匹配阈值（默认 0.85，可试 0.7）</li>
+<li>缩小搜索区域，提高查找速度和准确率</li>
+<li>确保模板图片来源与运行环境一致</li>
+<li>尝试切换匹配模式（灰度/感知亮度/OKLab 色彩）</li>
+</ul>
+<p><strong>后台模式和前台模式有什么区别？</strong></p>
+<ul>
+<li><strong>后台模式</strong>（默认）：在后台模拟操作，不干扰正常使用</li>
+<li><strong>前台模式</strong>：真实控制鼠标键盘，会抢占控制权</li>
+</ul>
+<p>后台模式无效时可切换为前台模式，结合 <strong>🔴 点击可视化</strong> 验证坐标。</p>
+<p><strong>如何调试？</strong></p>
+<p>使用工具栏的日志级别控制切换到<strong>追踪</strong>或<strong>调试</strong>级别查看详细日志，在关键步骤后添加<strong>日志输出</strong>节点，开启 <strong>🔴 点击可视化</strong> 观察点击位置。</p>
+<p><strong>代码预览和节点编辑器什么关系？</strong></p>
+<p>节点编辑器的操作自动生成 Lua 脚本代码，可在代码预览中查看（只读），由节点编辑器单向同步。</p>
+<p><strong>如何让使用者可以个性化配置？</strong></p>
+<p>在<strong>用户配置</strong>标签页（<code>Ctrl+9</code>）中定义配置变量，在节点配置中通过 <code>◎</code> 菜单引用（格式为 <code>u|var_id</code>），导出时标记为分发包。使用者在运行模式中即可填写。</p>
+<p><strong>分发包和普通项目有什么区别？</strong></p>
+<p>分发包导入后默认进入运行模式（设计模式入口灰色不可点击），普通项目恢复上次使用的模式（可自由切换）。导出时通过勾选"标记为分发包"决定。</p>
+<hr />
+<h2 id="十一演示项目">十一、演示项目</h2>
+<p>MacroAI 安装包内置了演示项目，帮助你快速了解软件功能。</p>
+<p><strong>内置演示项目：</strong></p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>办公自动化-记事本</td>
+<td>演示：打开记事本 → 写入内容 → 保存文件的完整流程</td>
+</tr>
+<tr>
+<td>游戏辅助-对对碰</td>
+<td>演示：自动识别对对碰游戏界面，匹配相同图案并自动点击消除</td>
+</tr>
+<tr>
+<td>游戏辅助-血条监控</td>
+<td>演示：实时监控游戏血条，血量不足时自动使用药水</td>
+</tr>
+</tbody>
+</table>
+<p>首次设置工作目录时系统会自动询问是否导入，或通过菜单 <strong>帮助 → 导入演示项目</strong> 随时导入。</p>
+<p>导入后通过 <strong>项目 → 打开项目</strong> 即可查看和运行，可作为学习和二次开发的起点。</p>
+<hr />
+<p><em>详细 API 参考请见菜单 </em><em>帮助 → API 参考</em><em>。</em></p>
+<hr />
+<p><strong>问题反馈：</strong> 使用中如遇到程序报错或有任何建议，请发送邮件至 <strong>macroai@sowe.com</strong>。我们期待您的反馈！</p>
+      </main>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/battle-demo.html">血条演示Demo</a>
+      <a href="/macroai/pengpeng-demo.html">对对碰演示Demo</a>
+    </div>
+  </footer>
+
+  <script src="/js/i18n.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Designer Guide - MacroAI</title>
+  <meta name="description" content="MacroAI Designer Guide — create scripts, define user config, export packages">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">Home</a>
+        <a href="/#features">Features</a>
+        <a href="/#scenarios">Use Cases</a>
+        <a href="/#download">Download</a>
+        <a href="/macroai/docs/zh/designer-guide.html">中文</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">Designer Guide</div>
+      <h1 class="section-title">Designer Guide</h1>
+      <div class="docs-tabs">
+        <a href="/macroai/docs/en/user-guide.html">User Guide</a>
+        <a href="/macroai/docs/en/designer-guide.html" class="active">Designer Guide</a>
+        <a href="/macroai/docs/en/api-reference.html">API Reference</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content docs-layout">
+      <aside class="docs-toc">
+        <div class="toc-label">Contents</div>
+        <a href="#1-introduction" class="toc-h2">1. Introduction</a>
+<a href="#2-quick-start" class="toc-h2">2. Quick Start</a>
+  <a href="#21-create-a-new-project" class="toc-h3">2.1 Create a New Project</a>
+  <a href="#22-interface-overview" class="toc-h3">2.2 Interface Overview</a>
+  <a href="#23-record-play-back-a-macro" class="toc-h3">2.3 Record & Play Back a Macro</a>
+  <a href="#24-enhance-your-workflow-with-the-node-editor" class="toc-h3">2.4 Enhance Your Workflow with the Node Editor</a>
+  <a href="#25-run-your-project" class="toc-h3">2.5 Run Your Project</a>
+<a href="#3-design-mode-run-mode" class="toc-h2">3. Design Mode & Run Mode</a>
+  <a href="#31-the-two-modes" class="toc-h3">3.1 The Two Modes</a>
+  <a href="#32-switching" class="toc-h3">3.2 Switching</a>
+  <a href="#33-design-mode-creating-scripts" class="toc-h3">3.3 Design Mode (Creating Scripts)</a>
+  <a href="#34-run-mode-end-user-view" class="toc-h3">3.4 Run Mode (End User View)</a>
+  <a href="#35-distribution-package" class="toc-h3">3.5 Distribution Package</a>
+<a href="#4-core-features" class="toc-h2">4. Core Features</a>
+  <a href="#image-recognition" class="toc-h3">Image Recognition</a>
+  <a href="#ocr-text-recognition" class="toc-h3">OCR Text Recognition</a>
+  <a href="#screen-change-detection" class="toc-h3">Screen Change Detection</a>
+  <a href="#color-detection" class="toc-h3">Color Detection</a>
+  <a href="#mouse-keyboard-simulation" class="toc-h3">Mouse & Keyboard Simulation</a>
+  <a href="#flow-control" class="toc-h3">Flow Control</a>
+  <a href="#variables-data-passing" class="toc-h3">Variables & Data Passing</a>
+  <a href="#audio-notifications" class="toc-h3">Audio & Notifications</a>
+<a href="#5-user-config-variables" class="toc-h2">5. User Config Variables</a>
+  <a href="#51-concept" class="toc-h3">5.1 Concept</a>
+  <a href="#52-defining-variables" class="toc-h3">5.2 Defining Variables</a>
+  <a href="#53-referencing-in-nodes" class="toc-h3">5.3 Referencing in Nodes</a>
+  <a href="#54-type-details" class="toc-h3">5.4 Type Details</a>
+  <a href="#55-end-user-view" class="toc-h3">5.5 End User View</a>
+<a href="#6-export-distribution" class="toc-h2">6. Export & Distribution</a>
+  <a href="#61-export-project" class="toc-h3">6.1 Export Project</a>
+  <a href="#62-distribution-vs-normal-project" class="toc-h3">6.2 Distribution vs Normal Project</a>
+  <a href="#63-best-practices" class="toc-h3">6.3 Best Practices</a>
+<a href="#7-log-level-control" class="toc-h2">7. Log Level Control</a>
+<a href="#8-advanced-features" class="toc-h2">8. Advanced Features</a>
+  <a href="#functions-custom-actions" class="toc-h3">Functions & Custom Actions</a>
+  <a href="#regions-multi-resolution-support" class="toc-h3">Regions & Multi-Resolution Support</a>
+  <a href="#debugging-tools" class="toc-h3">Debugging Tools</a>
+  <a href="#settings" class="toc-h3">Settings</a>
+<a href="#9-interface-reference" class="toc-h2">9. Interface Reference</a>
+  <a href="#toolbar" class="toc-h3">Toolbar</a>
+  <a href="#9-tabs" class="toc-h3">9 Tabs</a>
+  <a href="#floating-control-panel" class="toc-h3">Floating Control Panel</a>
+  <a href="#system-tray" class="toc-h3">System Tray</a>
+  <a href="#keyboard-shortcuts" class="toc-h3">Keyboard Shortcuts</a>
+<a href="#10-faq" class="toc-h2">10. FAQ</a>
+<a href="#11-demo-projects" class="toc-h2">11. Demo Projects</a>
+
+      </aside>
+      <main class="docs-content">
+        <h1 id="macroai-designer-guide">MacroAI Designer Guide</h1>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>MacroAI is a Windows macro automation platform for script creation and distribution.</p>
+<p>Build automation workflows through a <strong>visual node editor</strong> (20+ node types, tree-container architecture) or <strong>Lua scripting</strong> — covering mouse/keyboard, image recognition, OCR text recognition, screen change detection, and more. Built-in <strong>multi-resolution adaptation</strong> ensures the same script runs stably across different screen sizes and scaling ratios — the key enabler for sharing scripts with other users.</p>
+<p>Supports <strong>background input simulation</strong> (no focus stealing), <strong>Windows OCR (zero install)</strong>, <strong>screen change detection</strong>, and <strong>multi-threaded concurrent execution</strong>. Core features are permanently free with no ads.</p>
+<p>Core workflow: <strong>Designer creates script → Export distribution package → End user imports and runs</strong>.</p>
+<p><strong>Use cases:</strong> Game assistance · Office automation · Software testing · IT operations · RPA</p>
+<hr />
+<h2 id="2-quick-start">2. Quick Start</h2>
+<p>MacroAI organizes all content (nodes, scripts, images, recorded macros, etc.) into <strong>projects</strong>, so you must create a project first.</p>
+<h3 id="21-create-a-new-project">2.1 Create a New Project</h3>
+<p>Click menu <strong>Project → New</strong> (or press <code>Ctrl+N</code>):</p>
+<ol>
+<li>The first time you use it, you'll be prompted to choose a <strong>working directory</strong> (where project files are stored)</li>
+<li>Enter a project name</li>
+<li><strong>Set the design area</strong> — the effective range for your macro operations:</li>
+<li><strong>Full Screen</strong>: uses your current screen resolution</li>
+<li><strong>Custom Selection</strong>: drag to select a window or region</li>
+</ol>
+<h3 id="22-interface-overview">2.2 Interface Overview</h3>
+<p>The main window has <strong>9 tabs</strong> (switch via <code>Ctrl+1</code>~<code>Ctrl+9</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>Shortcut</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Node Editor</strong></td>
+<td><code>Ctrl+1</code></td>
+<td>Visual drag-and-drop workflow builder (most used)</td>
+</tr>
+<tr>
+<td><strong>Code Preview</strong></td>
+<td><code>Ctrl+2</code></td>
+<td>View auto-generated Lua scripts (read-only)</td>
+</tr>
+<tr>
+<td><strong>Variables</strong></td>
+<td><code>Ctrl+3</code></td>
+<td>Define variables used in scripts</td>
+</tr>
+<tr>
+<td><strong>Image Manager</strong></td>
+<td><code>Ctrl+4</code></td>
+<td>Manage template images (upload/screenshot)</td>
+</tr>
+<tr>
+<td><strong>Functions</strong></td>
+<td><code>Ctrl+5</code></td>
+<td>Manage reusable sub-workflows</td>
+</tr>
+<tr>
+<td><strong>Custom Actions</strong></td>
+<td><code>Ctrl+6</code></td>
+<td>Bind functions to floating panel buttons</td>
+</tr>
+<tr>
+<td><strong>Macro Manager</strong></td>
+<td><code>Ctrl+7</code></td>
+<td>Manage recorded macros</td>
+</tr>
+<tr>
+<td><strong>Regions</strong></td>
+<td><code>Ctrl+8</code></td>
+<td>Manage named regions</td>
+</tr>
+<tr>
+<td><strong>User Config</strong></td>
+<td><code>Ctrl+9</code></td>
+<td>Define user-configurable variables (see Chapter 5)</td>
+</tr>
+</tbody>
+</table>
+<p>The toolbar provides <strong>mode switching</strong> (🔧 Design/🏃 Run), Run/Stop, Background/Foreground, Click Visualization (🔴), and log level controls.</p>
+<h3 id="23-record-play-back-a-macro">2.3 Record &amp; Play Back a Macro</h3>
+<p>Recording is the fastest way to create a macro — record first, then refine:</p>
+<ol>
+<li>Switch to the <strong>Macro Manager</strong> tab (<code>Ctrl+7</code>), click <strong>+ New Recording</strong></li>
+<li>A green border appears around the design area, with a <strong>「■ Stop Recording」</strong> button at the bottom-left</li>
+<li>Perform the actions you want to automate (clicks, text input, etc.)</li>
+<li>Click <strong>「■ Stop Recording」</strong> to finish and save to project</li>
+<li>Select the recorded macro in the list and click <strong>▶ Play</strong> to replay it</li>
+</ol>
+<h3 id="24-enhance-your-workflow-with-the-node-editor">2.4 Enhance Your Workflow with the Node Editor</h3>
+<p>A recorded macro can only be replayed as-is. Want to add <strong>conditions, loops, image recognition</strong>, or other logic? Use the node editor:</p>
+<ol>
+<li>Switch to the <strong>Node Editor</strong> tab (<code>Ctrl+1</code>)</li>
+<li>In the left panel, click the <strong>Call Recorded Macro</strong> node to add it to the workflow</li>
+<li>Double-click the node to open its configuration and select the macro you just recorded</li>
+<li>Add other nodes before or after it (e.g., <strong>Wait</strong>, <strong>Find Image</strong>) to build smarter automation</li>
+<li>Drag nodes to reorder them, or drag them into a <strong>Condition</strong> or <strong>Loop</strong> node to group them together</li>
+</ol>
+<p>Changes in the node editor automatically generate script code, which you can view in the code preview (read-only, synced from the node editor).</p>
+<h3 id="25-run-your-project">2.5 Run Your Project</h3>
+<p>Click <strong>▶ Run</strong> (or press <code>F5</code>) to execute the current project's node workflow / script code. Click <strong>■ Stop</strong> (or press <code>Shift+F5</code>) to terminate at any time.</p>
+<hr />
+<h2 id="3-design-mode-run-mode">3. Design Mode &amp; Run Mode</h2>
+<p>MacroAI introduces a <strong>dual-mode system</strong> that completely separates the designer and end-user interfaces.</p>
+<h3 id="31-the-two-modes">3.1 The Two Modes</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Design Mode</th>
+<th>Run Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Target User</td>
+<td>Designer (creating scripts)</td>
+<td>End user (running scripts)</td>
+</tr>
+<tr>
+<td>Interface</td>
+<td>9 design tabs + full menu/toolbar</td>
+<td>Project info + area calibration + personalized config + run button</td>
+</tr>
+<tr>
+<td>Configuration</td>
+<td>Project settings dialog</td>
+<td>Embedded in main window, auto-save</td>
+</tr>
+<tr>
+<td>Status Prompts</td>
+<td>None (designer knows the project)</td>
+<td>Config completeness indicator (🟢🟡🔴)</td>
+</tr>
+<tr>
+<td>Log Levels</td>
+<td>Concise / Trace / Debug (3 levels)</td>
+<td>Concise / Trace / Debug (3 levels)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-switching">3.2 Switching</h3>
+<p>The toolbar's <strong>mode switch dropdown</strong> (🔧 Design / 🏃 Run) switches between modes with one click. Both modes are always visible.</p>
+<ul>
+<li><strong>New project</strong> → defaults to Design mode</li>
+<li><strong>Import normal project</strong> → restores last used mode</li>
+<li><strong>Import distribution package</strong> → automatically enters Run mode (Design mode entry is grayed out)</li>
+</ul>
+<h3 id="33-design-mode-creating-scripts">3.3 Design Mode (Creating Scripts)</h3>
+<p>Design mode provides full editing capabilities:</p>
+<ul>
+<li>9 tabs covering node editing, code, variables, images, functions, custom actions, macros, regions, and user config</li>
+<li>Menu <strong>Project → Settings</strong> opens the settings dialog</li>
+<li><strong>▶ Run</strong> button is available (for designer testing)</li>
+<li>Log displayed in a separate window</li>
+</ul>
+<h3 id="34-run-mode-end-user-view">3.4 Run Mode (End User View)</h3>
+<p>Run mode provides a streamlined interface for end users, hiding all editing tools:</p>
+<ul>
+<li><strong>Project Info Area</strong>: shows project name, design resolution, coordinate strategy, and description (collapsible)</li>
+<li><strong>Area Calibration Card</strong>: prominently displays run area status with a calibration button (always visible)</li>
+<li><strong>Personalized Config Area</strong>: end users fill in the config variables defined by the designer (see Chapter 5)</li>
+<li><strong>Config Completeness Indicator</strong> 🟢🟡🔴: reflects configuration status in the toolbar in real-time</li>
+<li><strong>Run Log</strong>: collapsible bottom panel, auto-expands during execution</li>
+</ul>
+<h3 id="35-distribution-package">3.5 Distribution Package</h3>
+<p>When exporting, a designer can choose to <strong>mark as distribution package</strong>:</p>
+<ul>
+<li>A distribution package defaults to Run mode upon import; the Design mode entry is grayed out and unclickable</li>
+<li>This flag identifies the project's origin and is reserved for future features (e.g., encrypted export, access control)</li>
+<li>Normal projects created on the designer's own machine do not have this flag</li>
+</ul>
+<hr />
+<h2 id="4-core-features">4. Core Features</h2>
+<h3 id="image-recognition">Image Recognition</h3>
+<p>Find a specific image on the screen and perform actions:</p>
+<ol>
+<li>In the <strong>Image Manager</strong> tab (<code>Ctrl+4</code>), upload a template image or take a screenshot</li>
+<li>In the node editor, add a <strong>Find Image</strong> or <strong>Find and Click</strong> node</li>
+<li>Configure: select the template image, search region, match threshold (default 0.85), and match method</li>
+<li>Enable <strong>Click</strong> to automatically click when found; set a <strong>Timeout</strong> to keep searching until the image appears</li>
+<li>The result is accessible via variables: <code>result.center_x</code>, <code>result.center_y</code>, etc.</li>
+</ol>
+<p><strong>Node Types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Find Image</td>
+<td>Find an image on screen, returns position</td>
+</tr>
+<tr>
+<td>Find All</td>
+<td>Return all matching positions (multiple instances of same pattern)</td>
+</tr>
+<tr>
+<td>Find and Click</td>
+<td>Find image and automatically click</td>
+</tr>
+</tbody>
+</table>
+<p>Three match modes: Grayscale (classic, fast), Luminance (lighting-robust), OKLab Color (color-shift resistant, no re-screenshot needed).</p>
+<h3 id="ocr-text-recognition">OCR Text Recognition</h3>
+<p>Recognize text on the screen:</p>
+<ul>
+<li><strong>OCR Recognize</strong>: select a region and read the text content</li>
+<li><strong>OCR Compare</strong>: check if specified text appears in a region; enable <strong>Click</strong> to auto-click when matched</li>
+<li><strong>Find Text</strong>: find specified text in a region and return its position</li>
+<li>Configure the default recognition language in Settings (<code>Ctrl+,</code>)</li>
+</ul>
+<h3 id="screen-change-detection">Screen Change Detection</h3>
+<p>Wait for specific changes on the screen, useful for monitoring UI states:</p>
+<ul>
+<li><strong>Wait for Screen Change</strong>: detect content changes within a specified region. Supports sensitivity adjustment, periodic change filtering (e.g., blinking buttons), and timeout settings</li>
+<li><strong>Wait for Bar Change</strong>: track length changes in bars (health bars, progress bars). Supports auto-detection of horizontal/vertical orientation and scrollbar interference filtering</li>
+</ul>
+<h3 id="color-detection">Color Detection</h3>
+<ul>
+<li><strong>Get Color</strong>: get the color value at a specified position</li>
+<li><strong>Find Color</strong>: search for a specific color within a region</li>
+<li><strong>Dominant Color</strong>: analyze the dominant color in a region</li>
+</ul>
+<h3 id="mouse-keyboard-simulation">Mouse &amp; Keyboard Simulation</h3>
+<ul>
+<li><strong>Mouse Click / Mouse Move / Mouse Drag</strong>: supports direct coordinates and variable references; you can box-select to get coordinates</li>
+<li><strong>Key Press / Type Text</strong>: simulate keyboard input and shortcut combinations</li>
+<li>Coordinate fields accept: direct numbers, variable references (e.g., <code>result.center_x</code>), or click-to-pick</li>
+</ul>
+<p><strong>Background Mode</strong> (default): simulates actions in the background without interfering with normal use.
+<strong>Foreground Mode</strong>: directly controls the mouse and keyboard, taking over control. Use when background mode doesn't work.</p>
+<h3 id="flow-control">Flow Control</h3>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Wait</strong></td>
+<td>insert a delay between actions (in milliseconds)</td>
+</tr>
+<tr>
+<td><strong>Condition</strong></td>
+<td>executes different branches based on conditions (previous success/failure, custom expression); can hold other nodes inside</td>
+</tr>
+<tr>
+<td><strong>Loop</strong></td>
+<td>repeats its children; supports breaking out of the loop</td>
+</tr>
+<tr>
+<td><strong>Break</strong></td>
+<td>exit a loop early</td>
+</tr>
+<tr>
+<td><strong>Call Function</strong></td>
+<td>execute a reusable sub-workflow</td>
+</tr>
+<tr>
+<td><strong>Call Recorded Macro</strong></td>
+<td>replay a recorded macro within the node workflow</td>
+</tr>
+<tr>
+<td><strong>Comment</strong></td>
+<td>add explanatory text (no execution)</td>
+</tr>
+</tbody>
+</table>
+<p>Every node can have an execution condition (previous success/failure, custom expression). Drag to adjust node order and nesting.</p>
+<h3 id="variables-data-passing">Variables &amp; Data Passing</h3>
+<p>Define variables (name, type, default value) in the <strong>Variables</strong> tab (<code>Ctrl+3</code>). Insert variable references in node configuration via the <code>▼</code> menu:</p>
+<table>
+<thead>
+<tr>
+<th>Common Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>result.success</code></td>
+<td>Whether the previous step succeeded</td>
+</tr>
+<tr>
+<td><code>result.x</code> / <code>result.y</code></td>
+<td>Top-left coordinates of the target</td>
+</tr>
+<tr>
+<td><code>result.center_x</code> / <code>result.center_y</code></td>
+<td>Center coordinates of the target</td>
+</tr>
+<tr>
+<td><code>ocr_text</code> / <code>ocr_result</code></td>
+<td>OCR recognition result</td>
+</tr>
+</tbody>
+</table>
+<p>Variable scope: <code>local</code> (script-local) or <code>global</code> (shared across scripts).</p>
+<h3 id="audio-notifications">Audio &amp; Notifications</h3>
+<ul>
+<li><strong>Play Sound</strong>: system sounds, do~si beeps, custom audio files</li>
+<li><strong>Play Music</strong>: background music in common formats; the floating panel shows playback controls (pause/resume/mute); sound effects automatically lower music volume</li>
+<li><strong>Show Notification</strong>: display a notification message at a specific step during execution</li>
+</ul>
+<hr />
+<h2 id="5-user-config-variables">5. User Config Variables</h2>
+<p>Designers can use user config variables to allow end users to personalize settings without touching the script.</p>
+<h3 id="51-concept">5.1 Concept</h3>
+<p>User Config Variables (UserConfigVar) let designers define "placeholders" that end users fill in before running:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Variable ID</td>
+<td>Internal identifier, referenced in scripts as <code>u|var_id</code></td>
+</tr>
+<tr>
+<td>Display Name</td>
+<td>Label shown to end users</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Help text explaining the purpose</td>
+</tr>
+<tr>
+<td>Type</td>
+<td><code>text</code> or <code>image</code></td>
+</tr>
+<tr>
+<td>Default Value</td>
+<td>Reference/example value provided by the designer</td>
+</tr>
+<tr>
+<td>Required</td>
+<td>Whether end users must set this</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-defining-variables">5.2 Defining Variables</h3>
+<p>Manage variable definitions in the <strong>User Config</strong> tab (<code>Ctrl+9</code>):</p>
+<ol>
+<li>Click <strong>+ New</strong> to open the edit dialog</li>
+<li>Fill in the variable ID (auto-prefixed with <code>uc_</code>), title, and description</li>
+<li>Select type: text or image</li>
+<li>Set a default value (as a reference for end users)</li>
+<li>For image type, you can enable "Allow multiple images"</li>
+</ol>
+<h3 id="53-referencing-in-nodes">5.3 Referencing in Nodes</h3>
+<p>In the node configuration dialog, click the <code>◎</code> button to open the <strong>three-segment menu</strong>:</p>
+<pre><code>Variables
+  my_var (variable)
+  other_var (variable)
+───
+Parameters
+  param1 (parameter)
+───
+User Config
+  🖼 Your Avatar (uc_avatar)
+  📝 Message Content (uc_message)
+</code></pre>
+<p>After selection, the field gets a <code>u|var_id</code> reference inserted. The engine resolves it to the end user's actual value at runtime.</p>
+<h3 id="54-type-details">5.4 Type Details</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Applicable Fields</th>
+<th>End User Input Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text</td>
+<td>Text input node content, log messages, etc.</td>
+<td>Text input + restore default</td>
+</tr>
+<tr>
+<td>Image</td>
+<td>Find image target, notification image, etc.</td>
+<td>Screenshot / file upload / clear</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55-end-user-view">5.5 End User View</h3>
+<p>In <strong>Run Mode</strong>, end users see these variables in the personalized config area:</p>
+<ul>
+<li>✅ Personalized: end user has set their own value</li>
+<li>⚠️ Using default: not modified, using the designer's example value</li>
+<li>❌ Not set: no value and no default (affects required fields only)</li>
+</ul>
+<p>All changes are saved in real-time.</p>
+<hr />
+<h2 id="6-export-distribution">6. Export &amp; Distribution</h2>
+<h3 id="61-export-project">6.1 Export Project</h3>
+<p>Click menu <strong>Project → Export</strong> (<code>Ctrl+E</code>):</p>
+<ol>
+<li>Choose the export path</li>
+<li>Enter a version number</li>
+<li><strong>Check "Mark as distribution package"</strong>: the imported project defaults to Run mode upon import</li>
+<li>Leave unchecked for a normal project; end users can switch to Design mode</li>
+</ol>
+<h3 id="62-distribution-vs-normal-project">6.2 Distribution vs Normal Project</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Distribution Package</th>
+<th>Normal Project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default mode on import</td>
+<td>Run mode</td>
+<td>Restores last mode</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>Distributing to others</td>
+<td>Team collaboration, learning</td>
+</tr>
+<tr>
+<td>Mode switching</td>
+<td>Grayed out</td>
+<td>Freely switchable</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-best-practices">6.3 Best Practices</h3>
+<ol>
+<li><strong>Write a detailed project description</strong>: help end users understand the script's purpose</li>
+<li><strong>Design user-friendly config variables</strong>: use clear display names and descriptions, provide reasonable defaults</li>
+<li><strong>Test your distribution package</strong>: verify all <code>u|</code> references work before exporting</li>
+<li><strong>Include all resources</strong>: ensure all template images are included</li>
+<li><strong>Version your releases</strong>: use version numbers so end users can track updates</li>
+</ol>
+<hr />
+<h2 id="7-log-level-control">7. Log Level Control</h2>
+<p>The toolbar provides three log levels for troubleshooting:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Content</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Concise</strong></td>
+<td>Log node output + runtime errors</td>
+<td><strong>Default</strong></td>
+</tr>
+<tr>
+<td><strong>Trace</strong></td>
+<td>Concise + execution description for each node</td>
+<td>Off</td>
+</tr>
+<tr>
+<td><strong>Debug</strong></td>
+<td>Trace + engine internal debug info (match scores, candidate boxes, etc.)</td>
+<td>Off</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Trace mode output example:</strong></p>
+<pre><code>[Image Find] Found &quot;avatar&quot; position=(520,340) confidence=0.95
+[Mouse Click] Click (520,340) left button
+[Mouse Move]  Move to (100,200)
+[Text Input]  Typing &quot;Hello&quot;
+[Wait]        Waiting 500ms
+[Condition]   Condition: result.success → true
+[Loop]        Loop start (count: 10)
+[OCR]         Recognized: &quot;hello&quot; confidence: 0.92
+[Color]       ✓ Matched color found
+[Variable]    my_var = hello
+[Notification] Operation completed (3s)
+[Wait Change] ✓ Detected 3 changes
+</code></pre>
+<p>In Design mode, logs appear in a separate window. In Run mode, logs appear in a collapsible bottom panel — auto-expanding during execution and collapsible when idle.</p>
+<hr />
+<h2 id="8-advanced-features">8. Advanced Features</h2>
+<h3 id="functions-custom-actions">Functions &amp; Custom Actions</h3>
+<p><strong>Functions</strong>: package a group of nodes into a reusable sub-workflow with parameter support. Create and edit them in the <strong>Functions</strong> tab (<code>Ctrl+5</code>).</p>
+<p><strong>Custom Actions</strong>: bind a function to a one-click button on the floating panel. Configure them in the <strong>Custom Actions</strong> tab (<code>Ctrl+6</code>); the buttons appear on the floating panel when running.</p>
+<h3 id="regions-multi-resolution-support">Regions &amp; Multi-Resolution Support</h3>
+<p>A region is a named rectangular area on the screen:</p>
+<ul>
+<li><strong>Design Area</strong>: the reference coordinate space defined when creating the project</li>
+<li><strong>Run Area</strong>: the actual screen region at runtime (can differ from the design area)</li>
+<li><strong>Custom Regions</strong>: user-named areas that can be referenced in node configuration</li>
+<li><strong>Coordinate Strategy</strong>: determines how coordinates are mapped from design area to run area</li>
+</ul>
+<h4 id="coordinate-strategy">Coordinate Strategy</h4>
+<p>Switch in <strong>Project → Settings → Region Settings</strong> (<code>Ctrl+,</code>):</p>
+<ul>
+<li><strong>Uniform Scaling (uniform)</strong> — games, full-screen apps: coordinates scale by the proportional size of design/run areas. During calibration, freely drag-select the area while maintaining the same aspect ratio as the design area</li>
+<li><strong>Pan Adaptation (desktop)</strong> — browsers, Office windows: coordinates shift only by translation, no scaling. During calibration, only the position can be adjusted; width and height are fixed to the design area</li>
+</ul>
+<p>Switching strategies changes how all existing coordinate points are interpreted. A warning is shown, and you may need to re-adjust existing coordinate points.</p>
+<h4 id="calibrating-the-run-area">Calibrating the Run Area</h4>
+<p>When a script is created at one resolution but needs to run at another (or the window position changes), click <strong>Project → Settings → Region Settings → Calibrate</strong> to re-set the run area:</p>
+<ol>
+<li>If the design area is <strong>Full Screen</strong>: the run area is automatically set to the current full screen — no manual selection needed</li>
+<li>If the design area is <strong>Custom Selection</strong>:</li>
+<li><strong>Uniform mode</strong>: drag to select the run area, maintaining the same aspect ratio as the design area</li>
+<li><strong>Desktop mode</strong>: click or drag to specify the run area's position (top-left corner); width and height are fixed to the design area</li>
+</ol>
+<p>After calibration, all coordinates are automatically recalculated according to the current coordinate strategy.</p>
+<p>Each <strong>Find Image</strong> node can independently set its own coordinate strategy, overriding the project default (Follow Project / Uniform Scaling / Pan Adaptation).</p>
+<h3 id="debugging-tools">Debugging Tools</h3>
+<ul>
+<li><strong>🔴 Click Visualization</strong>: when enabled, a red dot appears at each click position (disappears after 0.5s) for verifying coordinates</li>
+<li><strong>Log Level Control</strong>: switch between Concise/Trace/Debug</li>
+<li><strong>Log Output</strong> node: write custom log messages at key steps</li>
+</ul>
+<h3 id="settings">Settings</h3>
+<p>Click menu <strong>Project → Settings</strong> (<code>Ctrl+,</code>) to open the settings panel:</p>
+<ul>
+<li><strong>Working Directory</strong>: default location for project files</li>
+<li><strong>Interface Language</strong>: 中文 / English</li>
+<li><strong>OCR Language</strong>: default language for text recognition</li>
+<li><strong>Auto Save</strong>: automatically save changes to disk</li>
+</ul>
+<hr />
+<h2 id="9-interface-reference">9. Interface Reference</h2>
+<h3 id="toolbar">Toolbar</h3>
+<pre><code>[ 🔧 Design ▼ ]  [▶ Run]  [■ Stop]  [🔄 Background]  [🔴 Click Vis]  [🐞 Debug: Concise | Trace | Debug]
+</code></pre>
+<ul>
+<li><strong>Mode Switch</strong>: dropdown menu, one-click toggle between Design and Run modes</li>
+<li><strong>Run/Stop</strong>: execute or terminate the current project</li>
+<li><strong>Background/Foreground</strong>: switch input simulation mode</li>
+<li><strong>Click Visualization</strong>: show red dots at click positions</li>
+<li><strong>Log Level</strong>: three-segment button controlling log verbosity</li>
+<li><strong>Config Completeness Indicator</strong> (Run mode only): 🟢 Ready / 🟡 Some defaults / 🔴 Needs calibration</li>
+</ul>
+<h3 id="9-tabs">9 Tabs</h3>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>Shortcut</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node Editor</td>
+<td><code>Ctrl+1</code></td>
+<td>Visual node editor, drag-and-drop workflow builder</td>
+</tr>
+<tr>
+<td>Code Preview</td>
+<td><code>Ctrl+2</code></td>
+<td>Auto-generated Lua script, read-only</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>Ctrl+3</code></td>
+<td>Define variable names, types, and default values</td>
+</tr>
+<tr>
+<td>Image Manager</td>
+<td><code>Ctrl+4</code></td>
+<td>Upload/screenshot template images</td>
+</tr>
+<tr>
+<td>Functions</td>
+<td><code>Ctrl+5</code></td>
+<td>Create reusable sub-workflow functions</td>
+</tr>
+<tr>
+<td>Custom Actions</td>
+<td><code>Ctrl+6</code></td>
+<td>Bind functions to floating panel buttons</td>
+</tr>
+<tr>
+<td>Macro Manager</td>
+<td><code>Ctrl+7</code></td>
+<td>Record, manage, and replay macros</td>
+</tr>
+<tr>
+<td>Regions</td>
+<td><code>Ctrl+8</code></td>
+<td>Manage named regions</td>
+</tr>
+<tr>
+<td>User Config</td>
+<td><code>Ctrl+9</code></td>
+<td>Define user config variables (designer use)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="floating-control-panel">Floating Control Panel</h3>
+<p>Automatically appears when running a macro — always on top, draggable. Provides pause/resume, custom action buttons, background music controls (visible when music is playing), and close to stop execution.</p>
+<h3 id="system-tray">System Tray</h3>
+<p>Closing the window minimizes it to the system tray. Double-click the tray icon to show the main window. Tray menu: Show Window / Run Current Macro / Stop / Exit.</p>
+<h3 id="keyboard-shortcuts">Keyboard Shortcuts</h3>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+N</code></td>
+<td>New project</td>
+</tr>
+<tr>
+<td><code>Ctrl+O</code></td>
+<td>Open project</td>
+</tr>
+<tr>
+<td><code>Ctrl+S</code></td>
+<td>Save project</td>
+</tr>
+<tr>
+<td><code>Ctrl+Shift+O</code></td>
+<td>Switch project</td>
+</tr>
+<tr>
+<td><code>Ctrl+I</code></td>
+<td>Import project</td>
+</tr>
+<tr>
+<td><code>Ctrl+E</code></td>
+<td>Export project</td>
+</tr>
+<tr>
+<td><code>Ctrl+,</code></td>
+<td>Open settings</td>
+</tr>
+<tr>
+<td><code>F5</code></td>
+<td>Run project</td>
+</tr>
+<tr>
+<td><code>Shift+F5</code></td>
+<td>Stop</td>
+</tr>
+<tr>
+<td><code>F1</code></td>
+<td>Designer Guide</td>
+</tr>
+<tr>
+<td><code>Ctrl+1</code>~<code>Ctrl+9</code></td>
+<td>Switch tabs</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-faq">10. FAQ</h2>
+<p><strong>Why does my recorded macro always click at the wrong position?</strong></p>
+<p>Make sure you set the correct design area when creating the project. If you change monitors or resolution, use the <strong>Calibrate</strong> feature to re-set the run area.</p>
+<p><strong>Image search keeps failing?</strong></p>
+<ul>
+<li>Lower the match threshold (default 0.85, try 0.7)</li>
+<li>Narrow the search region for better speed and accuracy</li>
+<li>Ensure the template image matches the actual runtime environment</li>
+<li>Try different match modes (Grayscale/Luminance/OKLab Color)</li>
+</ul>
+<p><strong>What's the difference between Background and Foreground mode?</strong></p>
+<ul>
+<li><strong>Background Mode</strong> (default): simulates actions in the background without interfering with normal use</li>
+<li><strong>Foreground Mode</strong>: directly controls the mouse and keyboard, taking over control</li>
+</ul>
+<p>If background mode doesn't work for certain actions, switch to foreground mode. Use <strong>🔴 Click Visualization</strong> to verify coordinates.</p>
+<p><strong>How do I debug my workflow?</strong></p>
+<p>Use the log level control in the toolbar to switch to <strong>Trace</strong> or <strong>Debug</strong> level for detailed logs, add <strong>Log Output</strong> nodes at key steps, and enable <strong>🔴 Click Visualization</strong> to see where clicks land.</p>
+<p><strong>What is the relationship between the Code Preview and Node Editor?</strong></p>
+<p>Operations in the node editor automatically generate Lua script code. You can view the code in the code preview (read-only), synced from the node editor.</p>
+<p><strong>How do I allow end users to personalize settings?</strong></p>
+<p>Define config variables in the <strong>User Config</strong> tab (<code>Ctrl+9</code>), reference them in node configuration via the <code>◎</code> menu (<code>u|var_id</code> format), and mark the project as a distribution package when exporting. End users will see and fill in their values in Run mode.</p>
+<p><strong>What's the difference between a distribution package and a normal project?</strong></p>
+<p>A distribution package defaults to Run mode upon import (Design mode is grayed out), while a normal project restores the last used mode (freely switchable). The distinction is controlled by the "Mark as distribution package" checkbox during export.</p>
+<hr />
+<h2 id="11-demo-projects">11. Demo Projects</h2>
+<p>MacroAI comes with built-in demo projects to help you quickly understand the software's capabilities.</p>
+<p><strong>Included demo projects:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>办公自动化-记事本</td>
+<td>Demonstrates: Open Notepad → Write content → Save file (complete workflow)</td>
+</tr>
+<tr>
+<td>游戏辅助-对对碰</td>
+<td>Demonstrates: Auto-match game board pattern recognition and click elimination</td>
+</tr>
+<tr>
+<td>游戏辅助-血条监控</td>
+<td>Demonstrates: Real-time health bar monitoring, auto-use potion when HP is low</td>
+</tr>
+</tbody>
+</table>
+<p>The system will ask on first working directory setup, or import anytime via menu <strong>Help → Import Demo Projects</strong>.</p>
+<p>Use <strong>Project → Open</strong> to view and run them. Freely modify scripts and nodes as a starting point for learning and customization.</p>
+<hr />
+<p><em>For detailed API reference, see menu </em><em>Help → API Reference</em><em>.</em></p>
+<hr />
+<p><strong>Feedback:</strong> If you encounter any errors or have suggestions, please email us at <strong>macroai@sowe.com</strong>. We look forward to your feedback!</p>
+      </main>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/macroai/battle-demo.html">HP Bar Demo</a>
+      <a href="/macroai/pengpeng-demo.html">Match Game Demo</a>
+    </div>
+  </footer>
+
+  <script src="/js/i18n.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/docs.js"></script>
+</body>
+</html>

@@ -40,6 +40,7 @@
       <h1 class="section-title">API Reference</h1>
       <div class="docs-tabs">
         <a href="/macroai/docs/en/user-guide.html">User Guide</a>
+        <a href="/macroai/docs/en/designer-guide.html">Designer Guide</a>
         <a href="/macroai/docs/en/api-reference.html" class="active">API Reference</a>
       </div>
     </div>
@@ -60,9 +61,11 @@
 <a href="#change-detection" class="toc-h2">Change Detection</a>
   <a href="#detect_change-wait_change-parameters" class="toc-h3">detect_change / wait_change Parameters</a>
   <a href="#wait_bar_change-parameters" class="toc-h3">wait_bar_change Parameters</a>
+<a href="#color-detection" class="toc-h2">Color Detection</a>
 <a href="#audio" class="toc-h2">Audio</a>
 <a href="#logging" class="toc-h2">Logging</a>
-<a href="#other" class="toc-h2">Other</a>
+<a href="#notifications" class="toc-h2">Notifications</a>
+<a href="#user-config-variables" class="toc-h2">User Config Variables</a>
 <a href="#check-stop" class="toc-h2">Check Stop</a>
 <a href="#common-conventions" class="toc-h2">Common Conventions</a>
   <a href="#coordinate-system" class="toc-h3">Coordinate System</a>
@@ -72,17 +75,25 @@
       <main class="docs-content">
         <h1 id="macroai-api-reference">MacroAI API Reference</h1>
 <h2 id="image-recognition">Image Recognition</h2>
-<pre><code>image_find(tmpl, region?, threshold?) -&gt; ImageMatchResult | nil
-image_wait(tmpl, timeout?, region?, threshold?) -&gt; ImageMatchResult | nil
-image_find_all(tmpl, region?, threshold?) -&gt; table | nil
-image_wait_all(tmpl, timeout?, region?, threshold?) -&gt; table | nil
+<pre><code>image_find(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
+image_wait(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
+image_find_all(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; table | nil
+image_wait_all(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; table | nil
 image_save_template(img, path) -&gt; void
 </code></pre>
 <p><strong>Parameters:</strong>
-- <code>tmpl</code> (string) — template image filename (e.g. <code>"button.png"</code>), must be uploaded in Image Manager; also supports variable references (e.g. <code>var_get('btn_name')</code>) or function parameter names
+- <code>tmpl</code> (string | table) — template image. Accepts:
+  - Single template string: <code>"button.png"</code> or <code>"button"</code> (auto-resolved in <code>resources/images/</code>)
+  - Relative path: <code>"resources/images/icon.png"</code> (resolved relative to project dir)
+  - Absolute path: <code>"D:/images/icon.png"</code> (used as-is)
+  - Multi-template Lua table <code>{"a.png", "b.png"}</code> — screenshots once, iterates all, returns best match
+  - Variable/parameter/user config reference: <code>var_get('name')</code>, <code>u|var_id</code>
 - <code>region</code> (table, optional) — search area <code>{left, top, width, height}</code>, defaults to full screen
 - <code>threshold</code> (number, optional) — match threshold 0~1, default <code>0.85</code>, lower = more tolerant
-- <code>timeout</code> (number, optional) — timeout in seconds, default <code>10</code>
+- <code>timeout</code> (number, optional) — timeout in seconds, default <code>10</code> (image_wait / image_wait_all only)
+- <code>interval</code> (number, optional) — poll interval in seconds, default <code>0.2</code> (image_wait / image_wait_all only)
+- <code>match_mode</code> (string, optional) — match mode: <code>"grayscale"</code> (default), <code>"luminance"</code>, <code>"oklab"</code>
+- <code>transform_policy</code> (string, optional) — coordinate transform policy: <code>"default"</code> (follow project setting, default)
 - <code>img</code> — image data (numpy array)</p>
 <p><strong>Return Value (ImageMatchResult):</strong>
 - <code>.success</code> (boolean) — whether found
@@ -91,7 +102,7 @@ image_save_template(img, path) -&gt; void
 - <code>.width</code>, <code>.height</code> (number) — match dimensions
 - <code>.confidence</code> (number) — confidence score
 - <code>.rect</code> (table) — <code>{left, top, width, height}</code>
-- <code>.template_name</code> (string) — the matched template filename (useful in multi-template search to identify which template matched)</p>
+- <code>.template_name</code> (string) — the matched template filename (basename only, no path. Useful in multi-template search to identify which template matched)</p>
 <p><strong>Example:</strong></p>
 <pre><code class="language-lua">local r = image_find(&quot;login_btn.png&quot;, {100, 200, 800, 600}, 0.8)
 if r and r.success then
@@ -117,23 +128,25 @@ if results then
     end
 end
 </code></pre>
-<p><strong>Multi-template example:</strong></p>
-<pre><code class="language-lua">local r1 = image_find(&quot;btn_ok.png&quot;, nil, 0.85)
-local r2 = image_find(&quot;btn_cancel.png&quot;, nil, 0.85)
-local best = nil
-local best_conf = 0
-for _, r in ipairs({r1, r2}) do
-    if r and r.success and r.confidence &gt; best_conf then
-        best = r
-        best_conf = r.confidence
+<p><strong>Multi-template (single screenshot, iterate all, return best match):</strong></p>
+<pre><code class="language-lua">local r = image_find({&quot;btn_ok.png&quot;, &quot;btn_cancel.png&quot;})
+if r and r.success then
+    if r.template_name == &quot;btn_ok.png&quot; then
+        log(&quot;OK button found&quot;)
     end
 end
-if best then
-    if best.template_name == &quot;btn_ok.png&quot; then
-        -- OK button found
-    else
-        -- Cancel button found
-    end
+</code></pre>
+<p><strong>Multi-template mixed with user_config_list:</strong></p>
+<pre><code class="language-lua">-- Node editor template list: icon.png, u|uc_avatar
+-- Generated code builds a mixed list automatically:
+local _tmpls = {}
+table.insert(_tmpls, 'icon.png')
+for _, _v in ipairs(user_config_list('uc_avatar')) do
+    table.insert(_tmpls, _v)
+end
+local r = image_find(_tmpls)
+if r and r.success then
+    log(&quot;Matched: &quot; .. r.template_name)
 end
 </code></pre>
 <hr />
@@ -199,17 +212,22 @@ mouse_scroll(3)                      -- scroll down 3 clicks
 key_type(text) -&gt; void
 key_hotkey(key1, key2, ...) -&gt; void
 key_shortcut(combo) -&gt; void
+key_stroke(vk, scan, is_down?) -&gt; void
 </code></pre>
 <p><strong>Parameters:</strong>
 - <code>key</code> (string) — key name, e.g. <code>"enter"</code>, <code>"tab"</code>, <code>"escape"</code>, <code>"a"</code>, <code>"ctrl"</code>
 - <code>text</code> (string) — text to type, newlines are converted to Enter
 - <code>key1, key2, ...</code> (string...) — sequential key combination, e.g. <code>("ctrl", "c")</code>
-- <code>combo</code> (string) — shortcut notation, e.g. <code>"ctrl+c"</code>, <code>"alt+tab"</code></p>
+- <code>combo</code> (string) — shortcut notation, e.g. <code>"ctrl+c"</code>, <code>"alt+tab"</code>
+- <code>vk</code> (number) — Virtual-Key Code
+- <code>scan</code> (number) — scan code
+- <code>is_down</code> (boolean, optional) — <code>true</code> = press, <code>false</code> = release, omit for press+release</p>
 <p><strong>Example:</strong></p>
 <pre><code class="language-lua">key_press(&quot;enter&quot;)                   -- press Enter
 key_type(&quot;Hello, World!&quot;)            -- type text
 key_hotkey(&quot;ctrl&quot;, &quot;c&quot;)             -- Ctrl+C (sequential)
 key_shortcut(&quot;ctrl+c&quot;)              -- Ctrl+C (chord)
+key_stroke(0x70, 0x3B)            -- press F1 (virtual key code 0x70)
 </code></pre>
 <hr />
 <h2 id="screen">Screen</h2>
@@ -257,8 +275,7 @@ end
 </code></pre>
 <hr />
 <h2 id="regions">Regions</h2>
-<pre><code>region_set(name, left, top, width, height) -&gt; void
-region_get(name) -&gt; Region | nil
+<pre><code>region_get(name) -&gt; Region | nil
 getRegion(name?) -&gt; {left, top, width, height} | nil
 to_runtime_region(region) -&gt; {left, top, width, height}
 to_runtime_point(x, y) -&gt; number, number
@@ -272,8 +289,7 @@ to_runtime_point(x, y) -&gt; number, number
 - <code>getRegion</code> returns a Lua table; omit name or use <code>"__effective__"</code> for the default search area
 - <code>to_runtime_region</code> / <code>to_runtime_point</code> convert design-space coordinates to runtime (for multi-resolution support)</p>
 <p><strong>Example:</strong></p>
-<pre><code class="language-lua">region_set(&quot;dialog&quot;, 100, 200, 500, 300)
-local r = region_get(&quot;dialog&quot;)
+<pre><code class="language-lua">local r = region_get(&quot;dialog&quot;)
 if r then
     log(&quot;Region: &quot; .. r.left .. &quot;,&quot; .. r.top)
 end
@@ -403,14 +419,14 @@ wait_bar_change(kwargs?) -&gt; table
 <td>reset all tracking (use when switching scenes)</td>
 </tr>
 <tr>
-<td><code>colors</code></td>
+<td><code>templates</code></td>
 <td>table[]</td>
 <td>required</td>
 <td>template configurations (see below)</td>
 </tr>
 </tbody>
 </table>
-<p><strong>colors format:</strong></p>
+<p><strong>templates format:</strong></p>
 <pre><code class="language-lua">{
     {
         label = &quot;hp_full&quot;,             -- template name (also filename)
@@ -438,7 +454,7 @@ wait_bar_change(kwargs?) -&gt; table
           rect = {100, 200, 300, 20},       -- bar bounding box
           center_x = 250,                     -- bar center X
           center_y = 210,                     -- bar center Y
-          color = "hp_full",                  -- matched template label
+           label = "hp_full",                  -- matched template label
           state = "changed",                  -- changed/resized/disappeared/appeared
           delta = 0.5,                        -- width ratio change (new label / old label)
           reference_value = 1.0,              -- old label width ratio
@@ -452,7 +468,7 @@ wait_bar_change(kwargs?) -&gt; table
 local bar_changes = wait_bar_change({
     region = {100, 50, 300, 20},
     timeout = 15,
-    colors = {
+    templates = {
         {
             label = &quot;full&quot;,
             template_path = &quot;resources/bar_templates/full.png&quot;,
@@ -467,7 +483,7 @@ local bar_changes = wait_bar_change({
 -- Filter: only process real changes, ignore enter/leave
 for _, bc in ipairs(bar_changes) do
     if bc.state == &quot;changed&quot; or bc.state == &quot;resized&quot; then
-        log(&quot;bar changed: &quot; .. bc.color .. &quot; delta=&quot; .. bc.delta)
+        log(&quot;bar changed: &quot; .. bc.label .. &quot; delta=&quot; .. bc.delta)
     end
 end
 </code></pre>
@@ -496,13 +512,54 @@ reset_bar_detector()
 
 local bars = wait_bar_change({
     region = {100, 50, 300, 20},
-    colors = {
+    templates = {
         { label=&quot;full&quot;, template_path=&quot;resources/bar_templates/full.png&quot; },
         { label=&quot;half&quot;, template_path=&quot;resources/bar_templates/half.png&quot; },
     }
 })
 </code></pre>
 <hr />
+<h2 id="color-detection">Color Detection</h2>
+<pre><code>color_get_pixel(x, y) -&gt; table
+color_get_dominant(region?, kwargs?) -&gt; table
+color_find(kwargs?) -&gt; table
+color_is(detected, target, threshold?) -&gt; boolean
+color_distance(c1, c2) -&gt; number
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>x</code>, <code>y</code> (number) — screen coordinates
+- <code>region</code> (table, optional) — detection area <code>{left, top, width, height}</code>, defaults to full screen
+- <code>kwargs</code> (table, optional) — parameters dictionary:
+  - <code>region</code> — search area
+  - <code>color</code> — target color <code>{r, g, b}</code> (used by color_find)
+- <code>detected</code> (table) — detected color <code>{r, g, b}</code>
+- <code>target</code> (table) — target color <code>{r, g, b}</code>
+- <code>threshold</code> (number, optional) — color distance threshold, default <code>30</code>
+- <code>c1</code>, <code>c2</code> (table) — two color values <code>{r, g, b}</code></p>
+<p><strong>color_get_pixel returns:</strong> <code>{r, g, b}</code> with values 0~255</p>
+<p><strong>color_get_dominant returns:</strong> <code>{r, g, b}</code> dominant color</p>
+<p><strong>color_find returns:</strong> <code>{x, y}</code> if found, <code>nil</code> otherwise</p>
+<p><strong>color_is returns:</strong> <code>true</code> / <code>false</code></p>
+<p><strong>color_distance returns:</strong> distance value (lower = closer)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">local pixel = color_get_pixel(500, 300)
+log(&quot;Pixel color: &quot; .. pixel.r .. &quot;,&quot; .. pixel.g .. &quot;,&quot; .. pixel.b)
+
+local dominant = color_get_dominant({100, 100, 200, 200})
+log(&quot;Dominant: &quot; .. dominant.r .. &quot;,&quot; .. dominant.g .. &quot;,&quot; .. dominant.b)
+
+local found = color_find({region={0, 0, 1920, 1080}, color={255, 0, 0}})
+if found then
+    log(&quot;Found red at: &quot; .. found.x .. &quot;,&quot; .. found.y)
+end
+
+if color_is({255, 50, 50}, {255, 0, 0}, 60) then
+    log(&quot;Color approximately matches&quot;)
+end
+
+local dist = color_distance({255, 0, 0}, {200, 0, 0})
+log(&quot;Color distance: &quot; .. dist)
+</code></pre>
 <hr />
 <h2 id="audio">Audio</h2>
 <pre><code>play_warning(sound_type, custom_file?) -&gt; void
@@ -530,6 +587,7 @@ end
 <h2 id="logging">Logging</h2>
 <pre><code>log(message) -&gt; void
 ocr_log(msg) -&gt; void
+trace_log(msg) -&gt; void
 print(...) -&gt; void
 </code></pre>
 <p><strong>Example:</strong></p>
@@ -538,15 +596,46 @@ ocr_log(&quot;OCR result: &quot; .. text)
 print(&quot;Values:&quot;, x, y, z)  -- output: Values: 100 200 300
 </code></pre>
 <hr />
-<h2 id="other">Other</h2>
-<pre><code>macro_call(macro_id) -&gt; void
+<h2 id="notifications">Notifications</h2>
+<pre><code>show_dialog(text, image?, btn_text?) -&gt; void
+show_toast(text, image?, duration?) -&gt; void
 </code></pre>
+<p><strong>Parameters:</strong>
+- <code>text</code> (string) — notification text
+- <code>image</code> (string, optional) — image file path to display
+- <code>btn_text</code> (string, optional) — dialog button text (default "OK")
+- <code>duration</code> (number, optional) — toast display duration in seconds, default <code>3</code></p>
 <p><strong>Notes:</strong>
-- <code>macro_id</code> (string) — recorded macro ID to replay
-- Replays all recorded events (mouse clicks, key presses, waits, etc.)
-- Coordinates are automatically scaled to fit the current run area</p>
+- <code>show_dialog</code> shows a modal dialog, pauses until user confirms
+- <code>show_toast</code> shows a system toast notification that auto-dismisses</p>
 <p><strong>Example:</strong></p>
-<pre><code class="language-lua">macro_call(&quot;macro_12345678&quot;)  -- replay a recorded macro
+<pre><code class="language-lua">show_dialog(&quot;Operation complete!&quot;)
+show_toast(&quot;Task completed successfully&quot;, 5)
+show_dialog(&quot;Please confirm&quot;, &quot;C:\\image.png&quot;, &quot;OK&quot;)
+</code></pre>
+<hr />
+<h2 id="user-config-variables">User Config Variables</h2>
+<pre><code>user_config(var_id) -&gt; string
+user_config_list(var_id) -&gt; table
+</code></pre>
+<p><strong>Parameters:</strong>
+- <code>var_id</code> (string) — user config variable ID (auto-prefixed with <code>uc_</code> when defined, referenced with <code>u|</code> prefix)</p>
+<p><strong>Notes:</strong>
+- <code>user_config</code> returns the user config variable value (text string or absolute image path)
+- <code>user_config_list</code> returns a list of absolute file paths for image-type user config variables (for multi-image expansion in templates)
+- Images are stored in <code>resources/user_config/</code> directory; name_ids are automatically resolved to absolute paths by the engine
+- Single-image variables referenced as <code>u|var_id</code> in the node editor are expanded at code generation time</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">local nickname = user_config(&quot;uc_nickname&quot;)
+log(&quot;Nickname: &quot; .. nickname)
+
+local images = user_config_list(&quot;uc_avatar&quot;)
+for _, path in ipairs(images) do
+    log(&quot;Image absolute path: &quot; .. path)
+end
+
+-- Used directly in image_find (handled by generated code):
+-- image_find({&quot;fixed.png&quot;, user_config(&quot;uc_avatar&quot;)})
 </code></pre>
 <hr />
 <h2 id="check-stop">Check Stop</h2>

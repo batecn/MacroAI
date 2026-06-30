@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Guide - MacroAI</title>
-  <meta name="description" content="Complete user guide for MacroAI Windows desktop macro automation tool">
+  <meta name="description" content="MacroAI User Guide — import, configure, and run automation scripts">
   <link rel="icon" href="/assets/macroai.png" type="image/png">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/docs.css">
@@ -40,6 +40,7 @@
       <h1 class="section-title">User Guide</h1>
       <div class="docs-tabs">
         <a href="/macroai/docs/en/user-guide.html" class="active">User Guide</a>
+        <a href="/macroai/docs/en/designer-guide.html">Designer Guide</a>
         <a href="/macroai/docs/en/api-reference.html">API Reference</a>
       </div>
     </div>
@@ -51,228 +52,189 @@
         <div class="toc-label">Contents</div>
         <a href="#1-introduction" class="toc-h2">1. Introduction</a>
 <a href="#2-quick-start" class="toc-h2">2. Quick Start</a>
-  <a href="#21-create-a-new-project" class="toc-h3">2.1 Create a New Project</a>
-  <a href="#22-interface-overview" class="toc-h3">2.2 Interface Overview</a>
-  <a href="#23-record-play-back-a-macro" class="toc-h3">2.3 Record & Play Back a Macro</a>
-  <a href="#24-enhance-your-workflow-with-the-node-editor" class="toc-h3">2.4 Enhance Your Workflow with the Node Editor</a>
-  <a href="#25-run-your-project" class="toc-h3">2.5 Run Your Project</a>
-<a href="#3-core-features" class="toc-h2">3. Core Features</a>
-  <a href="#image-recognition" class="toc-h3">Image Recognition</a>
-  <a href="#ocr-text-recognition" class="toc-h3">OCR Text Recognition</a>
-  <a href="#screen-change-detection" class="toc-h3">Screen Change Detection</a>
-  <a href="#mouse-keyboard-simulation" class="toc-h3">Mouse & Keyboard Simulation</a>
-  <a href="#flow-control" class="toc-h3">Flow Control</a>
-  <a href="#variables-data-passing" class="toc-h3">Variables & Data Passing</a>
-  <a href="#audio-notifications" class="toc-h3">Audio & Notifications</a>
-<a href="#4-advanced-features" class="toc-h2">4. Advanced Features</a>
-  <a href="#functions-custom-actions" class="toc-h3">Functions & Custom Actions</a>
-  <a href="#regions-multi-resolution-support" class="toc-h3">Regions & Multi-Resolution Support</a>
-  <a href="#debugging-tools" class="toc-h3">Debugging Tools</a>
-  <a href="#settings" class="toc-h3">Settings</a>
-<a href="#5-interface-reference" class="toc-h2">5. Interface Reference</a>
-  <a href="#floating-control-panel" class="toc-h3">Floating Control Panel</a>
-  <a href="#system-tray" class="toc-h3">System Tray</a>
-  <a href="#keyboard-shortcuts" class="toc-h3">Keyboard Shortcuts</a>
+  <a href="#21-import-a-project" class="toc-h3">2.1 Import a Project</a>
+  <a href="#22-run-mode-interface" class="toc-h3">2.2 Run Mode Interface</a>
+  <a href="#23-step-1-calibrate-the-run-area" class="toc-h3">2.3 Step 1: Calibrate the Run Area</a>
+  <a href="#24-step-2-fill-in-personalized-config" class="toc-h3">2.4 Step 2: Fill in Personalized Config</a>
+  <a href="#25-run-the-script" class="toc-h3">2.5 Run the Script</a>
+<a href="#3-config-completeness-indicator" class="toc-h2">3. Config Completeness Indicator</a>
+<a href="#4-log-panel" class="toc-h2">4. Log Panel</a>
+<a href="#5-floating-control-panel" class="toc-h2">5. Floating Control Panel</a>
 <a href="#6-faq" class="toc-h2">6. FAQ</a>
-<a href="#7-demo-projects" class="toc-h2">7. Demo Projects</a>
+<a href="#7-keyboard-shortcuts" class="toc-h2">7. Keyboard Shortcuts</a>
 
       </aside>
       <main class="docs-content">
         <h1 id="macroai-user-guide">MacroAI User Guide</h1>
 <h2 id="1-introduction">1. Introduction</h2>
-<p>MacroAI is a Windows macro automation platform for script creation and distribution.</p>
-<p>Build automation workflows through a <strong>visual node editor</strong> (20+ node types, tree-container architecture) or <strong>Lua scripting</strong> — covering mouse/keyboard, image recognition, OCR text recognition, screen change detection, and more. Built-in <strong>multi-resolution adaptation</strong> ensures the same script runs stably across different screen sizes and scaling ratios — the key enabler for sharing scripts with other users.</p>
-<p>Supports <strong>background input simulation</strong> (no focus stealing), <strong>Windows OCR (zero install)</strong>, <strong>screen change detection</strong>, and <strong>multi-threaded concurrent execution</strong>. Core features are permanently free with no ads.</p>
+<p>MacroAI is a Windows macro automation tool for running scripts created by others. It can automatically perform mouse clicks, keyboard input, image recognition, and many other operations.</p>
 <p><strong>Use cases:</strong> Game assistance · Office automation · Software testing · IT operations · RPA</p>
 <hr />
 <h2 id="2-quick-start">2. Quick Start</h2>
-<p>MacroAI organizes all content (nodes, scripts, images, recorded macros, etc.) into <strong>projects</strong>, so you must create a project first.</p>
-<h3 id="21-create-a-new-project">2.1 Create a New Project</h3>
-<p>Click menu <strong>Project → New</strong> (or press <code>Ctrl+N</code>):</p>
+<h3 id="21-import-a-project">2.1 Import a Project</h3>
+<p>Once you receive a project file (<code>.zip</code> format) from its creator:</p>
 <ol>
-<li>The first time you use it, you'll be prompted to choose a <strong>working directory</strong> (where project files are stored)</li>
-<li>Enter a project name</li>
-<li><strong>Set the design area</strong> — the effective range for your macro operations:</li>
-<li><strong>Full Screen</strong>: uses your current screen resolution</li>
-<li><strong>Custom Selection</strong>: drag to select a window or region</li>
+<li>Click menu <strong>Project → Import</strong> (or press <code>Ctrl+I</code>)</li>
+<li>Select the zip file</li>
+<li>If the creator marked it as a <strong>distribution package</strong>, the app will automatically enter Run mode</li>
 </ol>
-<h3 id="22-interface-overview">2.2 Interface Overview</h3>
-<p>The main window has <strong>8 tabs</strong> (switch via <code>Ctrl+1</code>~<code>Ctrl+8</code>). Start with these:</p>
-<table>
-<thead>
-<tr>
-<th>Tab</th>
-<th>Shortcut</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Node Editor</strong></td>
-<td><code>Ctrl+1</code></td>
-<td>Visual drag-and-drop workflow builder (most used)</td>
-</tr>
-<tr>
-<td><strong>Code Editor</strong></td>
-<td><code>Ctrl+2</code></td>
-<td>View/edit auto-generated Lua scripts</td>
-</tr>
-<tr>
-<td><strong>Macro Manager</strong></td>
-<td><code>Ctrl+7</code></td>
-<td>Manage recorded macros</td>
-</tr>
-</tbody>
-</table>
-<p>The toolbar provides Run/Stop, mode toggle, Click Visualization (🔴), and Debug Mode (🐞) controls.</p>
-<h3 id="23-record-play-back-a-macro">2.3 Record &amp; Play Back a Macro</h3>
-<p>Recording is the fastest way to create a macro — record first, then refine:</p>
-<ol>
-<li>Switch to the <strong>Macro Manager</strong> tab (<code>Ctrl+7</code>), click <strong>+ New Recording</strong></li>
-<li>A green border appears around the design area, with a <strong>「■ Stop Recording」</strong> button at the bottom-left</li>
-<li>Perform the actions you want to automate (clicks, text input, etc.)</li>
-<li>Click <strong>「■ Stop Recording」</strong> to finish and save to project</li>
-<li>Select the recorded macro in the list and click <strong>▶ Play</strong> to replay it</li>
-</ol>
-<h3 id="24-enhance-your-workflow-with-the-node-editor">2.4 Enhance Your Workflow with the Node Editor</h3>
-<p>A recorded macro can only be replayed as-is. Want to add <strong>conditions, loops, image recognition</strong>, or other logic? Use the node editor:</p>
-<ol>
-<li>Switch to the <strong>Node Editor</strong> tab (<code>Ctrl+1</code>)</li>
-<li>In the left panel, click the <strong>Call Recorded Macro</strong> node to add it to the workflow</li>
-<li>Double-click the node to open its configuration and select the macro you just recorded</li>
-<li>Add other nodes before or after it (e.g., <strong>Wait</strong>, <strong>Find Image</strong>) to build smarter automation</li>
-<li>Drag nodes to reorder them, or drag them into a <strong>Condition</strong> or <strong>Loop</strong> node to group them together</li>
-</ol>
-<p>Changes in the node editor automatically generate script code, which you can view and edit in the code editor.</p>
-<h3 id="25-run-your-project">2.5 Run Your Project</h3>
-<p>Click <strong>▶ Run</strong> (or press <code>F5</code>) to execute the current project's node workflow / script code. Click <strong>■ Stop</strong> (or press <code>Shift+F5</code>) to terminate at any time.</p>
 <blockquote>
-<p>Tip: Turn on <strong>🐞 Debug Mode</strong> in the toolbar to see more detailed log information for troubleshooting.</p>
+<p>What is a distribution package? A special project package exported by designers. When imported, it locks into Run mode — you only need to focus on the configuration required to run the script.</p>
 </blockquote>
-<hr />
-<h2 id="3-core-features">3. Core Features</h2>
-<h3 id="image-recognition">Image Recognition</h3>
-<p>Find a specific image on the screen and perform actions:</p>
+<h3 id="22-run-mode-interface">2.2 Run Mode Interface</h3>
+<p>After importing a distribution package, you'll see the streamlined Run mode interface with three main areas:</p>
+<pre><code>┌── ① Project Info (collapsible) ──────────────────┐
+│  📁 Project Name                                  │
+│  Design Resolution: 1920×1080  Strategy: Uniform  │
+│  ───────────────────────────────────────────────  │
+│  Description: Auto-match game board, click        │
+│  identical patterns. Customizable avatar &amp; name.  │
+└────────────────────────────────────────────────────┘
+
+┌── ② Area Calibration (always visible) ────────┐
+│  🖥 Run Area: ── Not Calibrated ──  [ Calibrate ]│
+│  🖥 Design Area: 1920×1080 (reference)           │
+│  Coordinate Strategy: Uniform (auto-adapt)       │
+└──────────────────────────────────────────────────┘
+
+┌── ③ Personalized Config (collapsible) ────────┐
+│  ⚠️ Nickname: Using default                      │
+│  ✅ Avatar: Set                                   │
+│  ❌ Signature: Not set                            │
+└──────────────────────────────────────────────────┘
+</code></pre>
+<p>The toolbar provides Run/Stop, Background/Foreground mode, and log level controls.</p>
+<h3 id="23-step-1-calibrate-the-run-area">2.3 Step 1: Calibrate the Run Area</h3>
+<p>Calibration is the <strong>first step</strong> — it ensures the script's operations match your screen:</p>
 <ol>
-<li>In the <strong>Image Manager</strong> tab (<code>Ctrl+4</code>), upload a template image or take a screenshot</li>
-<li>In the node editor, add a <strong>Find Image</strong> node</li>
-<li>Configure: select the template image, search region, match threshold (default 0.85), and match method</li>
-<li>Enable <strong>Click</strong> to automatically click when found; set a <strong>Timeout</strong> to keep searching until the image appears</li>
-<li>The result is accessible via variables: <code>result.center_x</code>, <code>result.center_y</code>, etc.</li>
+<li>Click the <strong>[ Calibrate ]</strong> button on the area calibration card</li>
+<li>Follow the on-screen instructions to select the window or area where the script will run</li>
+<li>After calibration, the card will display the run area's dimensions and position</li>
 </ol>
-<h3 id="ocr-text-recognition">OCR Text Recognition</h3>
-<p>Recognize text on the screen:</p>
+<blockquote>
+<p>If the design area is full-screen, the system automatically adapts to your current screen — no manual selection needed.</p>
+</blockquote>
+<h3 id="24-step-2-fill-in-personalized-config">2.4 Step 2: Fill in Personalized Config</h3>
+<p>If the designer set up user config variables (e.g., nickname, avatar), fill them in:</p>
 <ul>
-<li><strong>OCR Recognize</strong>: select a region and read the text content</li>
-<li><strong>OCR Compare</strong>: check if specified text appears in a region; enable <strong>Click</strong> to auto-click when matched</li>
-<li>Configure the default recognition language in Settings (<code>Ctrl+,</code>)</li>
+<li><strong>Text type</strong>: type your value in the input field</li>
+<li><strong>Image type</strong>: click [Screenshot] or [Choose File] to upload an image</li>
 </ul>
-<h3 id="screen-change-detection">Screen Change Detection</h3>
-<p>Wait for specific changes on the screen, useful for monitoring UI states:</p>
-<ul>
-<li><strong>Wait for Screen Change</strong>: detect content changes within a specified region. Supports sensitivity adjustment, periodic change filtering (e.g., blinking buttons), and timeout settings</li>
-<li><strong>Wait for Bar Change</strong>: track length changes in bars (health bars, progress bars). Supports auto-detection of horizontal/vertical orientation and scrollbar interference filtering</li>
-</ul>
-<h3 id="mouse-keyboard-simulation">Mouse &amp; Keyboard Simulation</h3>
-<ul>
-<li><strong>Mouse Click / Mouse Move / Mouse Drag</strong>: supports direct coordinates and variable references; you can box-select to get coordinates</li>
-<li><strong>Key Press / Type Text</strong>: simulate keyboard input and shortcut combinations</li>
-<li>Coordinate fields accept: direct numbers, variable references (e.g., <code>result.center_x</code>), or click-to-pick</li>
-</ul>
-<h3 id="flow-control">Flow Control</h3>
-<ul>
-<li><strong>Wait</strong>: insert a delay between actions (in milliseconds)</li>
-<li><strong>Condition</strong>: executes different branches based on conditions (previous step succeeded/failed, custom expression); can hold other nodes inside</li>
-<li><strong>Loop</strong>: repeats its children; supports breaking out of the loop; can hold other nodes inside</li>
-<li><strong>Call Function</strong>: execute a reusable sub-workflow</li>
-<li><strong>Call Recorded Macro</strong>: replay a recorded macro within the node workflow</li>
-</ul>
-<p>Every node can have an execution condition (previous success/failure, custom expression). Drag to adjust node order and nesting.</p>
-<h3 id="variables-data-passing">Variables &amp; Data Passing</h3>
-<p>Define variables (name, type, default value) in the <strong>Variables</strong> tab (<code>Ctrl+3</code>). Insert variable references in node configuration via the <code>▼</code> menu:</p>
+<p>The status icon next to each item shows:</p>
 <table>
 <thead>
 <tr>
-<th>Common Variable</th>
-<th>Description</th>
+<th>Icon</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>result.success</code></td>
-<td>Whether the previous step succeeded</td>
+<td>✅</td>
+<td>You have set your own value</td>
 </tr>
 <tr>
-<td><code>result.x</code> / <code>result.y</code></td>
-<td>Top-left coordinates of the target</td>
+<td>⚠️</td>
+<td>Not modified, using the designer's default</td>
 </tr>
 <tr>
-<td><code>result.center_x</code> / <code>result.center_y</code></td>
-<td>Center coordinates of the target</td>
-</tr>
-<tr>
-<td><code>ocr_text</code> / <code>ocr_result</code></td>
-<td>OCR recognition result</td>
+<td>❌</td>
+<td>Not set (required items without defaults only)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="audio-notifications">Audio &amp; Notifications</h3>
+<p>All changes are saved automatically.</p>
+<h3 id="25-run-the-script">2.5 Run the Script</h3>
+<p>Once configured, click <strong>▶ Run</strong> (or press <code>F5</code>) to execute the script. Click <strong>■ Stop</strong> (or press <code>Shift+F5</code>) to terminate at any time.</p>
+<p>During execution, the log panel at the bottom auto-expands to show progress and results.</p>
+<hr />
+<h2 id="3-config-completeness-indicator">3. Config Completeness Indicator</h2>
+<p>The indicator on the toolbar shows your configuration status at a glance:</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🟢 <strong>Ready to run</strong></td>
+<td>All config done + area calibrated</td>
+<td>Just run</td>
+</tr>
+<tr>
+<td>🟡 <strong>X items using defaults</strong></td>
+<td>Some config not personalized, but area is calibrated</td>
+<td>Can run, consider completing</td>
+</tr>
+<tr>
+<td>🔴 <strong>Area needs calibration</strong></td>
+<td>Run area not yet calibrated</td>
+<td>Must calibrate first</td>
+</tr>
+</tbody>
+</table>
+<p>Click the indicator to expand a detailed checklist. Click [Jump] to navigate directly to any pending item.</p>
+<hr />
+<h2 id="4-log-panel">4. Log Panel</h2>
+<p>The run log appears in a collapsible panel at the bottom:</p>
 <ul>
-<li><strong>Play Sound</strong>: system sounds, do~si beeps, custom audio files</li>
-<li><strong>Play Music</strong>: background music in common formats; the floating panel shows playback controls (pause/resume/mute); sound effects automatically lower music volume</li>
-<li><strong>Show Notification</strong>: display a notification message at a specific step during execution</li>
+<li><strong>Idle</strong>: panel is collapsed, only the run button is visible</li>
+<li><strong>Running</strong>: panel auto-expands, logs stream in real-time</li>
+<li><strong>Finished</strong>: last state is preserved, you can manually collapse it</li>
+</ul>
+<p>The <strong>🐞 Debug</strong> dropdown on the toolbar controls log verbosity:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Concise (default)</td>
+<td>Key operation descriptions + errors</td>
+</tr>
+<tr>
+<td>Trace</td>
+<td>Concise + execution steps for each action</td>
+</tr>
+<tr>
+<td>Debug</td>
+<td>Trace + detailed technical information</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-floating-control-panel">5. Floating Control Panel</h2>
+<p>When a script is running, a floating control panel appears (always on top):</p>
+<ul>
+<li><strong>Pause/Resume</strong>: temporarily stop or continue execution</li>
+<li><strong>Custom Action Buttons</strong>: quick actions defined by the designer (e.g., "Pause and adjust window")</li>
+<li><strong>Music Controls</strong>: if the script includes background music, shows pause/resume/mute buttons</li>
+<li><strong>Close Panel</strong>: stops script execution</li>
 </ul>
 <hr />
-<h2 id="4-advanced-features">4. Advanced Features</h2>
-<h3 id="functions-custom-actions">Functions &amp; Custom Actions</h3>
-<p><strong>Functions</strong>: package a group of nodes into a reusable sub-workflow with parameter support. Create and edit them in the <strong>Functions</strong> tab (<code>Ctrl+5</code>).</p>
-<p><strong>Custom Actions</strong>: bind a function to a one-click button on the floating panel. Configure them in the <strong>Custom Actions</strong> tab (<code>Ctrl+6</code>); the buttons appear on the floating panel when running.</p>
-<h3 id="regions-multi-resolution-support">Regions &amp; Multi-Resolution Support</h3>
-<p>A region is a named rectangular area on the screen:</p>
+<h2 id="6-faq">6. FAQ</h2>
+<p><strong>I made a mistake during calibration — what now?</strong></p>
+<p>Simply click the <strong>[ Calibrate ]</strong> button again to re-select the area.</p>
+<p><strong>I filled in the wrong value in config — how do I reset?</strong></p>
+<p>For text fields, click <strong>[Restore Default]</strong> to revert to the designer's example. For images, click <strong>[Clear]</strong> and re-select.</p>
+<p><strong>The indicator keeps showing 🔴?</strong></p>
+<p>The run area hasn't been calibrated yet. Complete the calibration first.</p>
+<p><strong>The script is clicking at the wrong position?</strong></p>
+<p>The run area calibration might be inaccurate. Try recalibrating. If the problem persists, contact the script's designer.</p>
+<p><strong>What's the difference between Background and Foreground mode?</strong></p>
 <ul>
-<li><strong>Design Area</strong>: the reference coordinate space defined when creating the project</li>
-<li><strong>Run Area</strong>: the actual screen region at runtime (can differ from the design area)</li>
-<li><strong>Custom Regions</strong>: user-named areas that can be referenced in node configuration</li>
-<li><strong>Coordinate Strategy</strong>: determines how coordinates are mapped from design area to run area</li>
+<li><strong>Background Mode</strong> (default): simulates actions in the background without interfering with your normal computer use</li>
+<li><strong>Foreground Mode</strong>: directly controls the mouse and keyboard, taking over control</li>
 </ul>
-<h4 id="coordinate-strategy">Coordinate Strategy</h4>
-<p>Switch in <strong>Project → Settings → Region Settings</strong> (<code>Ctrl+,</code>):</p>
-<ul>
-<li><strong>Uniform Scaling (uniform)</strong> — games, full-screen apps: coordinates scale by the proportional size of design/run areas. During calibration, freely drag-select the area while maintaining the same aspect ratio as the design area</li>
-<li><strong>Pan Adaptation (desktop)</strong> — browsers, Office windows: coordinates shift only by translation, no scaling. During calibration, only the position can be adjusted; width and height are fixed to the design area</li>
-</ul>
-<p>Switching strategies changes how all existing coordinate points are interpreted. A warning is shown, and you may need to re-adjust existing coordinate points.</p>
-<h4 id="calibrating-the-run-area">Calibrating the Run Area</h4>
-<p>When a script is created at one resolution but needs to run at another (or the window position changes), click <strong>Project → Settings → Region Settings → Calibrate</strong> to re-set the run area:</p>
-<ol>
-<li>If the design area is <strong>Full Screen</strong>: the run area is automatically set to the current full screen — no manual selection needed</li>
-<li>If the design area is <strong>Custom Selection</strong>:</li>
-<li><strong>Uniform mode</strong>: drag to select the run area, maintaining the same aspect ratio as the design area</li>
-<li><strong>Desktop mode</strong>: click or drag to specify the run area's position (top-left corner); width and height are fixed to the design area</li>
-</ol>
-<p>After calibration, all coordinates are automatically recalculated according to the current coordinate strategy.</p>
-<p>Each <strong>Find Image</strong> node can independently set its own coordinate strategy, overriding the project default (Follow Project / Uniform Scaling / Pan Adaptation).</p>
-<h3 id="debugging-tools">Debugging Tools</h3>
-<ul>
-<li><strong>🔴 Click Visualization</strong>: when enabled, a red dot appears at each click position (disappears after 0.5s) for verifying coordinates</li>
-<li><strong>🐞 Debug Mode</strong>: when enabled, logs show more detailed execution information</li>
-<li><strong>Log Output</strong> node: write custom log messages at key steps</li>
-</ul>
-<h3 id="settings">Settings</h3>
-<p>Click menu <strong>Project → Settings</strong> (<code>Ctrl+,</code>) to open the settings panel:</p>
-<ul>
-<li><strong>Working Directory</strong>: default location for project files</li>
-<li><strong>Interface Language</strong>: 中文 / English</li>
-<li><strong>OCR Language</strong>: default language for text recognition</li>
-<li><strong>Auto Save</strong>: automatically save changes to disk</li>
-</ul>
+<p>Switch to foreground mode if background mode doesn't work for certain actions.</p>
 <hr />
-<h2 id="5-interface-reference">5. Interface Reference</h2>
-<h3 id="floating-control-panel">Floating Control Panel</h3>
-<p>Automatically appears when running a macro — always on top, draggable. Provides pause/resume, custom action buttons, background music controls (visible when music is playing), and close to stop execution.</p>
-<h3 id="system-tray">System Tray</h3>
-<p>Closing the window minimizes it to the system tray. Double-click the tray icon to show the main window. Tray menu: Show Window / Run Current Macro / Stop / Exit.</p>
-<h3 id="keyboard-shortcuts">Keyboard Shortcuts</h3>
+<h2 id="7-keyboard-shortcuts">7. Keyboard Shortcuts</h2>
 <table>
 <thead>
 <tr>
@@ -282,36 +244,12 @@
 </thead>
 <tbody>
 <tr>
-<td><code>Ctrl+N</code></td>
-<td>New project</td>
-</tr>
-<tr>
-<td><code>Ctrl+O</code></td>
-<td>Open project</td>
-</tr>
-<tr>
-<td><code>Ctrl+S</code></td>
-<td>Save project</td>
-</tr>
-<tr>
-<td><code>Ctrl+Shift+O</code></td>
-<td>Switch project</td>
-</tr>
-<tr>
 <td><code>Ctrl+I</code></td>
 <td>Import project</td>
 </tr>
 <tr>
-<td><code>Ctrl+E</code></td>
-<td>Export project</td>
-</tr>
-<tr>
-<td><code>Ctrl+,</code></td>
-<td>Open settings</td>
-</tr>
-<tr>
 <td><code>F5</code></td>
-<td>Run project</td>
+<td>Run</td>
 </tr>
 <tr>
 <td><code>Shift+F5</code></td>
@@ -319,61 +257,14 @@
 </tr>
 <tr>
 <td><code>F1</code></td>
-<td>User guide</td>
-</tr>
-<tr>
-<td><code>Ctrl+1</code>~<code>Ctrl+8</code></td>
-<td>Switch tabs</td>
+<td>Open this guide</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="6-faq">6. FAQ</h2>
-<p><strong>Why does my recorded macro always click at the wrong position?</strong></p>
-<p>Make sure you set the correct design area when creating the project. If you change monitors or resolution, use the <strong>Calibrate</strong> feature to re-set the run area.</p>
-<p><strong>Image search keeps failing?</strong></p>
-<ul>
-<li>Lower the match threshold (default 0.85, try 0.7)</li>
-<li>Narrow the search region for better speed and accuracy</li>
-<li>Ensure the template image matches the actual runtime environment</li>
-<li>Try lowering the match threshold to find a balance between precision and tolerance</li>
-</ul>
-<p><strong>What's the difference between Background and Foreground mode?</strong></p>
-<ul>
-<li><strong>Background Mode</strong> (default): simulates actions in the background without interfering with normal use</li>
-<li><strong>Foreground Mode</strong>: directly controls the mouse and keyboard, taking over control</li>
-</ul>
-<p>If background mode doesn't work for certain actions, switch to foreground mode. Use <strong>🔴 Click Visualization</strong> to verify coordinates.</p>
-<p><strong>How do I debug my workflow?</strong></p>
-<p>Turn on <strong>🐞 Debug Mode</strong> in the toolbar for detailed logs, add <strong>Log Output</strong> nodes at key steps, and enable <strong>🔴 Click Visualization</strong> to see where clicks land.</p>
-<p><strong>What is the relationship between the Code Editor and Node Editor?</strong></p>
-<p>Operations in the node editor automatically generate Lua script code. You can view and manually edit the code in the code editor — they stay in sync.</p>
+<p><em>For more detailed information, see </em><em>Help → Designer Guide</em><em> (for script creators).</em></p>
 <hr />
-<h2 id="7-demo-projects">7. Demo Projects</h2>
-<p>MacroAI comes with built-in demo projects to help you quickly understand the software's capabilities.</p>
-<p><strong>Included demo projects:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Project</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>办公自动化-记事本</td>
-<td>Demonstrates: Open Notepad → Write content → Save file (complete workflow)</td>
-</tr>
-<tr>
-<td>游戏辅助-血条监控</td>
-<td>Demonstrates: Real-time health bar monitoring, auto-use potion when HP is low</td>
-</tr>
-</tbody>
-</table>
-<p>The system will ask on first working directory setup, or import anytime via menu <strong>Help → Import Demo Projects</strong>.</p>
-<p>Use <strong>Project → Open</strong> to view and run them. Freely modify scripts and nodes as a starting point for learning.</p>
-<hr />
-<p><em>For detailed API reference, see menu </em><em>Help → API Reference</em>*. *</p>
+<p><strong>Feedback:</strong> If you encounter any errors or have suggestions, please email us at <strong>macroai@sowe.com</strong>. We look forward to your feedback!</p>
       </main>
     </div>
   </section>
