@@ -4,6 +4,9 @@ build_docs.py
 # Source markdown (maintained in source repo, not in distribution)
 locale/
 
+# Python cache
+__pycache__/
+
 # OS
 .DS_Store
 Thumbs.db

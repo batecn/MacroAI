@@ -158,5 +158,31 @@
   "game.tip.step5": "Run the macro and watch MacroAI restore HP automatically!",
 
   "footer.copyright": "© 2026 MacroAI. All rights reserved.",
-  "footer.version": "Version"
+  "footer.privacy": "Privacy Policy",
+  "footer.version": "Version",
+
+  "privacy.title": "Privacy Policy",
+  "privacy.last-updated": "Last updated: July 2026",
+  "privacy.intro.title": "1. Introduction",
+  "privacy.intro.body": "MacroAI (hereinafter referred to as 'the Software') respects and protects user privacy. This Privacy Policy explains how the Software collects, uses, and stores your information during operation. By using the Software, you agree to the terms of this Privacy Policy.",
+  "privacy.collect.title": "2. Information Collection",
+  "privacy.collect.body1": "MacroAI is a locally-run desktop macro automation tool. We solemnly commit that:",
+  "privacy.collect.item1": "The Software does not collect any personal information, usage habits, or operation records;",
+  "privacy.collect.item2": "The Software does not send any data to any server;",
+  "privacy.collect.item3": "The Software does not contain any form of telemetry or statistical analysis;",
+  "privacy.collect.item4": "All processing is performed entirely on your local device.",
+  "privacy.collect.body2": "Scripts, images, configuration files, and other data you create during use are stored locally on your computer and are not uploaded to any remote server.",
+  "privacy.network.title": "3. Network Access",
+  "privacy.network.body": "The Software does not actively establish any network connections during operation. Version updates are performed by you proactively visiting the GitHub or Gitee release page to download the installer. The Software itself does not have automatic update or network communication capabilities.",
+  "privacy.third.title": "4. Third-Party Services",
+  "privacy.third.body": "The Software does not integrate any third-party analytics, advertising, or data collection services. Open-source components used by the Software run as local libraries and do not communicate with external servers.",
+  "privacy.storage.title": "5. Data Storage and Security",
+  "privacy.storage.body": "All data generated while using the Software (including script configurations, template images, user configurations, etc.) is stored in local directories on your computer. We recommend regular backups of important data. Since all data is stored locally, data security is ensured by your own system security measures.",
+  "privacy.children.title": "6. Children's Privacy",
+  "privacy.children.body": "The Software is not directed at children under 13. We do not knowingly collect personal information from children.",
+  "privacy.changes.title": "7. Changes to This Privacy Policy",
+  "privacy.changes.body": "We may update this Privacy Policy from time to time. Updated versions will be posted on this page with an updated 'Last updated' date. If future versions introduce account systems, cloud services, or other features that require data collection, we will update this policy in a timely manner and notify you through in-app notifications.",
+  "privacy.contact.title": "8. Contact Us",
+  "privacy.contact.body": "If you have any questions or suggestions regarding this Privacy Policy, please contact us at:",
+  "privacy.contact.email": "Email: macroai@sowe.com"
 }
