@@ -12,6 +12,7 @@ Core positioning: **Visual node-based workflow + Background execution + Reusable
 
 ## 📥 Download
 
+**Microsoft Store**: [Microsoft Store](https://apps.microsoft.com/store/detail/9P29TVVR182J?cid=DevShareMCLPCS)
 **GitHub**: [Releases](https://github.com/batecn/MacroAI/releases)
 **Gitee**: [Releases](https://gitee.com/batecn/MacroAI/releases)
 

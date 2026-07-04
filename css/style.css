@@ -733,9 +733,9 @@ ul { list-style: none; }
    ============================================ */
 .docs-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
-  max-width: 900px;
+  max-width: 960px;
   margin: 40px auto;
   padding: 0 28px;
 }
