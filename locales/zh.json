@@ -108,6 +108,7 @@
   "download.mirror.notice": "国内用户如果无法访问 GitHub，可通过 Gitee 镜像下载",
   "download.mirror.btn": "Gitee 镜像下载",
   "download.changelog": "更新日志",
+  "download.changelog.v135": "v1.3.5 — 加固宏录制的安全性，注意：由于安全原因，不兼容之前录制的内容",
   "download.changelog.v133": "v1.3.3 — 安装包大幅瘦身，缩减下载体积；已上架微软商店；GitHub 与 Gitee 同步提供安装包和便携版下载",
   "download.changelog.v130": "v1.3.0 — 设计/运行模式分离、完善脚本分发、多图像查找重构性能优化、新增追踪模式、代码预览支持语法高亮/折叠、修复宏录制坐标丢失",
   "download.changelog.v122": "v1.2.2 — 修复宏录制在不同 DPI 时坐标转换的 bug",

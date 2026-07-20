@@ -108,6 +108,7 @@
   "download.mirror.notice": "If GitHub is inaccessible, download via Gitee mirror",
   "download.mirror.btn": "Gitee Mirror Download",
   "download.changelog": "Changelog",
+  "download.changelog.v135": "v1.3.5 — Enhanced macro recording security. Note: due to security reasons, not compatible with previously recorded macros",
   "download.changelog.v133": "v1.3.3 — Installer size significantly reduced; now available on Microsoft Store; GitHub and Gitee both offer installer and portable downloads",
   "download.changelog.v130": "v1.3.0 — Design/Run mode separation, improved script distribution, multi-image find refactor with performance boost, new trace mode, code preview with syntax highlighting/folding, fixed macro recording coordinate loss",
   "download.changelog.v122": "v1.2.2 — Fixed macro recording coordinate conversion bug under different DPI",
