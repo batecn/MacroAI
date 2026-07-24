@@ -79,7 +79,6 @@
 image_wait(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
 image_find_all(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; table | nil
 image_wait_all(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; table | nil
-image_save_template(img, path) -&gt; void
 </code></pre>
 <p><strong>参数说明：</strong>
 - <code>tmpl</code> (string | table) — 模板图片，支持以下格式：
@@ -231,17 +230,11 @@ key_shortcut(&quot;ctrl+c&quot;)             -- 按 Ctrl+C（组合键）
 key_stroke(0x70, 0x3B)            -- 按下 F1 键（虚拟键码 0x70）
 </code></pre>
 <h2 id="屏幕">屏幕</h2>
-<pre><code>screen_capture(region?) -&gt; Image (numpy array)
-screen_size() -&gt; width, height
+<pre><code>screen_size() -&gt; width, height
 </code></pre>
-<p><strong>参数说明：</strong>
-- <code>region</code> (table, 可选) — 捕获区域 <code>{left, top, width, height}</code>，不传则捕获全屏</p>
 <p><strong>示例：</strong></p>
 <pre><code class="language-lua">local w, h = screen_size()
 log(&quot;屏幕分辨率: &quot; .. w .. &quot;x&quot; .. h)
-
-local img = screen_capture({0, 0, 100, 100})  -- 捕获左上角 100x100
-image_save_template(img, &quot;screenshot.png&quot;)
 </code></pre>
 <hr />
 <h2 id="等待">等待</h2>

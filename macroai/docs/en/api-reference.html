@@ -79,7 +79,6 @@
 image_wait(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
 image_find_all(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; table | nil
 image_wait_all(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; table | nil
-image_save_template(img, path) -&gt; void
 </code></pre>
 <p><strong>Parameters:</strong>
 - <code>tmpl</code> (string | table) — template image. Accepts:
@@ -231,17 +230,11 @@ key_stroke(0x70, 0x3B)            -- press F1 (virtual key code 0x70)
 </code></pre>
 <hr />
 <h2 id="screen">Screen</h2>
-<pre><code>screen_capture(region?) -&gt; Image (numpy array)
-screen_size() -&gt; width, height
+<pre><code>screen_size() -&gt; width, height
 </code></pre>
-<p><strong>Parameters:</strong>
-- <code>region</code> (table, optional) — capture area <code>{left, top, width, height}</code>, defaults to full screen</p>
 <p><strong>Example:</strong></p>
 <pre><code class="language-lua">local w, h = screen_size()
 log(&quot;Screen resolution: &quot; .. w .. &quot;x&quot; .. h)
-
-local img = screen_capture({0, 0, 100, 100})  -- capture top-left 100x100
-image_save_template(img, &quot;screenshot.png&quot;)
 </code></pre>
 <hr />
 <h2 id="wait">Wait</h2>
