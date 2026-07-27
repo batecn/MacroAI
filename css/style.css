@@ -683,6 +683,69 @@ ul { list-style: none; }
   text-decoration: underline;
 }
 
+/* --- Platform Tabs --- */
+.platform-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.platform-tab {
+  padding: 12px 32px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: 0.3px;
+}
+
+.platform-tab:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  color: var(--text-primary);
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.platform-tab.active {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(71, 119, 255, 0.25);
+}
+
+.platform-panel {
+  display: none;
+  animation: panelFadeIn 0.4s ease;
+}
+
+.platform-panel.active {
+  display: block;
+}
+
+@keyframes panelFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Platform Tag (feature cards) --- */
+.platform-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: rgba(71, 119, 255, 0.1);
+  border: 1px solid rgba(71, 119, 255, 0.2);
+  color: #7da2ff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
 .version-info {
   text-align: center;
   color: var(--text-muted);

@@ -46,4 +46,19 @@
       if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
     });
   });
+
+  // === Platform Tabs (Download section) ===
+  var platformTabs = document.querySelectorAll('.platform-tab');
+  platformTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var target = this.getAttribute('data-platform');
+      platformTabs.forEach(function (t) { t.classList.remove('active'); });
+      this.classList.add('active');
+      document.querySelectorAll('.platform-panel').forEach(function (panel) {
+        panel.classList.remove('active');
+      });
+      var activePanel = document.getElementById('panel-' + target);
+      if (activePanel) activePanel.classList.add('active');
+    });
+  });
 })();

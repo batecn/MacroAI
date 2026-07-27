@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MacroAI - Windows 桌面宏自动化工具</title>
-  <meta name="description" content="基于图像识别、OCR 和 Lua 脚本的 Windows 桌面宏自动化工具">
+  <title>MacroAI - 跨平台宏自动化工具</title>
+  <meta name="description" content="基于图像识别、OCR 和 Lua 脚本的跨平台宏自动化工具，支持 Windows 与 Android">
   <link rel="icon" href="assets/macroai.png" type="image/png">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -39,10 +39,10 @@
   <section class="full-section" id="hero">
     <div class="section-content">
       <div class="reveal">
-        <div class="hero-badge" data-i18n="home.hero.subtitle">Windows 桌面宏自动化工具</div>
+        <div class="hero-badge" data-i18n="home.hero.subtitle">跨平台宏自动化 · Windows / Android</div>
       </div>
       <h1 class="hero-title reveal reveal-delay-1">MacroAI</h1>
-      <p class="hero-desc reveal reveal-delay-2" style="margin: 0 auto 44px;" data-i18n="home.hero.desc">基于图像识别、OCR 文字识别和 Lua 脚本的可视化宏自动化平台，让重复工作一键完成。</p>
+      <p class="hero-desc reveal reveal-delay-2" style="margin: 0 auto 44px;" data-i18n="home.hero.desc">基于图像识别、OCR 文字识别和 Lua 脚本的可视化宏自动化平台，支持 Windows 与 Android 双平台，让重复工作一键完成。</p>
       <div class="hero-actions reveal reveal-delay-3">
         <a href="#download" class="btn btn-primary" data-i18n="home.hero.cta">免费下载</a>
         <a href="#features" class="btn btn-secondary" data-i18n="home.hero.learn">了解更多</a>
@@ -76,7 +76,7 @@
         <div class="glass-card feature-card reveal stagger-item">
           <div class="feature-icon">📝</div>
           <h3 data-i18n="home.features.ocr.title">OCR 文字识别</h3>
-          <p data-i18n="home.features.ocr.desc">Windows OCR 引擎，识别屏幕指定区域文字，支持文字比对与条件触发。</p>
+          <p data-i18n="home.features.ocr.desc">内置 OCR 引擎，识别屏幕指定区域文字，支持文字比对与条件触发。</p>
         </div>
         <div class="glass-card feature-card reveal stagger-item">
           <div class="feature-icon">🔍</div>
@@ -91,6 +91,7 @@
         <div class="glass-card feature-card reveal stagger-item">
           <div class="feature-icon">🖥</div>
           <h3 data-i18n="home.features.bg.title">后台模式</h3>
+          <span class="platform-tag">Windows</span>
           <p data-i18n="home.features.bg.desc">Win32 PostMessage 后台输入，不抢占焦点。支持后台截图识别，脚本静默执行。</p>
         </div>
         <div class="glass-card feature-card reveal stagger-item">
@@ -102,6 +103,11 @@
           <div class="feature-icon">🎁</div>
           <h3 data-i18n="home.features.free.title">完全免费 · 无广告</h3>
           <p data-i18n="home.features.free.desc">基础核心功能永久免费，无功能阉割、无广告弹窗、无捆绑安装。</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">🔄</div>
+          <h3 data-i18n="home.features.cross.title">跨平台脚本互通</h3>
+          <p data-i18n="home.features.cross.desc">同一份 Lua 脚本在 Windows 与 Android 上通用执行，图像模板两平台共享，一次编写到处运行。</p>
         </div>
       </div>
     </div>
@@ -153,48 +159,87 @@
         <h2 class="section-title" data-i18n="download.desc">选择适合您的版本，开始自动化之旅</h2>
       </div>
 
-      <div class="download-options reveal stagger-children">
-        <div class="glass-card download-card stagger-item">
-          <div style="font-size: 2.8rem; margin-bottom: 16px;">📦</div>
-          <h3 data-i18n="download.installer">安装包下载</h3>
-          <p data-i18n="download.installer.desc">Inno Setup 安装包，包含完整组件，推荐新用户使用</p>
-          <a href="https://github.com/batecn/MacroAI/releases/latest" class="btn btn-primary" target="_blank" data-i18n-href="download.installer.link" data-i18n="download.installer.btn">前往下载</a>
-          <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases/latest" target="_blank" data-i18n-href="download.installer.mirror.link" data-i18n="download.installer.mirror">备用下载：GitHub</a></p>
+      <div class="platform-tabs reveal">
+        <button class="platform-tab active" data-platform="windows">🖥 Windows</button>
+        <button class="platform-tab" data-platform="android">📱 Android</button>
+      </div>
+
+      <!-- Windows Panel -->
+      <div class="platform-panel active" id="panel-windows">
+        <div class="download-options stagger-children">
+          <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">📦</div>
+            <h3 data-i18n="download.installer">安装包下载</h3>
+            <p data-i18n="download.installer.desc">Inno Setup 安装包，包含完整组件，推荐新用户使用</p>
+            <a href="https://github.com/batecn/MacroAI/releases/latest" class="btn btn-primary" target="_blank" data-i18n-href="download.installer.link" data-i18n="download.installer.btn">前往下载</a>
+            <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases/latest" target="_blank" data-i18n-href="download.installer.mirror.link" data-i18n="download.installer.mirror">备用下载：GitHub</a></p>
+          </div>
+          <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">🗜</div>
+            <h3 data-i18n="download.portable">绿色便携版</h3>
+            <p data-i18n="download.portable.desc">解压即用，无需安装，适合临时或便携使用</p>
+            <a href="https://github.com/batecn/MacroAI/releases/latest" class="btn btn-primary" target="_blank" data-i18n-href="download.portable.link" data-i18n="download.portable.btn">前往下载</a>
+            <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases/latest" target="_blank" data-i18n-href="download.portable.mirror.link" data-i18n="download.portable.mirror">备用下载：GitHub</a></p>
+          </div>
+          <div class="glass-card download-card stagger-item" style="grid-column: 1 / -1;">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">🏪</div>
+            <h3 data-i18n="download.mall">微软商店下载</h3>
+            <p data-i18n="download.mall.desc">通过微软商店一键安装，自动更新，安全便捷</p>
+            <a href="https://apps.microsoft.com/store/detail/9P29TVVR182J?cid=DevShareMCLPCS" class="btn btn-primary" target="_blank" data-i18n-href="download.mall.link" data-i18n="download.mall.btn">前往商店</a>
+          </div>
         </div>
-        <div class="glass-card download-card stagger-item">
-          <div style="font-size: 2.8rem; margin-bottom: 16px;">🗜</div>
-          <h3 data-i18n="download.portable">绿色便携版</h3>
-          <p data-i18n="download.portable.desc">解压即用，无需安装，适合临时或便携使用</p>
-          <a href="https://github.com/batecn/MacroAI/releases/latest" class="btn btn-primary" target="_blank" data-i18n-href="download.portable.link" data-i18n="download.portable.btn">前往下载</a>
-          <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases/latest" target="_blank" data-i18n-href="download.portable.mirror.link" data-i18n="download.portable.mirror">备用下载：GitHub</a></p>
+
+        <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.requirements">系统要求</h3>
+          <ul style="list-style:disc; padding-left:20px;">
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item1">Windows 10 / Windows 11（64 位）</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item2">4GB 及以上内存</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item3">200MB 及以上磁盘空间</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item4">支持 DirectX 11 的显卡</li>
+          </ul>
         </div>
-        <div class="glass-card download-card stagger-item" style="grid-column: 1 / -1;">
-          <div style="font-size: 2.8rem; margin-bottom: 16px;">🏪</div>
-          <h3 data-i18n="download.mall">微软商店下载</h3>
-          <p data-i18n="download.mall.desc">通过微软商店一键安装，自动更新，安全便捷</p>
-          <a href="https://apps.microsoft.com/store/detail/9P29TVVR182J?cid=DevShareMCLPCS" class="btn btn-primary" target="_blank" data-i18n-href="download.mall.link" data-i18n="download.mall.btn">前往商店</a>
+
+        <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.changelog">更新日志</h3>
+          <div class="changelog-item" data-i18n="download.changelog.v135"><strong>v1.3.5</strong> — 加固宏录制的安全性，注意：由于安全原因，不兼容之前录制的内容</div>
+          <div class="changelog-item" data-i18n="download.changelog.v133"><strong>v1.3.3</strong> — 安装包大幅瘦身，缩减下载体积；已上架微软商店；GitHub 与 Gitee 同步提供安装包和便携版下载</div>
+          <div class="changelog-item" data-i18n="download.changelog.v130"><strong>v1.3.0</strong> — 设计/运行模式分离，完善脚本分发，多图查找重构大幅提升性能，新增追踪模式，代码预览支持语法高亮及代码折叠，修正宏录制坐标丢失的bug</div>
+          <div class="changelog-item" data-i18n="download.changelog.v122"><strong>v1.2.2</strong> — 修复宏录制在不同 DPI 时坐标转换的 bug</div>
+          <div class="changelog-item" data-i18n="download.changelog.v121"><strong>v1.2.1</strong> — 大幅优化图像匹配的准确度</div>
         </div>
       </div>
 
-      <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
-        <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.requirements">系统要求</h3>
-        <ul style="list-style:disc; padding-left:20px;">
-          <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item1">Windows 10 / Windows 11（64 位）</li>
-          <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item2">4GB 及以上内存</li>
-          <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item3">200MB 及以上磁盘空间</li>
-          <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.requirements.item4">支持 DirectX 11 的显卡</li>
-        </ul>
-      </div>
-<div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
-        <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.changelog">更新日志</h3>
-        <div class="changelog-item" data-i18n="download.changelog.v135"><strong>v1.3.5</strong> — 加固宏录制的安全性，注意：由于安全原因，不兼容之前录制的内容</div>
-        <div class="changelog-item" data-i18n="download.changelog.v133"><strong>v1.3.3</strong> — 安装包大幅瘦身，缩减下载体积；已上架微软商店；GitHub 与 Gitee 同步提供安装包和便携版下载</div>
-        <div class="changelog-item" data-i18n="download.changelog.v130"><strong>v1.3.0</strong> — 设计/运行模式分离，完善脚本分发，多图查找重构大幅提升性能，新增追踪模式，代码预览支持语法高亮及代码折叠，修正宏录制坐标丢失的bug</div>
-        <div class="changelog-item" data-i18n="download.changelog.v122"><strong>v1.2.2</strong> — 修复宏录制在不同 DPI 时坐标转换的 bug</div>
-        <div class="changelog-item" data-i18n="download.changelog.v121"><strong>v1.2.1</strong> — 大幅优化图像匹配的准确度</div>
-        <div class="changelog-item" data-i18n="download.changelog.v115"><strong>v1.1.5</strong> — 修复节点编辑器拖拽重排问题，优化跨容器拖拽体验</div>
-        <div class="changelog-item" data-i18n="download.changelog.v114"><strong>v1.1.4</strong> — 优化 OCR 识别稳定性，修复多分辨率坐标缩放问题</div>
-        <div class="changelog-item" data-i18n="download.changelog.v113"><strong>v1.1.3</strong> — 新增条形图变化检测节点，优化图像识别性能</div>
+      <!-- Android Panel -->
+      <div class="platform-panel" id="panel-android">
+        <div class="download-options stagger-children">
+          <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">📱</div>
+            <h3 data-i18n="download.android.apk">APK 安装包</h3>
+            <p data-i18n="download.android.apk.desc">下载 APK 直接安装，当前版本 v1.0.4</p>
+            <a href="https://github.com/batecn/MacroAI/releases" class="btn btn-primary" target="_blank" data-i18n-href="download.android.apk.link" data-i18n="download.android.apk.btn">前往下载</a>
+            <p class="download-mirror"><a href="https://gitee.com/batecn/MacroAI/releases" target="_blank" data-i18n-href="download.android.apk.mirror.link" data-i18n="download.android.apk.mirror">备用下载：Gitee</a></p>
+          </div>
+          <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">⚡</div>
+            <h3 data-i18n="download.android.feature">安卓版特性</h3>
+            <p data-i18n="download.android.feature.desc">无障碍服务驱动，无需 Root；与 Windows 版共享 Lua 脚本和图像模板</p>
+          </div>
+        </div>
+
+        <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.requirements">系统要求</h3>
+          <ul style="list-style:disc; padding-left:20px;">
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.android.req.item1">Android 8.0 及以上版本</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.android.req.item2">需开启无障碍服务权限（用于自动化操作）</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.android.req.item3">图像识别功能需授权屏幕录制权限</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;" data-i18n="download.android.req.item4">约 30MB 存储空间</li>
+          </ul>
+        </div>
+
+        <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.changelog">更新日志</h3>
+          <div class="changelog-item" data-i18n="download.android.changelog.v104"><strong>v1.0.4</strong> — 安卓版首个公开版本，支持 Lua 脚本执行、图像识别、OCR、无障碍服务自动化</div>
+        </div>
       </div>
     </div>
   </section>
@@ -276,7 +321,7 @@
   <section class="full-section" id="cta-section">
     <div class="section-content">
       <div class="cta-box reveal">
-        <h2 data-i18n="home.cta.title">开始自动化您的桌面操作</h2>
+        <h2 data-i18n="home.cta.title">开始自动化您的桌面与手机操作</h2>
         <p data-i18n="home.cta.desc">免费下载 MacroAI，体验可视化宏自动化的强大能力</p>
         <a href="#download" class="btn" data-i18n="home.cta.btn">立即下载</a>
       </div>
