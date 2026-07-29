@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- 首页 中文 -->
+  <url>
+    <loc>https://www.sowe.com/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.sowe.com/"/>
+  </url>
+
+  <!-- 首页 英文 -->
+  <url>
+    <loc>https://www.sowe.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.sowe.com/"/>
+  </url>
+
+  <!-- 隐私政策 中文 -->
+  <url>
+    <loc>https://www.sowe.com/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/en/privacy.html"/>
+  </url>
+
+  <!-- 隐私政策 英文 -->
+  <url>
+    <loc>https://www.sowe.com/en/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/en/privacy.html"/>
+  </url>
+
+  <!-- 文档 中文 -->
+  <url>
+    <loc>https://www.sowe.com/macroai/docs/zh/user-guide.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/docs/zh/user-guide.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/docs/en/user-guide.html"/>
+  </url>
+  <url>
+    <loc>https://www.sowe.com/macroai/docs/zh/designer-guide.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/docs/zh/designer-guide.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/docs/en/designer-guide.html"/>
+  </url>
+  <url>
+    <loc>https://www.sowe.com/macroai/docs/zh/api-reference.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/docs/zh/api-reference.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/docs/en/api-reference.html"/>
+  </url>
+
+  <!-- 文档 英文 -->
+  <url>
+    <loc>https://www.sowe.com/macroai/docs/en/user-guide.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/docs/zh/user-guide.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/docs/en/user-guide.html"/>
+  </url>
+  <url>
+    <loc>https://www.sowe.com/macroai/docs/en/designer-guide.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/docs/zh/designer-guide.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/docs/en/designer-guide.html"/>
+  </url>
+  <url>
+    <loc>https://www.sowe.com/macroai/docs/en/api-reference.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/docs/zh/api-reference.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/docs/en/api-reference.html"/>
+  </url>
+
+  <!-- Demo 页面 -->
+  <url>
+    <loc>https://www.sowe.com/macroai/battle-demo.html</loc>
+  </url>
+  <url>
+    <loc>https://www.sowe.com/macroai/pengpeng-demo.html</loc>
+  </url>
+
+</urlset>

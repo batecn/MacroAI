@@ -181,6 +181,8 @@
   "footer.copyright": "© 2026 MacroAI. All rights reserved.",
   "footer.privacy": "Privacy Policy",
   "footer.version": "Version",
+  "footer.demo.battle": "HP Bar Demo",
+  "footer.demo.match": "Match Game Demo",
 
   "privacy.title": "Privacy Policy",
   "privacy.last-updated": "Last updated: July 2026",

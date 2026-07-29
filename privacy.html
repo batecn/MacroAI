@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="privacy.title">Privacy Policy - MacroAI</title>
   <meta name="description" content="MacroAI 隐私政策">
+  <link rel="alternate" hreflang="zh" href="https://www.sowe.com/privacy.html">
+  <link rel="alternate" hreflang="en" href="https://www.sowe.com/en/privacy.html">
   <link rel="icon" href="assets/macroai.png" type="image/png">
   <link rel="stylesheet" href="css/style.css">
   <style>
@@ -37,7 +39,7 @@
         <a href="index.html#features" data-i18n="nav.features">功能特性</a>
         <a href="index.html#scenarios" data-i18n="nav.scenarios">适用场景</a>
         <a href="index.html#download" data-i18n="nav.download">下载</a>
-        <button id="lang-toggle">English</button>
+        <a href="/en/privacy.html" id="lang-toggle" class="lang-link">English</a>
       </div>
       <button class="hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -103,14 +105,20 @@
     <p data-i18n="footer.copyright">© 2026 MacroAI. All rights reserved.</p>
     <div class="footer-links">
       <a href="index.html" data-i18n="nav.home">首页</a>
-      <a href="macroai/battle-demo.html">血条演示Demo</a>
-      <a href="macroai/pengpeng-demo.html">对对碰演示Demo</a>
+      <a href="macroai/battle-demo.html" data-i18n="footer.demo.battle">血条演示Demo</a>
+      <a href="macroai/pengpeng-demo.html" data-i18n="footer.demo.match">对对碰演示Demo</a>
       <a href="privacy.html" data-i18n="footer.privacy">隐私政策</a>
       <a href="mailto:macroai@sowe.com">macroai@sowe.com</a>
     </div>
   </footer>
 
-  <script src="js/i18n.js"></script>
+  <script>
+    (function() {
+      var stored = localStorage.getItem('macroai-lang');
+      var lang = stored || (navigator.language && navigator.language.indexOf('zh') === -1 ? 'en' : 'zh');
+      if (lang === 'en') { location.replace('/en/privacy.html'); }
+    })();
+  </script>
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>变量、函数与流程控制 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI 变量、条件判断、循环、函数、表达式常见问题">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">变量、函数与流程控制</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <details class="faq-item">
+        <summary>变量是什么？怎么在节点中使用变量？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>变量</strong>就是一个"有名字的盒子"，用来存储运行时的数据（如图像查找的结果坐标、OCR 识别的文字、计数器等）。</p>
+          <p><strong>使用步骤：</strong></p>
+          <ol>
+            <li>在"变量"标签页（<code>Ctrl+3</code>）中定义变量：取个名字（如 <code>count</code>），选类型（字符串/数字/布尔），设默认值</li>
+            <li>在节点中<strong>写入</strong>变量：如"设置变量"节点，或图像查找节点的"结果变量"字段</li>
+            <li>在节点中<strong>读取</strong>变量：如条件判断中引用变量做比较，或"输入文本"节点中插入变量值</li>
+          </ol>
+          <p><strong>典型用法：</strong></p>
+          <ul>
+            <li>图像查找的结果自动存入变量（如 <code>result</code>），包含坐标和置信度</li>
+            <li>用"设置变量"节点做计数器：每循环一次 count + 1</li>
+            <li>在"输入文本"节点中引用变量，实现动态输入</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>"条件判断"节点怎么用？成功时/失败时/自定义条件是什么？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>条件判断让脚本"根据情况走不同的路"。每个节点都可以设置执行条件（在节点配置底部）：</p>
+          <ul>
+            <li><strong>无条件</strong>（默认）— 不管前面怎样都执行</li>
+            <li><strong>成功时</strong> — 只有上一个节点执行成功才执行。如：图像找到了 → 才点击</li>
+            <li><strong>失败时</strong> — 只有上一个节点执行失败才执行。如：图像没找到 → 走备选方案</li>
+            <li><strong>自定义条件</strong> — 写一个表达式，为 true 才执行。如：<code>count >= 5</code>（循环超过5次才执行）</li>
+          </ul>
+          <p><strong>"成功/失败"怎么定义？</strong></p>
+          <ul>
+            <li>图像查找：找到 = 成功，没找到 = 失败</li>
+            <li>OCR 比对：文字一致 = 成功，不一致 = 失败</li>
+            <li>等待变化：检测到变化 = 成功，超时 = 失败</li>
+            <li>等待/点击/日志：永远成功</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>"循环"节点有几种模式？怎么用？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>循环节点是一个<strong>容器</strong>，你把其他节点拖进去，它们就会被重复执行。三种模式：</p>
+          <ul>
+            <li><strong>固定次数</strong> — 循环 N 次。如：点击 10 次 → 设次数为 10。</li>
+            <li><strong>无限循环</strong> — 永远重复，直到脚本被手动停止。如：持续监控血条、持续刷怪。</li>
+            <li><strong>遍历数组</strong> — 依次取出数组中的每个元素执行。如：依次点击列表中的每个按钮。</li>
+          </ul>
+          <p><strong>使用方法：</strong></p>
+          <ol>
+            <li>添加"循环"节点</li>
+            <li>双击配置，选择循环模式和参数</li>
+            <li>把要重复执行的节点<strong>拖入循环容器内</strong>（视觉上会缩进显示）</li>
+          </ol>
+          <p><strong>提示：</strong>无限循环中建议加一个短"等待"节点（如 100ms），避免 CPU 占用过高。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>函数是什么？什么时候需要把一段流程做成函数？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>函数</strong>是把一组节点"打包"成一个可复用的模块。定义一次，可以在主流程中多次调用。</p>
+          <p><strong>什么时候用？</strong></p>
+          <ul>
+            <li>同一段操作在流程中出现了 2 次以上 → 做成函数，避免重复</li>
+            <li>一段操作有独立含义（如"回城""补充弹药""翻页"）→ 做成函数让流程更清晰</li>
+            <li>想从自定义动作中调用一段流程 → 必须先做成函数</li>
+          </ul>
+          <p><strong>使用方法：</strong></p>
+          <ol>
+            <li>在"函数"标签页（<code>Ctrl+5</code>）中创建函数，编辑其内部节点</li>
+            <li>在主流程中添加"调用函数"节点，选择要调用的函数</li>
+            <li>函数可以带参数，调用时传入不同的值</li>
+          </ol>
+          <p>函数之间也可以互相调用，可以访问全局变量。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>表达式是什么？哪些地方可以用表达式？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>表达式</strong>是一段 Lua 代码片段，运行后产生一个值。让你可以做计算、拼接、判断等灵活操作。</p>
+          <p><strong>可以用表达式的地方：</strong></p>
+          <ul>
+            <li><strong>条件判断</strong>的自定义条件：<code>count >= 10 and hp < 30</code></li>
+            <li><strong>设置变量</strong>时勾选"表达式"：<code>count + 1</code>、<code>name .. "_done"</code></li>
+            <li><strong>日志输出</strong>时勾选"表达式"：<code>"第" .. count .. "次循环"</code></li>
+            <li><strong>等待时间</strong>：<code>math.random(500, 1500)</code>（随机等待）</li>
+          </ul>
+          <p><strong>常用语法：</strong></p>
+          <ul>
+            <li>数字运算：<code>a + b</code>、<code>a * 2</code>、<code>a % 3</code></li>
+            <li>字符串拼接：<code>"hello" .. name</code></li>
+            <li>比较：<code>x > 100</code>、<code>name == "test"</code></li>
+            <li>逻辑：<code>a and b</code>、<code>a or b</code>、<code>not a</code></li>
+          </ul>
+          <p>不需要勾选"表达式"时，输入框的内容会被当作纯文本/数字处理。</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>分发与导入导出 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI 脚本分发、分发包、导入导出、用户配置变量常见问题">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">分发与导入导出</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <details class="faq-item">
+        <summary>如何把做好的脚本分享给别人使用？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 支持将项目导出为单个文件，发给别人直接导入使用：</p>
+          <ol>
+            <li>在 MacroAI 中打开你的项目</li>
+            <li>点击菜单 <strong>项目 → 导出项目</strong></li>
+            <li>选择保存位置，生成 <code>.macroai</code> 文件</li>
+            <li>通过微信/QQ/邮件等方式发送给对方</li>
+          </ol>
+          <p><strong>对方收到后：</strong></p>
+          <ul>
+            <li>Windows：双击 .macroai 文件自动打开 MacroAI 并导入（已安装的情况下）</li>
+            <li>或者在 MacroAI 中点击 项目 → 导入，选择文件</li>
+            <li>Android：用 MacroAI 打开文件，自动导入并进入运行界面</li>
+          </ul>
+          <p>导出文件包含所有节点、图片、变量、函数等完整项目数据。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>什么是"分发包"？和普通导出有什么区别？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>导出时有两种选择：</p>
+          <ul>
+            <li><strong>普通导出</strong> — 明文包，导入后可以看到和编辑所有节点。适合：备份、团队协作、自己换电脑。</li>
+            <li><strong>分发包</strong>（加密导出）— 脚本内容加密，导入后<strong>只能运行，不能查看/编辑节点</strong>。适合：分发给最终用户、保护设计成果。</li>
+          </ul>
+          <p><strong>分发包的特点：</strong></p>
+          <ul>
+            <li>导入后自动进入运行模式，设计模式入口灰色不可点击</li>
+            <li>使用者看不到节点编辑器、代码等设计内容</li>
+            <li>使用者只能：校准区域、填写个性化配置、运行/停止</li>
+            <li>加密保护，无法通过解压文件还原脚本</li>
+          </ul>
+          <p>导出时勾选"分发包"选项即可生成加密包。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>导入 .macroai 文件后为什么看不到节点编辑器？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>这是因为你导入的是一个<strong>分发包</strong>（加密包）。分发包的设计目的就是"只让使用者运行，不让查看/修改脚本"。</p>
+          <p>导入分发包后：</p>
+          <ul>
+            <li>自动切换到运行模式</li>
+            <li>设计模式入口变灰，无法切换</li>
+            <li>你只能看到：项目信息、区域校准、个性化配置、运行按钮</li>
+          </ul>
+          <p><strong>这是正常行为，不是 bug。</strong>如果你需要编辑脚本，需要找设计者要普通导出包（非加密），或者让设计者给你源项目。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>使用者导入脚本后需要做哪些配置才能运行？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>导入后切换到运行模式，通常需要：</p>
+          <ol>
+            <li><strong>校准运行区域</strong>（如果你的屏幕分辨率/窗口位置和设计者不同）
+              <ul>
+                <li>点击"校准"按钮，框选目标程序在你屏幕上的实际位置</li>
+                <li>如果设计者用的全屏且你也是同分辨率全屏 → 可跳过</li>
+              </ul>
+            </li>
+            <li><strong>填写个性化配置</strong>（如果设计者定义了用户配置变量）
+              <ul>
+                <li>如：上传你自己的头像图片、输入你的游戏昵称</li>
+                <li>界面上会显示需要填写的项目</li>
+              </ul>
+            </li>
+            <li><strong>点击运行</strong></li>
+          </ol>
+          <p>运行模式界面有"配置完整度"提示，告诉你还有哪些配置没完成。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>"用户配置变量"是什么？设计者和使用者分别怎么操作？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>用户配置变量让设计者预留"可自定义的位置"，使用者运行前填入自己的值。</p>
+          <p><strong>典型场景：</strong>脚本中需要点击用户的游戏头像，但每个人的头像不同 → 设计者定义一个"头像"图片变量，使用者运行前截自己的头像。</p>
+          <p><strong>设计者操作：</strong></p>
+          <ol>
+            <li>在"用户配置"标签页（<code>Ctrl+9</code>）中定义变量（如：ID=avatar，名称=我的头像，类型=图片）</li>
+            <li>在图像查找节点中，通过 ◎ 按钮引用该变量（字段显示 <code>u|avatar</code>）</li>
+          </ol>
+          <p><strong>使用者操作：</strong></p>
+          <ol>
+            <li>在运行模式界面看到"我的头像"配置项</li>
+            <li>点击截图/上传，提供自己的头像图片</li>
+            <li>运行时脚本自动使用使用者提供的图片</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Windows 和 Android 的项目文件可以互相导入吗？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>可以。</strong>两端使用相同的项目格式和加密协议，.macroai 文件双向兼容。</p>
+          <p>在 Windows 上制作的脚本可以导出后在 Android 上导入运行，反之亦然。</p>
+          <p><strong>注意事项：</strong></p>
+          <ul>
+            <li>坐标策略和分辨率适配仍然需要处理（两端屏幕尺寸不同，运行前需校准）</li>
+            <li>某些节点可能一端支持另一端不支持（导入后不支持的节点会被跳过）</li>
+            <li>Windows 的"按键"节点使用虚拟键码，Android 上可能行为不同</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

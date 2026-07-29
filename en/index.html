@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroAI - Cross-Platform Macro Automation Tool</title>
+  <meta name="description" content="A cross-platform macro automation tool powered by image recognition, OCR, and Lua scripting. Supports Windows and Android.">
+  <link rel="alternate" hreflang="zh" href="https://www.sowe.com/">
+  <link rel="alternate" hreflang="en" href="https://www.sowe.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://www.sowe.com/">
+  <link rel="icon" href="../assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="#hero" class="navbar-logo">
+        <img src="../assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="#hero" class="active">Home</a>
+        <a href="#features">Features</a>
+        <a href="#scenarios">Use Cases</a>
+        <a href="#download">Download</a>
+        <a href="#docs">Docs</a>
+        <a href="/" id="lang-toggle" class="lang-link">中文</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <section class="full-section" id="hero">
+    <div class="section-content">
+      <div class="reveal">
+        <div class="hero-badge">Cross-Platform Macro Automation · Windows / Android</div>
+      </div>
+      <h1 class="hero-title reveal reveal-delay-1">MacroAI</h1>
+      <p class="hero-desc reveal reveal-delay-2" style="margin: 0 auto 44px;">A visual macro automation platform powered by image recognition, OCR, and Lua scripting. Now on both Windows and Android — make repetitive tasks a single click away.</p>
+      <div class="hero-actions reveal reveal-delay-3">
+        <a href="#download" class="btn btn-primary">Download Free</a>
+        <a href="#features" class="btn btn-secondary">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint reveal reveal-delay-4">
+      <span>Scroll Down</span>
+      <div class="arrow"></div>
+    </div>
+  </section>
+
+  <!-- ===== Features Overview ===== -->
+  <section class="full-section" id="features">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label">Core Features</div>
+        <h2 class="section-title">Powerful, Flexible</h2>
+        <p class="section-desc">Visual recognition meets scripting — built for desktop automation</p>
+      </div>
+      <div class="features-grid stagger-children">
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">⚡</div>
+          <h3>Visual Node Editor</h3>
+          <p>Drag-and-drop workflow builder with 20+ node types, LOOP/CONDITION container nodes. Build automation flows without writing code.</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">👁</div>
+          <h3>Image Recognition</h3>
+          <p>OpenCV-based template matching with custom regions, adjustable thresholds, and multi-template matching for precise element targeting.</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">📝</div>
+          <h3>OCR Text Recognition</h3>
+          <p>Built-in OCR engine for text recognition in screen regions. Supports text comparison and conditional triggering.</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">🔍</div>
+          <h3>Change Detection</h3>
+          <p>Grid-based screen change detection, bar value tracking (HP bars, progress bars), with automatic periodic change filtering.</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">🔧</div>
+          <h3>Lua Scripting Engine</h3>
+          <p>Node operations auto-generate Lua code — approachable for non-programmers, extensible for developers.</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">🖥</div>
+          <h3>Background Mode</h3>
+          <span class="platform-tag">Windows</span>
+          <p>Win32 PostMessage background input — no focus steal. Supports background screenshot & recognition for stealthy automation.</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">📐</div>
+          <h3>Multi-Resolution Support</h3>
+          <p>Independent design and runtime regions with automatic coordinate scaling. The same script runs stably across devices with different resolutions and scaling ratios.</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">🎁</div>
+          <h3>Completely Free · No Ads</h3>
+          <p>All core features are permanently free — no feature gating, no ad popups, no bundled adware.</p>
+        </div>
+        <div class="glass-card feature-card reveal stagger-item">
+          <div class="feature-icon">🔄</div>
+          <h3>Cross-Platform Scripts</h3>
+          <p>The same Lua script runs on both Windows and Android. Share image templates across platforms — write once, run anywhere.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Scenarios ===== -->
+  <section class="full-section" id="scenarios">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label">Use Cases</div>
+        <h2 class="section-title">Real Problems, Solved</h2>
+        <p class="section-desc">From office to IT ops — MacroAI automates the tedious</p>
+      </div>
+      <div class="scenarios-grid stagger-children">
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">📊</span>
+          <h4>Office Automation</h4>
+          <p>Automate repetitive form filling, data entry, and report generation. Free your team for creative work.</p>
+        </div>
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">🧪</span>
+          <h4>Software Testing</h4>
+          <p>GUI regression testing automation with image comparison verification. Boost testing efficiency.</p>
+        </div>
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">🎮</span>
+          <h4>Game Assistance</h4>
+          <p>Image recognition and change detection based automation with precise screen region targeting for gaming scenarios.</p>
+        </div>
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">🔄</span>
+          <h4>RPA Automation</h4>
+          <p>Cross-application process automation. Extract data from emails and write to Excel. Break down data silos.</p>
+        </div>
+        <div class="glass-card scenario-card reveal stagger-item">
+          <span class="scenario-icon">⚙</span>
+          <h4>IT Operations</h4>
+          <p>Scheduled system tasks, batch file processing, and remote operation automation orchestration.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Download ===== -->
+  <section class="full-section" id="download">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label">Download MacroAI</div>
+        <h2 class="section-title">Choose the version that fits your needs and start automating</h2>
+      </div>
+
+      <div class="platform-tabs reveal">
+        <button class="platform-tab active" data-platform="windows">🖥 Windows</button>
+        <button class="platform-tab" data-platform="android">📱 Android</button>
+      </div>
+
+      <!-- Windows Panel -->
+      <div class="platform-panel active" id="panel-windows">
+        <div class="download-options stagger-children">
+          <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">📦</div>
+            <h3>Installer</h3>
+            <p>Inno Setup installer with complete components. Recommended for new users.</p>
+            <a href="https://github.com/batecn/MacroAI/releases/latest" class="btn btn-primary" target="_blank">Go to Download</a>
+            <p class="download-mirror"><a href="https://gitee.com/batecn/MacroAI/releases" target="_blank">Mirror: Gitee</a></p>
+          </div>
+          <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">🗜</div>
+            <h3>Portable Edition</h3>
+            <p>Extract and run, no installation required. Ideal for temporary or portable use.</p>
+            <a href="https://github.com/batecn/MacroAI/releases/latest" class="btn btn-primary" target="_blank">Go to Download</a>
+            <p class="download-mirror"><a href="https://gitee.com/batecn/MacroAI/releases" target="_blank">Mirror: Gitee</a></p>
+          </div>
+          <div class="glass-card download-card stagger-item" style="grid-column: 1 / -1;">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">🏪</div>
+            <h3>Microsoft Store</h3>
+            <p>Install from Microsoft Store with auto-updates — safe and convenient</p>
+            <a href="https://apps.microsoft.com/store/detail/9P29TVVR182J?cid=DevShareMCLPCS" class="btn btn-primary" target="_blank">Go to Store</a>
+          </div>
+        </div>
+
+        <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;">System Requirements</h3>
+          <ul style="list-style:disc; padding-left:20px;">
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;">Windows 10 / Windows 11 (64-bit)</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;">4GB RAM or more</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;">200MB free disk space or more</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;">DirectX 11 compatible graphics card</li>
+          </ul>
+        </div>
+
+        <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;">Changelog</h3>
+          <div class="changelog-item">v1.3.5 — Enhanced macro recording security. Note: due to security reasons, not compatible with previously recorded macros<strong></strong></div>
+          <div class="changelog-item">v1.3.3 — Installer size significantly reduced; now available on Microsoft Store; GitHub and Gitee both offer installer and portable downloads<strong></strong></div>
+          <div class="changelog-item">v1.3.0 — Design/Run mode separation, improved script distribution, multi-image find refactor with performance boost, new trace mode, code preview with syntax highlighting/folding, fixed macro recording coordinate loss<strong></strong></div>
+          <div class="changelog-item">v1.2.2 — Fixed macro recording coordinate conversion bug under different DPI<strong></strong></div>
+          <div class="changelog-item">v1.2.1 — Significantly improved image matching accuracy<strong></strong></div>
+        </div>
+      </div>
+
+      <!-- Android Panel -->
+      <div class="platform-panel" id="panel-android">
+        <div class="download-options stagger-children">
+          <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">📱</div>
+            <h3>APK Download</h3>
+            <p>Download the APK and install directly. Current version: v1.0.4</p>
+            <a href="https://github.com/batecn/MacroAI/releases" class="btn btn-primary" target="_blank">Go to Download</a>
+            <p class="download-mirror"><a href="https://gitee.com/batecn/MacroAI/releases" target="_blank">Mirror: Gitee</a></p>
+          </div>
+          <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">⚡</div>
+            <h3>Android Features</h3>
+            <p>Powered by Accessibility Service, no Root required. Shares Lua scripts and image templates with the Windows edition</p>
+          </div>
+        </div>
+
+        <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;">System Requirements</h3>
+          <ul style="list-style:disc; padding-left:20px;">
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;">Android 8.0 or later</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;">Accessibility Service permission required (for automation)</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;">Screen capture permission required for image recognition</li>
+            <li style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:8px; line-height:1.6;">~30MB storage space</li>
+          </ul>
+        </div>
+
+        <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;">Changelog</h3>
+          <div class="changelog-item">v1.0.4 — First public Android release: Lua scripting, image recognition, OCR, and Accessibility Service automation<strong></strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Docs ===== -->
+  <section class="full-section" id="docs">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label">Documentation & Help</div>
+        <h2 class="section-title">Get started with MacroAI quickly and unlock your automation potential</h2>
+      </div>
+      <div class="docs-grid stagger-children">
+        <div class="glass-card docs-card reveal stagger-item" style="grid-column: 1 / -1;">
+          <h3>Quick Start</h3>
+          <p>From installation to your first automation flow — up and running in 10 minutes.</p>
+          <div class="quickstart-steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div>
+                <h4>Download & Install</h4>
+                <p>Get the installer from the download page and follow the setup guide.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div>
+                <h4>Open Node Editor</h4>
+                <p>The main window opens to the Node Editor tab by default. Drag nodes from the left panel to the canvas.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div>
+                <h4>Build Your Flow</h4>
+                <p>Connect nodes in sequence and configure each node's parameters.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <div>
+                <h4>Run & Debug</h4>
+                <p>Click run to execute your automation. Use debug mode to inspect the execution process.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="/macroai/docs/en/user-guide.html" class="glass-card docs-card reveal stagger-item">
+          <h3>User Guide</h3>
+          <p>Complete guide covering importing, configuring, and running automation scripts.</p>
+        </a>
+        <a href="/macroai/docs/en/designer-guide.html" class="glass-card docs-card reveal stagger-item">
+          <h3>Designer Guide</h3>
+          <p>Complete guide for creating scripts, defining user config, and exporting distribution packages.</p>
+        </a>
+        <a href="/macroai/docs/en/api-reference.html" class="glass-card docs-card reveal stagger-item">
+          <h3>API Reference</h3>
+          <p>Lua scripting API reference documentation covering all available functions and system variables.</p>
+        </a>
+        <div class="glass-card docs-card full reveal stagger-item">
+          <h3>FAQ</h3>
+          <div class="faq-item">
+            <div class="faq-question">Is MacroAI free?</div>
+            <div class="faq-answer">MacroAI's core features are permanently free — no feature gating, no ad popups, no bundled adware.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">What languages are supported?</div>
+            <div class="faq-answer">Currently supports Chinese and English UI. Switch between them in settings.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">How do I report issues or suggestions?</div>
+            <div class="faq-answer">Submit feedback via GitHub Issues or email us at macroai@sowe.com.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="full-section" id="cta-section">
+    <div class="section-content">
+      <div class="cta-box reveal">
+        <h2>Start Automating Your Desktop & Phone</h2>
+        <p>Download MacroAI for free and experience the power of visual macro automation</p>
+        <a href="#download" class="btn">Download Now</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#hero">Home</a>
+      <a href="../macroai/battle-demo.html">HP Bar Demo</a>
+      <a href="../macroai/pengpeng-demo.html">Match Game Demo</a>
+      <a href="../privacy.html">Privacy Policy</a>
+      <a href="mailto:macroai@sowe.com">macroai@sowe.com</a>
+    </div>
+  </footer>
+  <script src="../js/main.js"></script>
+</body>
+</html>

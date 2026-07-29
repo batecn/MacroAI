@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCR 与颜色检测 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI OCR 文字识别与颜色检测常见问题">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">OCR 与颜色检测</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin-bottom:20px;">OCR 文字识别</h2>
+
+      <details class="faq-item">
+        <summary>OCR 识别和 OCR 比对有什么区别？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <ul>
+            <li><strong>OCR 识别</strong> — 把屏幕上的文字"读出来"，结果存入变量供后续使用。适合：读取金币数量、获取聊天内容、记录分数。</li>
+            <li><strong>OCR 比对</strong> — 读取文字后自动和"期望文本"对比，返回"一致/不一致"。适合：判断按钮文字是不是"确定"、检测是否出现了"错误"提示。</li>
+          </ul>
+          <p><strong>简单说：</strong>OCR 识别 = "告诉我上面写了什么"；OCR 比对 = "上面写的是不是 XXX"。</p>
+          <p>OCR 比对节点也支持"比对成功后点击"，和图像查找的点击逻辑类似。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>OCR 识别不准确怎么办？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>OCR 准确率受多种因素影响，按优先级排查：</p>
+          <ol>
+            <li><strong>缩小识别区域</strong> — 区域越大，干扰文字越多。只框选需要识别的那一行/那几个字。</li>
+            <li><strong>确保文字清晰</strong> — 目标文字不能被遮挡、半透明、或有复杂背景花纹干扰。</li>
+            <li><strong>文字不能太小</strong> — 字号太小（如 8px）识别率会明显下降。</li>
+            <li><strong>选择正确的语言</strong> — 中文内容选中文，英文选英文。混合内容选中英文混合。</li>
+            <li><strong>避免艺术字体</strong> — 手写体、装饰体、严重变形的字体识别率很低。</li>
+          </ol>
+          <p>Windows 版使用系统内置的 Windows OCR 引擎，无需额外安装。如果系统语言包缺失，需要在 Windows 设置 → 时间和语言 → 语言 中添加对应语言。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>OCR 的"期望文本"是什么意思？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>"期望文本"只在 <strong>OCR 比对</strong>节点中使用。它的意思是"你期望屏幕上显示的文字是什么"。</p>
+          <p>引擎识别出屏幕文字后，会和期望文本做比较：</p>
+          <ul>
+            <li>一致（或足够相似）→ 节点判定为<strong>成功</strong></li>
+            <li>不一致 → 节点判定为<strong>失败</strong></li>
+          </ul>
+          <p><strong>举例：</strong>期望文本填"确定"，屏幕上按钮写的也是"确定" → 成功，可以继续执行点击操作。</p>
+          <p>如果留空，则不做比对，只要识别到任何文字就算成功。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Windows 版 OCR 需要额外安装什么吗？<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p><strong>不需要。</strong>MacroAI Windows 版使用系统内置的 Windows OCR 引擎（Windows.Media.Ocr），Windows 10/11 自带，零安装。</p>
+          <p>但如果你需要识别<strong>中文</strong>，确保系统已安装中文语言包：</p>
+          <ol>
+            <li>打开 Windows 设置 → 时间和语言 → 语言</li>
+            <li>确认"中文（简体）"在语言列表中</li>
+            <li>如果没有，点击"添加语言"安装</li>
+          </ol>
+          <p>英文是默认自带的，一般不需要额外操作。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>OCR 支持哪些语言？如何切换？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>支持的语言取决于系统已安装的语言包。最常用的是<strong>中文简体</strong>和<strong>英文</strong>，此外还支持中文繁体、日文、韩文等（取决于系统语言包）。</p>
+          <p>在 OCR 节点配置中，有"语言"下拉框可以选择识别语言。</p>
+          <p><strong>注意：</strong>语言选错会导致识别率大幅下降。比如用英文模式识别中文，结果会是乱码或空。</p>
+          <p>如果下拉框中没有你需要的语言，需要先在操作系统中安装对应的语言包。</p>
+        </div>
+      </details>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin: 40px 0 20px;">颜色检测</h2>
+
+      <details class="faq-item">
+        <summary>颜色检测的三种模式分别适合什么场景？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <ul>
+            <li><strong>取色（point）</strong> — 获取屏幕上某一个点的颜色值。<br>场景：检查固定位置的状态（技能图标是否亮了、按钮是否变灰了）。<br>输入：一个坐标。输出：该点的 RGB/HSV/Hex 颜色值。</li>
+            <li><strong>主色（dominant）</strong> — 分析一个区域内占比最大的颜色。<br>场景：判断弹窗背景色、检测页面主题色、识别文字颜色（第二主色）。<br>输入：一个区域。输出：该区域的主色（可返回前 N 个主色）。</li>
+            <li><strong>搜索（search）</strong> — 在区域内找到匹配目标颜色的位置。<br>场景：在小地图上找红点、在画面中找绿色NPC标记。<br>输入：区域 + 目标颜色 + 容差。输出：匹配位置的坐标。</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>"容差"是什么意思？设多大合适？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>容差（tolerance）控制颜色匹配的<strong>宽松程度</strong>。因为屏幕上的颜色可能因为光照、抗锯齿、半透明叠加等原因和你预期的不完全一致。</p>
+          <ul>
+            <li><strong>容差 = 0</strong>：必须完全一致（几乎不可能，因为抗锯齿会让边缘像素颜色偏移）</li>
+            <li><strong>容差 = 20~30</strong>：允许轻微偏差（推荐起始值）</li>
+            <li><strong>容差 = 50~80</strong>：比较宽松，颜色差异明显也能匹配上</li>
+            <li><strong>容差 > 100</strong>：太宽松，可能匹配到不相关的颜色</li>
+          </ul>
+          <p><strong>建议：</strong>从 30 开始试，如果匹配不到就逐步加大，如果出现误匹配就缩小。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>我想判断某个位置是不是红色，应该用哪种模式？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>用<strong>取色模式（point）</strong>+ 条件判断：</p>
+          <ol>
+            <li>添加颜色检测节点，模式选"取色"</li>
+            <li>设置坐标为你要检测的那个点</li>
+            <li>结果存入变量（如 <code>color</code>）</li>
+            <li>添加条件判断节点，使用 <code>color_is</code> 函数判断：<br><code>color_is(color, "red", 30)</code> — 判断是否红色，容差 30</li>
+          </ol>
+          <p>也可以用 RGB 值精确判断：<code>color_is(color, {r=200, g=30, b=30}, 40)</code></p>
+          <p>如果你不是要判断"一个点"，而是要"在一大片区域里找红色在哪"，那应该用<strong>搜索模式</strong>。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>颜色检测返回的 hex/name/rgb 分别是什么？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>颜色检测返回多种格式的颜色描述，方便不同场景使用：</p>
+          <ul>
+            <li><strong>rgb</strong>（如 r=200, g=30, b=30）— 红绿蓝三通道值，0~255。最基础的颜色表示。</li>
+            <li><strong>hex</strong>（如 "#C81E1E"）— 十六进制颜色码，网页设计常用格式。</li>
+            <li><strong>name</strong>（如 "red"）— 最接近的颜色名称（红/绿/蓝/黄/白/黑等），方便快速判断。</li>
+            <li><strong>hsv</strong>（如 h=0, s=85, v=78）— 色相/饱和度/明度，适合做颜色范围判断。</li>
+            <li><strong>brightness</strong>（如 0.35）— 亮度值 0~1，判断明暗。</li>
+          </ul>
+          <p>大多数情况下用 <code>color_is()</code> 函数判断即可，不需要自己解析这些值。</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

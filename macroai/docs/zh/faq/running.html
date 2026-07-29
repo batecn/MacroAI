@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>运行与调试 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI 运行与调试常见问题 — 日志、浮动面板、前后台运行、暂停停止">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">运行与调试</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <details class="faq-item">
+        <summary>脚本运行出错了，怎么看错误信息？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 的日志面板会显示运行过程中的所有信息：</p>
+          <ul>
+            <li><strong>Windows 版</strong>：主窗口底部的日志区域。运行出错时会显示红色错误信息。</li>
+            <li><strong>Android 版</strong>：点击运行气泡上的 📋 按钮打开日志页面。</li>
+          </ul>
+          <p><strong>常见错误及含义：</strong></p>
+          <ul>
+            <li>"找不到图片 xxx.png" → 模板图片不在搜索范围内，或阈值太高</li>
+            <li>"执行超时" → 等待图像/等待变化超过了设定的超时时间</li>
+            <li>"Lua 语法错误" → 自定义代码节点中有代码错误</li>
+            <li>"变量 xxx 未定义" → 使用了没有在变量 Tab 中定义的变量</li>
+          </ul>
+          <p>如果日志信息不够详细，把日志级别切换到"调试"可以看到更多内部信息。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>"简洁/追踪/调试"三种日志级别有什么区别？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>工具栏上的日志级别控制显示多少信息：</p>
+          <ul>
+            <li><strong>简洁</strong>（默认）— 只显示"日志输出"节点的内容和错误信息。最干净，适合正常运行。</li>
+            <li><strong>追踪</strong> — 额外显示每个节点的执行过程（如"[图像查找] 找到 xxx 位置=(500,300)"）。适合排查"脚本执行到哪一步了""某个节点有没有执行"。</li>
+            <li><strong>调试</strong> — 额外显示引擎内部信息（截图尺寸、缩放比例、匹配分数等）。适合排查深层技术问题。</li>
+          </ul>
+          <p><strong>建议：</strong>正常运行用"简洁"；出问题排查时切到"追踪"；给开发者反馈 bug 时用"调试"并截图日志。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>运行时浮动面板（气泡）上的按钮分别是什么功能？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>脚本运行后，屏幕右上角会出现浮动控制面板（Android 版是悬浮气泡）：</p>
+          <ul>
+            <li><strong>状态标签</strong>（▶ 运行中 / ⏸ 暂停中 / ⏹ 已完成 / ⚠ 出错）— 显示当前状态</li>
+            <li><strong>⏸ 暂停 / ▶ 继续</strong> — 暂停或恢复脚本执行</li>
+            <li><strong>■ 停止</strong> — 完全终止脚本</li>
+            <li><strong>自定义动作按钮</strong>（如有定义）— 一键触发额外操作（如"紧急停止""切换目标"）</li>
+            <li><strong>✕ 关闭</strong> — 关闭面板并停止所有运行中的任务</li>
+          </ul>
+          <p><strong>Windows 版：</strong>面板可拖动位置。脚本完成且无自定义动作时，面板 3 秒后自动消失。</p>
+          <p><strong>Android 版：</strong>气泡可拖动，点击展开菜单，首次出现时自动展开 3 秒。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>什么是"后台运行"和"前台运行"？有什么区别？<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p>这是 Windows 版特有的概念，控制鼠标键盘的模拟方式：</p>
+          <ul>
+            <li><strong>🔄 后台运行</strong>（默认）— 使用 Windows 消息机制发送点击/按键，<strong>不移动真实鼠标、不抢占焦点</strong>。你可以在脚本运行时继续使用电脑做其他事。</li>
+            <li><strong>前台运行</strong> — 直接控制物理鼠标/键盘，运行时鼠标会真的移动，你不能同时操作电脑。但兼容性更好。</li>
+          </ul>
+          <p><strong>怎么选？</strong></p>
+          <ul>
+            <li>大多数情况用后台（默认）即可</li>
+            <li>如果后台模式下目标程序"收不到"点击（某些游戏、远程桌面）→ 切换为前台</li>
+            <li>前台运行时不要动鼠标键盘，否则会干扰脚本</li>
+          </ul>
+          <p>通过工具栏的"🔄 后台"按钮切换。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>为什么脚本运行时我不能动鼠标/键盘？<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p>如果你当前是<strong>前台运行</strong>模式，脚本会直接控制物理鼠标和键盘，所以你不能同时操作。</p>
+          <p><strong>解决办法：</strong>切换到<strong>后台运行</strong>模式（点击工具栏的"🔄 后台"按钮），这样脚本通过消息机制发送操作，不会占用你的鼠标键盘。</p>
+          <p><strong>注意：</strong>某些程序（如部分游戏、远程桌面软件）不支持后台消息，必须用前台模式。这种情况下只能等脚本运行完再操作，或者用另一台电脑/手机控制。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>"点击可视化"（红点）是什么？有什么用？<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p>点击可视化是 Windows 版的<strong>调试辅助功能</strong>。开启后，脚本每次执行鼠标点击时，会在点击位置显示一个红色圆点（0.5 秒后消失）。</p>
+          <p><strong>用途：</strong></p>
+          <ul>
+            <li>确认脚本点击的位置是否正确</li>
+            <li>排查"找到了图片但点错了地方"的问题</li>
+            <li>后台模式下看不到鼠标移动，红点让你知道脚本"点了哪"</li>
+          </ul>
+          <p>通过工具栏的"🔴"按钮开关。正常运行时建议关闭（避免视觉干扰），调试时打开。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>脚本运行中如何暂停/继续/停止？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <ul>
+            <li><strong>暂停</strong>：点击浮动面板上的"⏸ 暂停"按钮。脚本会在当前节点执行完后暂停。</li>
+            <li><strong>继续</strong>：点击"▶ 继续"恢复执行。</li>
+            <li><strong>停止</strong>：点击"■ 停止"或按 <code>Shift+F5</code>。完全终止，不可恢复。</li>
+          </ul>
+          <p><strong>注意：</strong></p>
+          <ul>
+            <li>暂停时如果有"等待"节点正在计时，继续后会从暂停处接着执行</li>
+            <li>停止是不可逆的，需要重新点"▶ 运行"才能再次执行</li>
+            <li>Android 版：展开气泡菜单操作</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>自定义动作是什么？怎么在运行时触发额外操作？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>自定义动作</strong>是绑定在浮动面板上的"快捷按钮"，可以在主脚本运行的同时<strong>独立触发</strong>一段操作。</p>
+          <p><strong>典型场景：</strong></p>
+          <ul>
+            <li>主脚本在自动打怪，你随时想按一个按钮"回城" → 做一个"回城"自定义动作</li>
+            <li>主脚本在循环操作，你需要临时"暂停并截图保存"</li>
+            <li>多个辅助操作需要随时手动触发（如切换目标、使用特殊技能）</li>
+          </ul>
+          <p><strong>设置方法：</strong></p>
+          <ol>
+            <li>在"自定义动作"标签页（<code>Ctrl+6</code>）中创建动作</li>
+            <li>为动作编写节点流程（和主流程一样的编辑方式）</li>
+            <li>运行脚本后，浮动面板上会出现对应的按钮</li>
+            <li>随时点击按钮触发动作，不影响主脚本执行</li>
+          </ol>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro 功能与其他 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI Pro 授权、数据迁移、自动保存、多显示器等常见问题">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">Pro 功能与其他</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin-bottom:20px;">Pro 功能与授权</h2>
+
+      <details class="faq-item">
+        <summary>免费版和 Pro 版有什么区别？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 基础功能<strong>永久免费</strong>，无广告。Pro 版解锁进阶能力：</p>
+          <p><strong>免费功能：</strong></p>
+          <ul>
+            <li>节点编辑器（图像查找、鼠标点击、等待、循环、条件、变量、日志等）</li>
+            <li>颜色检测</li>
+            <li>录制与回放、函数、变量</li>
+            <li>运行/调试、日志、浮动面板</li>
+            <li>项目导入/导出</li>
+          </ul>
+          <p><strong>Pro 功能：</strong></p>
+          <ul>
+            <li>OCR 文字识别、OCR 比对</li>
+            <li>等待变化、等待条块变化</li>
+            <li>播放音乐、自定义代码（Lua）</li>
+            <li>坐标策略覆盖（节点级 transform_policy）</li>
+          </ul>
+          <p>具体哪些功能需要 Pro，在界面中会以 🔒 标记显示。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Pro 过期后已有的脚本还能运行吗？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>可以。</strong>Pro 过期后的限制是：</p>
+          <ul>
+            <li>❌ 不能<strong>新增</strong> Pro 节点（按钮变灰，提示"已过期"）</li>
+            <li>❌ 已有的 Pro 节点<strong>不可编辑</strong>（双击会提示"Pro 节点已过期，不可编辑"）</li>
+            <li>✅ 已有的脚本（包含 Pro 节点）<strong>仍然可以正常运行</strong></li>
+          </ul>
+          <p>简单说：Pro 限制的是"创建和编辑"，不影响"运行"。你的脚本不会因为 Pro 过期就报废。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>哪些节点/功能是 Pro 专属的？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>在节点面板中，Pro 节点会显示 🔒 标记。当前 Pro 专属的主要有：</p>
+          <ul>
+            <li><strong>OCR 识别</strong>、<strong>OCR 比对</strong>（文字识别相关）</li>
+            <li><strong>等待变化</strong>、<strong>等待条块变化</strong>（屏幕监控相关）</li>
+            <li><strong>播放音乐</strong>、<strong>自定义代码</strong>（Lua 脚本）</li>
+            <li><strong>坐标策略覆盖</strong>（节点级 transform_policy 设置）</li>
+          </ul>
+          <p>大部分日常使用的节点（图像查找、颜色检测、点击、等待、循环、条件等）都是免费的。</p>
+          <p>如果你不确定某个功能是否需要 Pro，直接点击尝试——需要 Pro 时会弹出提示，不会误操作。</p>
+        </div>
+      </details>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin: 40px 0 20px;">其他常见问题</h2>
+
+      <details class="faq-item">
+        <summary>项目数据保存在哪里？换了电脑怎么迁移？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>保存位置：</strong>所有项目保存在你首次使用时选择的"工作目录"中。每个项目是一个文件夹，包含 task.json（脚本数据）、resources/（图片等资源）、macros/（录制的宏）。</p>
+          <p><strong>迁移方法：</strong></p>
+          <ul>
+            <li><strong>方法一（推荐）</strong>：在 MacroAI 中导出项目为 .macroai 文件 → 拷贝到新电脑 → 导入</li>
+            <li><strong>方法二</strong>：直接拷贝整个工作目录到新电脑 → 在新电脑 MacroAI 中选择同一目录</li>
+          </ul>
+          <p><strong>Android 版：</strong>项目数据在应用私有目录中，通过导出 .macroai 文件迁移最方便。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>自动保存是怎么工作的？会不会丢失修改？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 有<strong>自动保存机制</strong>，你不需要频繁手动保存：</p>
+          <ul>
+            <li>任何修改（添加节点、改配置、改变量等）后，5 秒内无新操作就自动保存</li>
+            <li>状态栏会显示"5秒后自动保存..."提示</li>
+            <li>切换项目、运行脚本、导出、退出前都会自动保存</li>
+          </ul>
+          <p><strong>会丢失修改的情况：</strong></p>
+          <ul>
+            <li>修改后 5 秒内程序崩溃/电脑断电（极罕见）</li>
+            <li>磁盘写入失败（如磁盘满了）</li>
+          </ul>
+          <p>想立即保存可以按 <code>Ctrl+S</code>。正常使用下不需要担心数据丢失。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>支持多显示器吗？脚本能在副屏运行吗？<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p><strong>支持。</strong>MacroAI 可以操作任何显示器上的内容。</p>
+          <p><strong>使用方法：</strong></p>
+          <ul>
+            <li>创建设计区域时，框选副屏上的目标窗口即可</li>
+            <li>截图、图像查找、鼠标点击都基于屏幕绝对坐标，不受"哪个是主屏"限制</li>
+          </ul>
+          <p><strong>注意事项：</strong></p>
+          <ul>
+            <li>如果两个显示器 DPI 缩放不同（如主屏 125%、副屏 100%），需要注意坐标空间一致性</li>
+            <li>建议两个显示器使用相同的 DPI 缩放比例</li>
+            <li>运行脚本时目标窗口不要跨屏移动</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>脚本能定时执行吗？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 目前<strong>不支持定时执行</strong>，后续版本会支持该功能。</p>
+          <p><strong>替代方案：</strong></p>
+          <ul>
+            <li>在脚本内部用"无限循环 + 等待"实现简单定时（如每隔 30 分钟执行一次）</li>
+            <li>Windows 用户可以用系统的任务计划程序（Task Scheduler）定时启动 MacroAI</li>
+          </ul>
+          <p>目前也不支持命令行直接运行脚本，MacroAI 启动后需要在界面中手动操作运行。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>如何设置开机自启动/后台常驻？<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p><strong>开机自启动：</strong></p>
+          <ul>
+            <li>方法一：把 MacroAI 的快捷方式放入启动文件夹（<code>Win+R</code> → 输入 <code>shell:startup</code> → 回车 → 放入快捷方式）</li>
+            <li>方法二：在 Windows 任务计划程序中创建"登录时"触发的任务</li>
+          </ul>
+          <p><strong>后台常驻（最小化到托盘）：</strong></p>
+          <ul>
+            <li>MacroAI 支持系统托盘图标，关闭窗口时会最小化到托盘而非退出</li>
+            <li>右键托盘图标可以快速打开主窗口或退出程序</li>
+          </ul>
+          <p>配合 Windows 任务计划 + 脚本内无限循环，可以实现"开机后自动在后台持续运行脚本"。</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

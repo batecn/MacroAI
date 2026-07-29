@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>入门与基础概念 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI 入门常见问题 — 项目创建、设计区域、节点编辑器、模式切换">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">入门与基础概念</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <details class="faq-item">
+        <summary>MacroAI 是什么？能做什么？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 是一款<strong>跨平台宏自动化工具</strong>，支持 Windows 和 Android。它让你无需编程基础，就能制作出"自动点击、自动识别图片、自动识别文字"的自动化脚本。</p>
+          <p>典型用途：</p>
+          <ul>
+            <li><strong>游戏辅助</strong> — 自动打怪、自动吃药、自动日常任务</li>
+            <li><strong>办公自动化</strong> — 批量填表、自动操作 ERP/CRM 系统</li>
+            <li><strong>软件测试</strong> — 模拟用户操作、回归测试</li>
+            <li><strong>运维管理</strong> — 定时巡检、监控告警后自动处理</li>
+          </ul>
+          <p>核心能力：图像识别定位、OCR 文字识别、颜色检测、屏幕变化监控、鼠标键盘模拟、Lua 脚本扩展。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>如何创建第一个项目？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 以<strong>项目</strong>为单位管理所有内容。使用任何功能前，必须先创建一个项目：</p>
+          <ol>
+            <li>点击菜单 <strong>项目 → 新建项目</strong>（或按 <code>Ctrl+N</code>）</li>
+            <li>首次使用会引导你选择<strong>工作目录</strong>（项目文件存放位置），选一个你记得住的文件夹即可</li>
+            <li>输入项目名称（如"对对碰辅助"）</li>
+            <li>设定<strong>设计区域</strong>（见下一个问题）</li>
+            <li>点击确定，项目创建完成</li>
+          </ol>
+          <p>创建后你就可以在节点编辑器中添加节点、录制宏、管理图片了。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>"设计区域"是什么？为什么创建项目时要框选一个区域？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>设计区域</strong>定义了你的脚本"在哪个范围内工作"。它告诉 MacroAI：你制作脚本时看到的目标窗口/画面是哪个区域。</p>
+          <p>为什么需要它？因为同一个脚本可能在不同分辨率的电脑上运行。有了设计区域作为参考基准，MacroAI 才能自动换算坐标，让脚本在别人电脑上也能正确运行。</p>
+          <p>两种选择：</p>
+          <ul>
+            <li><strong>全屏</strong> — 如果你操作的是全屏游戏或整个桌面，选这个最简单</li>
+            <li><strong>自定义框选</strong> — 如果你只操作某个窗口（如浏览器、游戏窗口），用鼠标拖拽框选那个窗口</li>
+          </ul>
+          <p><strong>新手建议：</strong>不确定就选"全屏"，后续可以在项目设置中修改。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>设计模式和运行模式有什么区别？我该用哪个？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 有两种工作模式，面向不同角色：</p>
+          <ul>
+            <li><strong>🔧 设计模式</strong> — 给"制作脚本的人"用。包含节点编辑器、变量管理、图片管理等全部 9 个标签页，用来创作和编辑脚本。</li>
+            <li><strong>🏃 运行模式</strong> — 给"使用脚本的人"用。只显示项目信息、区域校准、个性化配置和运行按钮，界面简洁，专注运行。</li>
+          </ul>
+          <p><strong>怎么选？</strong></p>
+          <ul>
+            <li>你自己制作脚本 → 设计模式</li>
+            <li>别人发给你一个脚本文件，你只想运行 → 运行模式（导入分发包时会自动切换）</li>
+          </ul>
+          <p>通过工具栏左侧的下拉菜单随时切换，快捷键无冲突。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>什么是"节点"？节点编辑器怎么用？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>节点</strong>是脚本中的一个操作步骤。比如"鼠标点击(500,300)"是一个节点，"等待2秒"是一个节点，"查找图像"也是一个节点。</p>
+          <p>节点编辑器让你像搭积木一样，把这些步骤从上到下排列，MacroAI 会按顺序执行它们。</p>
+          <p>基本操作：</p>
+          <ul>
+            <li><strong>添加节点</strong>：在左侧面板点击节点类型（如"查找图像""鼠标点击""等待"）</li>
+            <li><strong>配置节点</strong>：双击节点打开配置对话框，设置具体参数</li>
+            <li><strong>调整顺序</strong>：直接拖拽节点上下移动</li>
+            <li><strong>组合逻辑</strong>：把节点拖入"循环"或"条件判断"容器内，实现重复执行或条件分支</li>
+          </ul>
+          <p>节点编辑器会自动生成对应的脚本代码，你不需要手写任何代码。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>录制宏和节点编辑器有什么关系？什么时候用哪个？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>两者是互补关系：</p>
+          <ul>
+            <li><strong>录制宏</strong> — 你操作一遍，MacroAI 录下所有鼠标键盘动作，回放时原样重现。适合"固定步骤、不需要判断"的简单操作。</li>
+            <li><strong>节点编辑器</strong> — 手动搭建流程，可以加入图像识别、条件判断、循环等智能逻辑。适合"需要根据屏幕内容做决定"的复杂场景。</li>
+          </ul>
+          <p><strong>推荐工作流：</strong></p>
+          <ol>
+            <li>先用录制快速录下一段操作</li>
+            <li>在节点编辑器中添加"调用录制宏"节点</li>
+            <li>在它前后加上图像查找、条件判断等节点，让流程更智能</li>
+          </ol>
+          <p>简单说：录制解决"做什么"，节点编辑器解决"什么时候做、做几次、满足什么条件才做"。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>项目、宏、函数、节点之间是什么关系？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>用一句话概括：<strong>项目</strong>是容器，里面装着<strong>节点</strong>（主流程）、<strong>函数</strong>（可复用子流程）和<strong>宏</strong>（录制的操作序列）。</p>
+          <ul>
+            <li><strong>项目</strong> — 一个完整的自动化任务。包含所有节点、图片、变量、函数、宏等。对应左侧项目列表中的一个条目。</li>
+            <li><strong>节点</strong> — 主流程中的一个步骤。在"节点编辑"标签页管理。</li>
+            <li><strong>函数</strong> — 把一组节点打包成可复用的模块，可以在主流程中多次调用。在"函数"标签页管理。</li>
+            <li><strong>宏</strong> — 录制下来的一段鼠标键盘操作。可以通过"调用录制宏"节点嵌入主流程。在"宏管理"标签页管理。</li>
+          </ul>
+          <p>执行顺序：运行项目时，按节点编辑器中的顺序从上到下执行。遇到"调用函数"节点就跳去执行函数内容，遇到"调用录制宏"节点就回放录制的操作。</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

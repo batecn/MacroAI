@@ -181,6 +181,8 @@
   "footer.copyright": "© 2026 MacroAI. All rights reserved.",
   "footer.privacy": "隐私政策",
   "footer.version": "版本",
+  "footer.demo.battle": "血条演示Demo",
+  "footer.demo.match": "对对碰演示Demo",
 
   "privacy.title": "隐私政策",
   "privacy.last-updated": "最后更新：2026年7月",

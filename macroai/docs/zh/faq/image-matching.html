@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图像查找与匹配 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI 图像查找常见问题 — 找不到图片、匹配阈值、匹配模式、模板截图技巧">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">图像查找与匹配</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <details class="faq-item">
+        <summary>图像查找节点找不到图片怎么办？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>按以下顺序排查：</p>
+          <ol>
+            <li><strong>目标是否真的在屏幕上？</strong> 运行时目标图片必须可见。如果被遮挡、在屏幕外、或还没加载出来，就找不到。</li>
+            <li><strong>用图像管理的"匹配检测"调试！</strong> 这是最好的排查方式：打开图像管理标签页，选中对应图片，点击"匹配检测"按钮。它会实时截图并显示三种模式（灰度/感知亮度/色彩）分别能否找到，还可以调整阈值观察效果。</li>
+            <li><strong>模板图片是否准确？</strong> 重新截取模板：在节点配置中点击截图按钮，精确框选目标（不要多选背景）。</li>
+            <li><strong>匹配阈值是否太高？</strong> 默认 0.85，如果画面有轻微变化（抗锯齿、动画），可以尝试降到 0.75~0.80。</li>
+            <li><strong>搜索区域是否限制了范围？</strong> 如果设置了区域（Region），目标必须在区域内。不确定就先不设置区域（留空 = 全屏搜索）。</li>
+            <li><strong>分辨率是否变了？</strong> 如果换了电脑或改了缩放，需要重新截取模板或校准运行区域。</li>
+            <li><strong>匹配模式是否合适？</strong> 在匹配检测中对比三种模式的结果，选择能成功匹配的模式。</li>
+          </ol>
+          <p><strong>调试技巧：</strong>开启工具栏的"🔴 点击可视化"，运行时可以看到 MacroAI 实际点击的位置（红点），帮助判断是"没找到"还是"找到了但点错了"。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>什么是"匹配阈值"？设多少合适？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>匹配阈值（threshold）控制"多像才算找到"，范围 0~1：</p>
+          <ul>
+            <li><strong>1.0</strong> = 必须像素级完全一致（几乎不可能达到）</li>
+            <li><strong>0.85</strong> = 默认值，适合大多数场景</li>
+            <li><strong>0.70~0.75</strong> = 宽松匹配，适合画面有轻微变化的场景</li>
+            <li><strong>低于 0.60</strong> = 太宽松，可能误匹配到不相关的区域</li>
+          </ul>
+          <p><strong>建议：</strong></p>
+          <ul>
+            <li>一般保持默认 0.85 即可</li>
+            <li>如果目标有动画效果、半透明、光影变化 → 降到 0.75</li>
+            <li>如果频繁误匹配（找到错误位置）→ 提高到 0.90</li>
+            <li>不要低于 0.65，否则可靠性很差</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>灰度、感知亮度、色彩三种匹配模式有什么区别？该选哪个？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>三种模式决定了"怎么比较两张图片是否一样"：</p>
+          <ul>
+            <li><strong>灰度（grayscale）</strong> — 只看形状和明暗，完全忽略颜色。速度最快，对颜色变化不敏感。<br>👉 <strong>80% 的场景用这个</strong>：按钮、图标、UI 元素定位。<br>ℹ️ 灰度模式最适合"不看颜色，只通过形状就能区分"的图像。</li>
+            <li><strong>感知亮度（perceptual）</strong> — 也是只看明暗，但对暗部更敏感（人眼对暗处差异更敏感）。<br>👉 灰度模式在暗色目标上匹配不准时，换这个试试。</li>
+            <li><strong>色彩（color）</strong> — 同时比较形状和颜色。红色按钮和蓝色按钮会被区分开。<br>👉 需要区分颜色时用：找红色血条、找绿色按钮、区分不同颜色的标记。</li>
+          </ul>
+          <p><strong>简单选择法：</strong></p>
+          <ul>
+            <li>目标仅通过形状就能区分（不依赖颜色）→ 灰度（最快最稳）</li>
+            <li>目标颜色会变（高亮/置灰/换肤）→ 灰度</li>
+            <li>必须靠颜色区分不同目标 → 色彩</li>
+            <li>暗色目标灰度匹配不准 → 感知亮度</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>截图模板时有什么技巧？为什么我截的图匹配不上？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>模板截图质量直接决定匹配成功率。关键技巧：</p>
+          <ul>
+            <li><strong>精确框选目标</strong> — 只选目标本身，不要包含多余背景。比如找按钮就只框按钮，不要把按钮周围的空白也选进去。</li>
+            <li><strong>避免包含动态内容</strong> — 不要截取会变化的部分（如数字、倒计时、动画帧）。如果按钮上有变化的文字，只截取按钮边框/图标部分。</li>
+            <li><strong>在正常状态下截取</strong> — 在游戏/程序正常运行时截图，不要在暂停、加载、或特殊状态下截。</li>
+            <li><strong>不要截太小</strong> — 太小的图片（如 10×10 像素）特征不够，容易误匹配。一般至少 30×30 以上。</li>
+            <li><strong>不要截太大</strong> — 太大的图片包含太多背景，目标稍有位移就匹配不上。</li>
+          </ul>
+          <p><strong>常见错误：</strong>截图时包含了鼠标光标、包含了会变的数字、框选范围包含了半透明边缘。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>"查找图像"节点中"找到后点击"怎么用？三种点击目标是什么？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>"查找图像"节点内置了"找到后点击"选项，勾选后找到图片会自动执行点击。三种点击目标：</p>
+          <ul>
+            <li><strong>匹配位置（找到的图片）</strong> — 点击找到的图片的中心点。最常用，比如"找到开始按钮并点击它"。</li>
+            <li><strong>指定坐标</strong> — 找到图片后，点击你预设的另一个坐标。适合"看到某个标志后，点击它旁边的位置"。</li>
+            <li><strong>指定图片</strong> — 找到图片 A 后，再去点击另一张图片 B 的位置。适合"确认弹窗出现后，点击确定按钮"。</li>
+          </ul>
+          <p>不勾选"找到后点击"时，节点只负责查找，结果存入变量，你可以用条件判断来决定后续操作。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>图像查找的"超时"和"间隔"是什么意思？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>这两个参数控制"找不到时怎么办"：</p>
+          <ul>
+            <li><strong>超时 = 0</strong>（默认）：只找一次。找到就继续，找不到就立即判定失败，执行下一个节点。</li>
+            <li><strong>超时 > 0</strong>（如 5000 毫秒）：反复查找，每隔"间隔"毫秒找一次，直到找到或超过超时时间。</li>
+          </ul>
+          <p><strong>间隔</strong>（如 200 毫秒）：每次查找之间等多久。太小会占 CPU，太大反应慢。一般 200~500 毫秒即可。</p>
+          <p><strong>使用场景：</strong></p>
+          <ul>
+            <li>等待加载完成 → 超时设 10000（10秒），间隔 500，找到"加载完成"的图片就继续</li>
+            <li>判断某个按钮是否存在 → 超时设 0，找一次就行</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>什么是"搜索区域（Region）"？不设置会怎样？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>搜索区域限制图像查找的<strong>搜索范围</strong>。设置后只在该矩形区域内查找，区域外完全忽略。</p>
+          <p><strong>不设置（留空）</strong>= 在整个设计区域（通常是全屏）内搜索。</p>
+          <p><strong>什么时候该设置？</strong></p>
+          <ul>
+            <li>目标只可能出现在固定位置（如血条总在左上角）→ 设置区域可以加快搜索速度</li>
+            <li>屏幕上有多个相似图案，只想找特定位置的那个 → 用区域排除干扰</li>
+            <li>全屏搜索太慢（高分辨率 + 大模板）→ 缩小区域提升性能</li>
+          </ul>
+          <p><strong>什么时候不该设置？</strong></p>
+          <ul>
+            <li>目标位置不固定（如随机出现的弹窗）→ 不要限制区域</li>
+            <li>不确定目标在哪 → 先不设置，确认能找到后再加区域优化性能</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>多图模式（多模板匹配）怎么用？什么场景需要？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>多图模式允许一个节点同时查找<strong>多张不同的模板图片</strong>，只要其中任何一张被找到就算成功。</p>
+          <p><strong>典型场景：</strong></p>
+          <ul>
+            <li>同一个按钮在不同状态下外观不同（正常/悬停/按下）→ 截三张图，任一匹配就点击</li>
+            <li>不同皮肤/主题下目标外观不同 → 每个主题截一张</li>
+            <li>多个不同目标出现任意一个就执行操作 → 如"出现'胜利'或'失败'弹窗都点击确定"</li>
+          </ul>
+          <p><strong>使用方法：</strong>在节点配置中，点击模板图片旁的"+"添加多张图片。搜索模式选择"多图选择查找"。</p>
+          <p>匹配顺序：按列表从上到下依次尝试，第一个匹配成功的即为结果。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>为什么图像查找找到了位置，但点击却点错了地方？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>找到了但点错，通常是<strong>坐标系不一致</strong>或<strong>匹配到了相似图像</strong>导致的：</p>
+          <ul>
+            <li><strong>匹配到了相似图像</strong> — 界面中有外观相似的图像，看着明显不一样但却被找到了。这很可能是灰度模式造成的——该模式忽略颜色，只考虑形状相似。→ 解决：切换到色彩匹配模式试试。</li>
+            <li><strong>运行区域未校准</strong> — 图像查找在"当前屏幕"上找到了目标（返回的是屏幕坐标），但点击时如果坐标策略做了额外换算，就会偏移。<br>→ 解决：校准运行区域，确保设计区域和运行区域的关系正确。</li>
+            <li><strong>点击目标选了"指定坐标"</strong> — 你填的坐标是设计坐标，但实际运行时可能需要偏移。<br>→ 解决：确认坐标策略正确，或改用"匹配位置"直接点找到的图片。</li>
+          </ul>
+          <p><strong>调试方法：</strong>开启"🔴 点击可视化"，观察红点位置。如果红点在正确位置但实际点击偏了 → 坐标策略/校准问题；如果红点本身就在错误位置 → 可能匹配到了相似图像，尝试切换匹配模式。</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

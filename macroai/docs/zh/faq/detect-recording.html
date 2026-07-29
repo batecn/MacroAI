@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>变化检测与录制 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI 等待变化检测、条块变化监控、宏录制与回放常见问题">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">变化检测与录制</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin-bottom:20px;">变化检测</h2>
+
+      <details class="faq-item">
+        <summary>"等待变化"节点是做什么的？和"等待"节点有什么区别？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <ul>
+            <li><strong>等待</strong> — 固定等一段时间（如 2 秒），不管屏幕发生什么都等。"盲等"。</li>
+            <li><strong>等待变化</strong> — 持续监控屏幕，直到指定区域<strong>画面发生变化</strong>才继续。"智能等"。</li>
+          </ul>
+          <p><strong>典型场景：</strong></p>
+          <ul>
+            <li>等待加载完成 → 用"等待变化"监控加载动画区域，画面一变（加载结束）就继续</li>
+            <li>等待对手出招 → 监控游戏画面，有变化就触发应对操作</li>
+            <li>等待页面跳转 → 监控内容区域，变化说明跳转了</li>
+          </ul>
+          <p>比"等待 3 秒"更智能：变化快就早执行，变化慢就自动多等，不会浪费时间也不会错过时机。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>"等待条块变化"节点怎么用？需要上传多个模板是什么意思？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>"等待条块变化"专门用于监控<strong>血条、进度条、能量条</strong>等条形元素的长短变化。</p>
+          <p><strong>为什么需要多个模板？</strong>因为条块在不同长度时外观不同（满血是长条，残血是短条）。你需要截取同一血条在不同状态下的截图作为参照：</p>
+          <ol>
+            <li>在节点配置中点击"取参考条块"</li>
+            <li>框选血条区域 → 输入名称（如"满血""低血"）</li>
+            <li>建议截取 2 张：1 张满血状态 + 1 张约 1/4 或 1/3 血量状态</li>
+          </ol>
+          <p>注意：模板不宜太多，太多会影响检测效率。2 张已足够覆盖大多数场景。</p>
+          <p>引擎会持续匹配当前画面最接近哪个模板，当匹配结果从一个模板切换到另一个时，判定为"条块变化了"。</p>
+          <p><strong>典型用法：</strong>监控角色血条，血量减少超过一定比例 → 自动使用药品。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>条块变化的"变化阈值"和"匹配阈值"分别控制什么？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>这两个阈值容易混淆，它们控制不同的事情：</p>
+          <ul>
+            <li><strong>匹配阈值</strong>（默认 0.85）— 控制"当前画面和模板多像才算匹配上了"。和普通图像查找的阈值含义相同。太低会误匹配，太高会匹配不上。</li>
+            <li><strong>变化阈值</strong>（默认 0.1）— 控制"条块长度变化多少才算真的变了"。0.1 表示长度变化超过 10% 才报告。防止画面轻微抖动导致频繁误报。</li>
+          </ul>
+          <p><strong>简单记忆：</strong>匹配阈值管"找不找得到"，变化阈值管"变了多少才算变"。</p>
+          <p>一般保持默认即可。如果血条微调就误报 → 加大变化阈值到 0.15~0.2。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>我想监控游戏血条变化自动吃药，应该怎么配置？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>完整步骤：</p>
+          <ol>
+            <li>添加<strong>循环</strong>节点（无限循环），让脚本持续监控</li>
+            <li>在循环内添加<strong>等待条块变化</strong>节点：
+              <ul>
+                <li>区域：框选血条所在位置</li>
+                <li>模板：截取 1 张满血 + 1 张低血（约 1/4）状态的参考图</li>
+                <li>超时：设 0（持续监控直到变化）</li>
+                <li>变化阈值：0.1（默认即可）</li>
+              </ul>
+            </li>
+            <li>在等待条块变化后面添加<strong>条件判断</strong>：判断 delta（变化比例）是否表示血量减少</li>
+            <li>条件满足时添加<strong>查找图像</strong>节点：找到药品图标并点击</li>
+            <li>添加一个短<strong>等待</strong>（如 500ms），防止连续触发</li>
+          </ol>
+          <p>这样脚本会持续监控血条，一旦检测到血量明显减少就自动点击药品。</p>
+          <p><strong>参考示例：</strong>Windows 版内置了"游戏辅助-血条监控"Demo 项目，可通过菜单导入 Demo 包查看完整配置（包含 2 个模板：满血 + 30% 血量）。</p>
+        </div>
+      </details>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin: 40px 0 20px;">录制与回放</h2>
+
+      <details class="faq-item">
+        <summary>如何录制一个宏？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>Windows 版：</strong></p>
+          <ol>
+            <li>切换到"宏管理"标签页（<code>Ctrl+7</code>）</li>
+            <li>点击 <strong>+ 新建录制</strong></li>
+            <li>屏幕出现绿色边框（标示设计区域），左下角有"■ 停止录制"按钮</li>
+            <li>正常操作你想自动化的步骤（点击、打字等）</li>
+            <li>完成后点击"■ 停止录制"</li>
+            <li>选择"保存到项目"</li>
+          </ol>
+          <p><strong>Android 版：</strong>在编辑器中切换到录制模式，操作会被全屏覆盖层拦截并记录，同时底层界面会同步执行你的操作。</p>
+          <p>录制完成后，在宏列表中可以回放测试，也可以通过"调用录制宏"节点嵌入主流程。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>录制时为什么有些操作没有被录进去？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 录制时只记录<strong>设计区域内</strong>的操作。这是有意设计，防止你误操作（如点击了 MacroAI 自身的界面）被录进去。</p>
+          <p><strong>没被录入的情况：</strong></p>
+          <ul>
+            <li>点击了设计区域外面的位置（边框会闪红色提示）</li>
+            <li>点击了 MacroAI 自身的窗口/按钮</li>
+            <li>Android 版：点击了录制浮球区域</li>
+          </ul>
+          <p><strong>解决办法：</strong></p>
+          <ul>
+            <li>确保你的操作都在绿色边框范围内</li>
+            <li>如果目标窗口比设计区域大，需要重新创建项目或修改设计区域</li>
+            <li>看到边框闪红色 = 这次操作没被录入，需要重做</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>录制的宏回放时速度太快/太慢怎么办？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>宏回放会<strong>保留录制时的时间间隔</strong>。如果你录制时操作很快，回放也会很快。</p>
+          <p><strong>调整方法：</strong></p>
+          <ul>
+            <li>录制时故意放慢节奏，每步之间留出足够间隔</li>
+            <li>如果某步操作需要等加载，在录制时真的等到加载完再操作下一步</li>
+            <li>录制完成后不能修改延时，如果不满意需要删除后重新录制</li>
+          </ul>
+          <p><strong>更好的做法：</strong>对于需要精确控制节奏的场景，建议用节点编辑器手动搭建（等待节点 + 点击节点），而不是依赖录制。录制更适合"操作序列固定、间隔不重要"的场景。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>录制的宏能编辑吗？能加入条件判断吗？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>宏本身不能编辑。</strong>录制完成后，你可以重命名、修改描述、回放、删除，但不能修改宏内部的具体事件（不能删除某个点击、不能调整延时、不能改坐标）。</p>
+          <p><strong>录错了怎么办？</strong>删除后重新录制。</p>
+          <p><strong>想要条件判断？</strong>用节点编辑器：</p>
+          <ol>
+            <li>在节点编辑器中添加"调用录制宏"节点，选择你的宏</li>
+            <li>在它前后添加条件判断、循环、图像查找等节点</li>
+            <li>这样宏负责"执行操作"，节点编辑器负责"控制逻辑"</li>
+          </ol>
+          <p>也可以把一个长操作拆成几段短宏分别录制，中间用节点逻辑连接，更灵活。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Android 版录制和 Windows 版有什么不同？<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>主要区别：</p>
+          <ul>
+            <li><strong>操作类型</strong>：Android 录制的是触摸操作（点击、滑动），没有键盘输入（安卓键盘输入通过输入法，无法直接拦截）</li>
+            <li><strong>录制方式</strong>：Android 用全屏覆盖层拦截触摸事件，同时在底层回放（你能看到自己的操作效果）</li>
+            <li><strong>回放方式</strong>：通过无障碍服务的 dispatchGesture 注入手势，不需要 root</li>
+            <li><strong>限制</strong>：录制时不能操作状态栏/导航栏区域；多指手势（如缩放）暂不支持</li>
+          </ul>
+          <p>因此 Android 版更推荐用节点编辑器搭建流程，录制作为辅助手段。Windows 版录制功能更完整（支持键盘、中文输入法）。</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

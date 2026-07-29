@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>坐标策略与分辨率适配 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI 坐标策略常见问题 — 等比缩放、平移适配、校准、DPI、跨设备运行">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">坐标策略与分辨率适配</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <details class="faq-item">
+        <summary>什么是"坐标策略"？等比缩放和平移适配有什么区别？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>坐标策略</strong>决定了"当运行环境和制作环境不一样时，坐标怎么换算"。MacroAI 提供两种策略：</p>
+          <ul>
+            <li><strong>等比缩放（uniform）</strong> — 画面整体放大/缩小。坐标按比例缩放，模板图片也按比例缩放。<br>适用：<strong>游戏、全屏应用</strong>。这类程序在不同分辨率下会把整个画面等比拉伸。</li>
+            <li><strong>平移适配（desktop）</strong> — 画面不缩放，只是位置偏移了。坐标只做平移，模板不缩放。<br>适用：<strong>浏览器、Office、文件管理器</strong>。这类程序窗口变大时内容不会放大，只是看到更多。</li>
+          </ul>
+          <p><strong>简单判断法：</strong>如果你的目标程序在不同分辨率下"画面看起来一样大，只是位置变了"→ 用平移适配；如果"画面整体变大/变小了"→ 用等比缩放。</p>
+          <p>在项目设置（<code>Ctrl+,</code>）→ 区域设置中切换。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>我的脚本换了一台电脑/手机就点不准了，怎么办？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>这是最常见的问题，通常是<strong>运行区域没有校准</strong>导致的。解决步骤：</p>
+          <ol>
+            <li>切换到<strong>运行模式</strong>（工具栏 → 🏃 运行）</li>
+            <li>找到<strong>区域校准</strong>区域，点击"校准"按钮</li>
+            <li>在弹出的全屏覆盖层中，框选目标程序的实际显示区域
+              <ul>
+                <li>等比缩放模式：自由框选，保持和设计区域相同的宽高比</li>
+                <li>平移适配模式：只能移动位置，宽高固定不变</li>
+              </ul>
+            </li>
+            <li>确认后重新运行脚本</li>
+          </ol>
+          <p><strong>如果校准后仍然偏移：</strong></p>
+          <ul>
+            <li>检查坐标策略是否选对（游戏用等比缩放，桌面程序用平移适配）</li>
+            <li>如果只是个别图像找不到，可能是图像质量问题，尝试重新截取模板图片</li>
+            <li>Android 用户检查游戏是否有黑边（有黑边时需要框选黑边内的实际画面区域）</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>什么是"校准运行区域"？什么时候需要校准？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI 有两个区域概念：</p>
+          <ul>
+            <li><strong>设计区域</strong> — 你制作脚本时的屏幕区域（创建项目时设定，一般不改）</li>
+            <li><strong>运行区域</strong> — 脚本实际运行时目标程序所在的屏幕区域</li>
+          </ul>
+          <p>如果你在同一台电脑、同一个窗口位置运行，两者相同，不需要校准。</p>
+          <p><strong>需要校准的情况：</strong></p>
+          <ul>
+            <li>换了一台分辨率不同的电脑/手机</li>
+            <li>目标窗口的位置或大小变了（如从左边移到了右边）</li>
+            <li>Windows 的 DPI 缩放比例变了（如从 100% 改为 125%）</li>
+          </ul>
+          <p>校准只需做一次，结果会保存在项目中。下次打开同一项目无需重新校准（除非环境又变了）。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>我的游戏在不同手机上画面大小不一样（有黑边），怎么处理？<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>安卓手机宽高比非常碎片化（16:9、19.5:9、20:9...），游戏在不同设备上通常有三种表现：</p>
+          <ul>
+            <li><strong>有黑边</strong>（内容居中，上下或左右留黑）→ 校准时框选黑边<em>内部</em>的实际画面区域，使用等比缩放模式</li>
+            <li><strong>画面等比放大</strong>（内容变大，没有黑边）→ 直接全屏，使用等比缩放模式</li>
+            <li><strong>视口扩大</strong>（内容不变大，看到更多背景）→ 使用平移适配模式，通常 UI 按钮位置不变</li>
+          </ul>
+          <p><strong>实操建议：</strong></p>
+          <ol>
+            <li>先确认游戏在你手机上的显示方式（有没有黑边）</li>
+            <li>有黑边 → 运行设置中校准区域，只框选画面部分</li>
+            <li>没黑边 → 默认全屏即可，一般不需要校准</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Windows 的 DPI 缩放（125%/150%）会影响脚本运行吗？<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p><strong>MacroAI 已内置 DPI 校正，DPI 已纳入坐标缩放体系，正常情况下不需要你操心。</strong></p>
+          <p>图像查找找不到通常和 DPI 无关，更可能是图像质量问题。如果个别图像找不到，建议重新截取模板图片。</p>
+          <p><strong>多显示器注意：</strong>如果两个显示器 DPI 缩放不同（如主屏 125%、副屏 100%），建议目标窗口不要跨屏移动。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>等比缩放模式下，为什么校准区域必须保持和设计区域相同的宽高比？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>因为等比缩放的核心假设是：<strong>画面在 X 和 Y 方向按相同比例缩放</strong>（scale_x = scale_y）。</p>
+          <p>如果设计区域是 1920×1080（16:9），而你校准时框了一个 1920×1200（16:10）的区域，那 X 方向缩放 1.0 倍、Y 方向缩放 1.11 倍——画面被非等比拉伸了，坐标换算就会出错。</p>
+          <p>所以 MacroAI 在校准时会<strong>锁定宽高比</strong>，你只能调整区域大小和位置，不能改变比例。这是为了保护坐标换算的准确性。</p>
+          <p>如果你的目标程序确实是非等比拉伸的（极少见），建议改用平移适配模式，或者重新以实际比例创建设计区域。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>什么情况下需要切换坐标策略？切换后已有的节点会怎样？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p><strong>需要切换的信号：</strong></p>
+          <ul>
+            <li>用等比缩放模式，但脚本在另一台电脑上"整体偏移"而不是"整体偏大/偏小"→ 应该用平移适配</li>
+            <li>用平移适配模式，但脚本在另一台电脑上"点击位置比例性偏移"→ 应该用等比缩放</li>
+          </ul>
+          <p><strong>切换后的影响：</strong></p>
+          <ul>
+            <li>所有已有坐标点的<strong>解释方式</strong>会改变（同样的数字，缩放和平移算出的实际位置不同）</li>
+            <li>切换时会弹出警告提示</li>
+            <li>可能需要重新校准运行区域</li>
+            <li>已截取的模板图片不受影响（图片本身不变）</li>
+          </ul>
+          <p><strong>建议：</strong>创建项目时就选对策略。如果不确定，游戏/全屏选等比缩放，窗口程序选平移适配。切换后最好完整测试一遍流程。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>节点配置里的"坐标策略覆盖"是什么？什么时候用？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>默认情况下，所有节点跟随项目的全局坐标策略。但个别节点可以<strong>单独设置不同的策略</strong>，这就是"坐标策略覆盖"（transform_policy）。</p>
+          <p><strong>使用场景举例：</strong></p>
+          <ul>
+            <li>项目整体是等比缩放（游戏），但某个节点要点击的是系统任务栏上的按钮（不随游戏缩放）→ 该节点单独设为平移适配</li>
+            <li>项目整体是平移适配（浏览器），但某个图像查找的目标是视频画面（会缩放）→ 该节点单独设为等比缩放</li>
+          </ul>
+          <p>在节点配置对话框中找到"坐标策略"下拉框，选择"等比缩放"或"平移适配"即可覆盖。选"跟随项目"则使用全局设置。</p>
+          <p><strong>注意：</strong>这是 Pro 功能。大多数情况下不需要用到，只有"同一个项目中混合了缩放和不缩放的内容"时才需要。</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

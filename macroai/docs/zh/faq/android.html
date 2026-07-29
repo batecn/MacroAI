@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Android 专有问题 - 常见问题 - MacroAI</title>
+  <meta name="description" content="MacroAI Android 版权限、无障碍服务、悬浮窗、编辑器常见问题">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/#features">功能特性</a>
+        <a href="/#download">下载</a>
+        <a href="/macroai/docs/zh/faq/">常见问题</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">常见问题</div>
+      <h1 class="section-title">Android 专有问题</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← 返回所有分类</a>
+
+      <details class="faq-item">
+        <summary>为什么需要开启"无障碍服务"权限？不开会怎样？<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>无障碍服务（Accessibility Service）是 MacroAI Android 版的<strong>核心权限</strong>，用于：</p>
+          <ul>
+            <li><strong>模拟触摸操作</strong> — 通过 dispatchGesture 注入点击/滑动手势到系统</li>
+            <li><strong>悬浮窗编辑器</strong> — 在其他应用上方显示编辑界面</li>
+          </ul>
+          <p><strong>不开启的后果：</strong>脚本无法执行任何点击/滑动操作，相当于"有脑子但没有手"。</p>
+          <p><strong>开启方法：</strong></p>
+          <ol>
+            <li>进入手机 设置 → 无障碍（或"辅助功能"）</li>
+            <li>找到"已下载的应用"或"已安装的服务"</li>
+            <li>找到 MacroAI，开启开关</li>
+            <li>系统会弹出安全提示，点"确定"</li>
+          </ol>
+          <p>不同品牌手机路径不同（华为/小米/OPPO/vivo 各有差异），MacroAI 会尝试自动跳转到对应设置页。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>为什么需要"悬浮窗"权限？<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI Android 版的编辑器和运行控制都是<strong>悬浮在其他应用上方</strong>的（因为你操作的目标是其他应用/游戏，MacroAI 不能占满屏幕）。</p>
+          <p>悬浮窗权限让 MacroAI 可以：</p>
+          <ul>
+            <li>在游戏/应用上方显示编辑气泡和节点配置面板</li>
+            <li>显示运行控制气泡（播放/暂停/停止）</li>
+            <li>显示录制覆盖层</li>
+          </ul>
+          <p><strong>不开启的后果：</strong>无法在其他应用上方显示任何界面，编辑器和运行控制都不可用。</p>
+          <p><strong>开启方法：</strong>设置 → 应用管理 → MacroAI → 悬浮窗（或"显示在其他应用上方"）→ 允许。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>屏幕录制授权弹窗能跳过吗？每次都弹好烦。<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p><strong>不能跳过，这是 Android 系统强制要求。</strong></p>
+          <p>MacroAI 需要截取屏幕画面来做图像识别、OCR、颜色检测等操作。Android 系统规定，任何应用截取屏幕都必须经过用户明确授权（MediaProjection API），且每次启动服务时都要重新授权。</p>
+          <p><strong>这是系统安全机制，MacroAI 无法绕过。</strong></p>
+          <p>好消息：</p>
+          <ul>
+            <li>弹窗只在启动运行/编辑时出现一次，不会反复弹</li>
+            <li>部分 Android 11+ 设备支持"记住选择"，勾选后不再弹出</li>
+            <li>如果你只是导入运行别人的脚本（不需要截图功能），某些场景可以不授权</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>为什么我的手机开启无障碍服务后过一会儿就自动关闭了？<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>这是国产安卓手机（华为/小米/OPPO/vivo/荣耀）的<strong>后台管理策略</strong>导致的——系统为了省电会自动"杀死"后台服务。</p>
+          <p><strong>解决办法（按品牌）：</strong></p>
+          <ul>
+            <li><strong>通用</strong>：设置 → 电池 → 找到 MacroAI → 设为"不限制"/"无限制"</li>
+            <li><strong>小米</strong>：设置 → 应用设置 → 应用管理 → MacroAI → 省电策略 → 无限制；同时锁定最近任务（下拉锁定）</li>
+            <li><strong>华为/荣耀</strong>：设置 → 电池 → 启动管理 → MacroAI → 关闭"自动管理"，手动开启所有开关</li>
+            <li><strong>OPPO/vivo</strong>：设置 → 电池 → 后台耗电管理 → MacroAI → 允许后台运行</li>
+          </ul>
+          <p><strong>额外建议：</strong>在最近任务/多任务界面把 MacroAI "锁定"（通常是下拉或长按加锁），防止被一键清理。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>安卓版的编辑器在哪里？怎么打开？<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>Android 版的编辑器<strong>不是一个独立界面</strong>，而是以悬浮气泡的形式显示在其他应用上方。</p>
+          <p><strong>打开方式：</strong></p>
+          <ol>
+            <li>在 MacroAI 主界面（项目列表）中选择一个项目</li>
+            <li>点击"编辑"按钮</li>
+            <li>MacroAI 会最小化到后台，屏幕上出现一个<strong>编辑气泡</strong></li>
+            <li>点击气泡展开编辑菜单（添加节点、配置、运行等）</li>
+          </ol>
+          <p><strong>为什么这样设计？</strong>因为你需要一边看着目标应用/游戏的画面，一边编辑脚本。如果编辑器占满屏幕，你就看不到要操作的目标了。</p>
+          <p>气泡可以拖动位置，不用的时候可以收起到很小，不遮挡画面。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>安卓版支持哪些节点类型？和 Windows 版一样吗？<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>大部分核心节点两端都支持，但有差异：</p>
+          <p><strong>两端都支持的：</strong></p>
+          <ul>
+            <li>查找图像（含点击）、颜色检测、OCR 识别/比对</li>
+            <li>等待变化、等待条块变化</li>
+            <li>鼠标点击（触摸点击）、鼠标移动、鼠标拖拽</li>
+            <li>等待、循环、条件判断、设置变量、日志</li>
+            <li>调用函数、调用录制宏</li>
+          </ul>
+          <p><strong>有差异的：</strong></p>
+          <ul>
+            <li><strong>按键/输入文本</strong>：Windows 用虚拟键码，Android 用无障碍服务输入，部分特殊键不支持</li>
+            <li><strong>后台输入</strong>：Windows 有后台/前台模式切换，Android 统一通过无障碍服务注入（天然"后台"）</li>
+            <li><strong>自定义代码</strong>：两端都支持 Lua，但可用的 API 略有差异</li>
+          </ul>
+          <p>导入不兼容的节点时会被自动跳过，不会导致整个脚本失败。</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/">首页</a>
+      <a href="/macroai/docs/zh/faq/">常见问题</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

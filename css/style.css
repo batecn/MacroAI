@@ -195,6 +195,8 @@ ul { list-style: none; }
   font-family: var(--font-sans);
   transition: all var(--transition);
   letter-spacing: 0.3px;
+  text-decoration: none;
+  display: inline-block;
 }
 #lang-toggle:hover {
   border-color: rgba(139, 92, 246, 0.4);

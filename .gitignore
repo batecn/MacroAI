@@ -1,5 +1,6 @@
 # Build tools (local only, not needed in distribution repo)
 build_docs.py
+build_i18n.py
 
 # Source markdown (maintained in source repo, not in distribution)
 locale/
