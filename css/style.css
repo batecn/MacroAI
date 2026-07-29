@@ -821,6 +821,8 @@ ul { list-style: none; }
 
 .docs-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; }
 .docs-card.full { grid-column: 1 / -1; }
+.docs-card-link { display: inline-block; margin-top: 16px; color: var(--accent); font-size: 0.9rem; font-weight: 500; text-decoration: none; transition: opacity 0.2s; }
+.docs-card-link:hover { opacity: 0.8; text-decoration: underline; }
 
 .quickstart-steps {
   display: grid;

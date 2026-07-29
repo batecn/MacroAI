@@ -160,6 +160,8 @@
   "docs.faq.a2": "目前支持中文和英文界面，可在设置中切换。",
   "docs.faq.q3": "如何反馈问题或建议？",
   "docs.faq.a3": "您可以通过 GitHub Issues 提交问题反馈，或发送邮件至 macroai@sowe.com。",
+  "docs.faq.more": "查看全部常见问题 →",
+  "docs.faq.link": "/macroai/docs/zh/faq/",
 
   "game.title": "战斗演示",
   "game.desc": "打开 MacroAI 桌面端，用条块变化检测和图像识别来自动操作这个场景",

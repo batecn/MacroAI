@@ -84,8 +84,6 @@
     fetchTranslations(currentLang).then(function (data) {
       translations = data;
       apply();
-      var btn = document.getElementById('lang-toggle');
-      if (btn) btn.addEventListener('click', toggleLang);
     });
   }
 

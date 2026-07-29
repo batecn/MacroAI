@@ -160,6 +160,8 @@
   "docs.faq.a2": "Currently supports Chinese and English UI. Switch between them in settings.",
   "docs.faq.q3": "How do I report issues or suggestions?",
   "docs.faq.a3": "Submit feedback via GitHub Issues or email us at macroai@sowe.com.",
+  "docs.faq.more": "View all FAQs →",
+  "docs.faq.link": "/macroai/docs/zh/faq/",
 
   "game.title": "Battle Demo",
   "game.desc": "Open MacroAI desktop and use bar change detection & image recognition to automate this scene",

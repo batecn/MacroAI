@@ -315,6 +315,7 @@
             <div class="faq-question" data-i18n="docs.faq.q3">如何反馈问题或建议？</div>
             <div class="faq-answer" data-i18n="docs.faq.a3">您可以通过 GitHub Issues 提交问题反馈，或发送邮件至 macroai@sowe.com。</div>
           </div>
+          <a href="/macroai/docs/zh/faq/" class="docs-card-link" data-i18n="docs.faq.more" data-i18n-href="docs.faq.link">查看全部常见问题 →</a>
         </div>
       </div>
     </div>
@@ -343,11 +344,14 @@
   </footer>
 
   <script>
-    // Language auto-detect & redirect
+    // Language auto-detect & redirect (only on first visit, no stored preference)
     (function() {
       var stored = localStorage.getItem('macroai-lang');
-      var lang = stored || (navigator.language && navigator.language.indexOf('zh') === -1 ? 'en' : 'zh');
-      if (lang === 'en') { location.replace('/en/'); }
+      if (!stored && navigator.language && navigator.language.indexOf('zh') === -1) {
+        location.replace('/en/');
+      } else {
+        localStorage.setItem('macroai-lang', 'zh');
+      }
     })();
   </script>
   <script src="js/main.js"></script>
