@@ -17,7 +17,7 @@
   border: 1px solid var(--border-glass);
   border-radius: var(--radius);
   padding: 4px;
-  max-width: 400px;
+  max-width: 520px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -25,13 +25,14 @@
 .docs-tabs a {
   flex: 1;
   text-align: center;
-  padding: 10px 20px;
+  padding: 10px 16px;
   border-radius: calc(var(--radius) - 4px);
   color: #8888aa;
   font-size: 0.9rem;
   font-weight: 500;
   transition: all var(--transition);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .docs-tabs a:hover {
