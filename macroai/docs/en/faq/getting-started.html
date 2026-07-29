@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started &amp; Basics - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI getting started FAQ — project creation, design region, node editor, mode switching">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">Getting Started &amp; Basics</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <details class="faq-item">
+        <summary>What is MacroAI? What can it do?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI is a <strong>cross-platform macro automation tool</strong> that supports both Windows and Android. It lets you build automation scripts that "click automatically, recognize images, and read on-screen text" — no programming experience required.</p>
+          <p>Typical use cases:</p>
+          <ul>
+            <li><strong>Game assistance</strong> — auto-farming, auto-healing, auto daily quests</li>
+            <li><strong>Office automation</strong> — batch form filling, automating ERP/CRM operations</li>
+            <li><strong>Software testing</strong> — simulating user actions, regression testing</li>
+            <li><strong>Operations</strong> — scheduled inspections, automatic handling after monitoring alerts</li>
+          </ul>
+          <p>Core capabilities: image recognition and positioning, OCR text recognition, color detection, screen change monitoring, mouse &amp; keyboard simulation, and Lua script extension.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do I create my first project?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI organizes everything around <strong>projects</strong>. Before using any feature, you must create a project first:</p>
+          <ol>
+            <li>Click the menu <strong>Project → New Project</strong> (or press <code>Ctrl+N</code>)</li>
+            <li>On first launch, you'll be guided to choose a <strong>workspace directory</strong> (where project files are stored) — just pick a folder you'll remember</li>
+            <li>Enter a project name (e.g. "Match Game Helper")</li>
+            <li>Set the <strong>design region</strong> (see the next question)</li>
+            <li>Click OK, and your project is created</li>
+          </ol>
+          <p>Once created, you can add nodes in the node editor, record macros, and manage images.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What is the "design region"? Why do I need to select an area when creating a project?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The <strong>design region</strong> defines "the area your script works in". It tells MacroAI which area of the screen — the target window or view — you were looking at while building the script.</p>
+          <p>Why is it needed? Because the same script may run on computers with different resolutions. With the design region as a reference baseline, MacroAI can automatically convert coordinates so your script runs correctly on other machines too.</p>
+          <p>Two options:</p>
+          <ul>
+            <li><strong>Full screen</strong> — the simplest choice if you're automating a full-screen game or the entire desktop</li>
+            <li><strong>Custom selection</strong> — if you only operate within a specific window (e.g. a browser or game window), drag to select that window</li>
+          </ul>
+          <p><strong>Tip for beginners:</strong> if you're unsure, choose "Full screen" — you can change it later in the project settings.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What's the difference between design mode and run mode? Which one should I use?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI has two working modes, each aimed at a different role:</p>
+          <ul>
+            <li><strong>🔧 Design mode</strong> — for the person who <em>builds</em> the script. Includes all 9 tabs: node editor, variable management, image management, and more. Used for creating and editing scripts.</li>
+            <li><strong>🏃 Run mode</strong> — for the person who <em>uses</em> the script. Shows only project info, region calibration, personal configuration, and the run button. A clean interface focused on running.</li>
+          </ul>
+          <p><strong>How to choose?</strong></p>
+          <ul>
+            <li>You're building the script yourself → design mode</li>
+            <li>Someone sent you a script file and you just want to run it → run mode (importing a distribution package switches to it automatically)</li>
+          </ul>
+          <p>You can switch at any time via the dropdown menu on the left side of the toolbar.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What is a "node"? How do I use the node editor?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>A <strong>node</strong> is a single action step in your script. For example, "mouse click (500,300)" is a node, "wait 2 seconds" is a node, and "find image" is also a node.</p>
+          <p>The node editor lets you line up these steps from top to bottom, like stacking building blocks. MacroAI executes them in order.</p>
+          <p>Basic operations:</p>
+          <ul>
+            <li><strong>Add a node</strong>: click a node type in the left panel (e.g. "Find Image", "Mouse Click", "Wait")</li>
+            <li><strong>Configure a node</strong>: double-click the node to open its configuration dialog and set the parameters</li>
+            <li><strong>Reorder</strong>: simply drag nodes up or down</li>
+            <li><strong>Compose logic</strong>: drag nodes into a "Loop" or "Condition" container to implement repetition or branching</li>
+          </ul>
+          <p>The node editor automatically generates the corresponding script code — you never need to write any code by hand.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How does macro recording relate to the node editor? When should I use each?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The two are complementary:</p>
+          <ul>
+            <li><strong>Macro recording</strong> — you perform the actions once, and MacroAI records every mouse and keyboard action, replaying them exactly. Best for simple operations with "fixed steps and no decision-making".</li>
+            <li><strong>Node editor</strong> — you build the flow manually and can add intelligent logic such as image recognition, conditions, and loops. Best for complex scenarios where you "need to make decisions based on screen content".</li>
+          </ul>
+          <p><strong>Recommended workflow:</strong></p>
+          <ol>
+            <li>First, quickly record a sequence of actions</li>
+            <li>Add a "Call Recorded Macro" node in the node editor</li>
+            <li>Add image search, condition, and other nodes around it to make the flow smarter</li>
+          </ol>
+          <p>In short: recording handles "what to do", while the node editor handles "when to do it, how many times, and under what conditions".</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do projects, macros, functions, and nodes relate to each other?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>In one sentence: a <strong>project</strong> is a container that holds <strong>nodes</strong> (the main flow), <strong>functions</strong> (reusable sub-flows), and <strong>macros</strong> (recorded action sequences).</p>
+          <ul>
+            <li><strong>Project</strong> — a complete automation task. Contains all nodes, images, variables, functions, macros, and so on. Corresponds to one entry in the project list on the left.</li>
+            <li><strong>Node</strong> — a single step in the main flow. Managed in the "Node Editor" tab.</li>
+            <li><strong>Function</strong> — a group of nodes packaged into a reusable module that can be called multiple times from the main flow. Managed in the "Functions" tab.</li>
+            <li><strong>Macro</strong> — a recorded sequence of mouse and keyboard actions. It can be embedded in the main flow via a "Call Recorded Macro" node. Managed in the "Macro Manager" tab.</li>
+          </ul>
+          <p>Execution order: when you run a project, it executes from top to bottom in the node editor's order. When it hits a "Call Function" node, it jumps to execute the function's content; when it hits a "Call Recorded Macro" node, it plays back the recorded actions.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

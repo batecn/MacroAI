@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running &amp; Debugging - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI running and debugging FAQ — logs, floating panel, foreground/background running, pause &amp; stop">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">Running &amp; Debugging</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <details class="faq-item">
+        <summary>My script hit an error. How do I view the error message?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI's log panel shows all information generated during a run:</p>
+          <ul>
+            <li><strong>Windows version</strong>: the log area at the bottom of the main window. Errors are shown in red.</li>
+            <li><strong>Android version</strong>: tap the 📋 button on the run bubble to open the log page.</li>
+          </ul>
+          <p><strong>Common errors and what they mean:</strong></p>
+          <ul>
+            <li>"Image xxx.png not found" → the template image isn't within the search range, or the threshold is too high</li>
+            <li>"Execution timed out" → wait-for-image / wait-for-change exceeded the configured timeout</li>
+            <li>"Lua syntax error" → there's a code error in a custom code node</li>
+            <li>"Variable xxx is undefined" → you used a variable that isn't defined in the Variables tab</li>
+          </ul>
+          <p>If the log isn't detailed enough, switch the log level to "Debug" to see more internal information.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What's the difference between the "Concise / Trace / Debug" log levels?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The log level on the toolbar controls how much information is shown:</p>
+          <ul>
+            <li><strong>Concise</strong> (default) — shows only the content of "Log Output" nodes and error messages. The cleanest option, suited for normal runs.</li>
+            <li><strong>Trace</strong> — additionally shows each node's execution progress (e.g. "[Find Image] found xxx at position=(500,300)"). Suited for troubleshooting "which step is the script on" or "did a certain node run".</li>
+            <li><strong>Debug</strong> — additionally shows engine internals (screenshot dimensions, scaling ratios, match scores, etc.). Suited for diagnosing deep technical issues.</li>
+          </ul>
+          <p><strong>Recommendation:</strong> use "Concise" for normal runs; switch to "Trace" when troubleshooting; use "Debug" and capture a log screenshot when reporting bugs to the developers.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What do the buttons on the floating panel (bubble) do while running?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>After the script starts, a floating control panel appears in the top-right of the screen (on Android it's a floating bubble):</p>
+          <ul>
+            <li><strong>Status label</strong> (▶ Running / ⏸ Paused / ⏹ Finished / ⚠ Error) — shows the current state</li>
+            <li><strong>⏸ Pause / ▶ Resume</strong> — pauses or resumes script execution</li>
+            <li><strong>■ Stop</strong> — fully terminates the script</li>
+            <li><strong>Custom action buttons</strong> (if defined) — trigger extra operations with one tap (e.g. "Emergency Stop", "Switch Target")</li>
+            <li><strong>✕ Close</strong> — closes the panel and stops all running tasks</li>
+          </ul>
+          <p><strong>Windows version:</strong> the panel can be dragged around. When the script finishes and there are no custom actions, the panel disappears automatically after 3 seconds.</p>
+          <p><strong>Android version:</strong> the bubble can be dragged; tap it to expand the menu. It auto-expands for 3 seconds when it first appears.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What are "background running" and "foreground running"? What's the difference?<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p>This is a concept specific to the Windows version, controlling how mouse and keyboard actions are simulated:</p>
+          <ul>
+            <li><strong>🔄 Background running</strong> (default) — sends clicks/keystrokes via the Windows message mechanism, <strong>without moving the real mouse or stealing focus</strong>. You can keep using your computer for other things while the script runs.</li>
+            <li><strong>Foreground running</strong> — directly controls the physical mouse/keyboard. The mouse actually moves while running, and you can't operate the computer at the same time. But it has better compatibility.</li>
+          </ul>
+          <p><strong>How to choose?</strong></p>
+          <ul>
+            <li>In most cases, background (the default) is fine</li>
+            <li>If in background mode the target program "doesn't receive" the clicks (some games, remote desktop) → switch to foreground</li>
+            <li>While running in foreground, don't touch the mouse or keyboard, or you'll interfere with the script</li>
+          </ul>
+          <p>Switch it via the "🔄 Background" button on the toolbar.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Why can't I use my mouse/keyboard while the script is running?<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p>If you're currently in <strong>foreground running</strong> mode, the script directly controls the physical mouse and keyboard, so you can't operate them at the same time.</p>
+          <p><strong>Solution:</strong> switch to <strong>background running</strong> mode (click the "🔄 Background" button on the toolbar). Then the script sends actions via the message mechanism and won't occupy your mouse and keyboard.</p>
+          <p><strong>Note:</strong> some programs (such as certain games and remote desktop software) don't support background messages and require foreground mode. In that case, you'll have to wait for the script to finish before operating, or use another computer/phone to control things.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What is "Click Visualization" (the red dots)? What's it for?<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p>Click Visualization is a <strong>debugging aid</strong> in the Windows version. When enabled, every time the script performs a mouse click, a red dot is shown at the click position (disappearing after 0.5 seconds).</p>
+          <p><strong>Uses:</strong></p>
+          <ul>
+            <li>Confirm whether the script is clicking the right position</li>
+            <li>Troubleshoot "found the image but clicked the wrong spot" issues</li>
+            <li>In background mode you can't see the mouse move — the red dot shows you "where it clicked"</li>
+          </ul>
+          <p>Toggle it with the "🔴" button on the toolbar. We recommend turning it off during normal runs (to avoid visual distraction) and turning it on while debugging.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do I pause/resume/stop a running script?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <ul>
+            <li><strong>Pause</strong>: click the "⏸ Pause" button on the floating panel. The script pauses after the current node finishes.</li>
+            <li><strong>Resume</strong>: click "▶ Resume" to continue execution.</li>
+            <li><strong>Stop</strong>: click "■ Stop" or press <code>Shift+F5</code>. Fully terminates and cannot be resumed.</li>
+          </ul>
+          <p><strong>Notes:</strong></p>
+          <ul>
+            <li>If a "Wait" node is timing when you pause, it resumes from where it paused</li>
+            <li>Stopping is irreversible — you'll need to click "▶ Run" again to run it once more</li>
+            <li>Android version: expand the bubble menu to operate</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What are custom actions? How do I trigger extra operations while running?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p><strong>Custom actions</strong> are "shortcut buttons" bound to the floating panel. They let you <strong>independently trigger</strong> a sequence of operations while the main script is running.</p>
+          <p><strong>Typical scenarios:</strong></p>
+          <ul>
+            <li>The main script is auto-farming, and you want to press a button at any time to "return to town" → create a "Return to Town" custom action</li>
+            <li>The main script is looping, and you need to temporarily "pause and take a screenshot"</li>
+            <li>You have several helper operations that need to be triggered manually at any time (e.g. switching targets, using a special skill)</li>
+          </ul>
+          <p><strong>How to set up:</strong></p>
+          <ol>
+            <li>Create an action in the "Custom Actions" tab (<code>Ctrl+6</code>)</li>
+            <li>Build the action's node flow (edited the same way as the main flow)</li>
+            <li>After running the script, the corresponding button appears on the floating panel</li>
+            <li>Tap the button at any time to trigger the action, without affecting the main script</li>
+          </ol>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

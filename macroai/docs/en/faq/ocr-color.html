@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCR &amp; Color Detection - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI OCR text recognition and color detection FAQ">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">OCR &amp; Color Detection</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin-bottom:20px;">OCR Text Recognition</h2>
+
+      <details class="faq-item">
+        <summary>What's the difference between OCR Recognize and OCR Compare?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <ul>
+            <li><strong>OCR Recognize</strong> — "reads out" the text on screen and stores the result in a variable for later use. Suited for: reading coin counts, getting chat content, recording scores.</li>
+            <li><strong>OCR Compare</strong> — reads the text and automatically compares it against an "expected text", returning "match / no match". Suited for: checking whether a button's text is "OK", or detecting whether an "Error" message has appeared.</li>
+          </ul>
+          <p><strong>In short:</strong> OCR Recognize = "tell me what's written there"; OCR Compare = "is what's written there XXX?".</p>
+          <p>The OCR Compare node also supports "click after a successful match", with click logic similar to image search.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What should I do if OCR recognition is inaccurate?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>OCR accuracy is affected by many factors. Troubleshoot in order of priority:</p>
+          <ol>
+            <li><strong>Shrink the recognition region</strong> — the larger the region, the more interfering text. Select only the line or characters you need to recognize.</li>
+            <li><strong>Make sure the text is clear</strong> — the target text must not be obscured, translucent, or disturbed by complex background patterns.</li>
+            <li><strong>The text must not be too small</strong> — recognition accuracy drops noticeably for very small font sizes (e.g. 8px).</li>
+            <li><strong>Choose the correct language</strong> — select Chinese for Chinese content and English for English. For mixed content, select the Chinese-English mixed option.</li>
+            <li><strong>Avoid decorative fonts</strong> — handwriting, decorative, and heavily distorted fonts have very low recognition rates.</li>
+          </ol>
+          <p>The Windows version uses the built-in Windows OCR engine, with no extra installation required. If a system language pack is missing, you'll need to add the corresponding language in Windows Settings → Time &amp; Language → Language.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What does "expected text" mean in OCR?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>"Expected text" is only used in the <strong>OCR Compare</strong> node. It means "the text you expect to be shown on screen".</p>
+          <p>After the engine recognizes the on-screen text, it compares it with the expected text:</p>
+          <ul>
+            <li>Match (or similar enough) → the node is judged <strong>successful</strong></li>
+            <li>No match → the node is judged <strong>failed</strong></li>
+          </ul>
+          <p><strong>Example:</strong> the expected text is "OK", and the button on screen also reads "OK" → success, and you can proceed to click it.</p>
+          <p>If left empty, no comparison is performed — the node succeeds as long as any text is recognized.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Does OCR on the Windows version require any extra installation?<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p><strong>No.</strong> The Windows version of MacroAI uses the system's built-in Windows OCR engine (Windows.Media.Ocr), which ships with Windows 10/11 — zero installation.</p>
+          <p>However, if you need to recognize <strong>Chinese</strong>, make sure the Chinese language pack is installed on the system:</p>
+          <ol>
+            <li>Open Windows Settings → Time &amp; Language → Language</li>
+            <li>Confirm that "Chinese (Simplified)" is in the language list</li>
+            <li>If not, click "Add a language" to install it</li>
+          </ol>
+          <p>English is included by default, so no extra steps are usually needed.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Which languages does OCR support? How do I switch?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The supported languages depend on the language packs installed on your system. The most commonly used are <strong>Simplified Chinese</strong> and <strong>English</strong>, and it also supports Traditional Chinese, Japanese, Korean, and more (depending on the system language packs).</p>
+          <p>In the OCR node configuration, there's a "Language" dropdown for selecting the recognition language.</p>
+          <p><strong>Note:</strong> choosing the wrong language drastically reduces accuracy. For example, recognizing Chinese in English mode will produce garbled text or nothing at all.</p>
+          <p>If the language you need isn't in the dropdown, you'll need to install the corresponding language pack in your operating system first.</p>
+        </div>
+      </details>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin: 40px 0 20px;">Color Detection</h2>
+
+      <details class="faq-item">
+        <summary>What scenarios are the three color detection modes each suited for?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <ul>
+            <li><strong>Point (point)</strong> — gets the color value of a single point on screen.<br>Scenario: checking the state at a fixed position (whether a skill icon is lit, whether a button has grayed out).<br>Input: a coordinate. Output: the RGB/HSV/Hex color value at that point.</li>
+            <li><strong>Dominant (dominant)</strong> — analyzes the most prevalent color within a region.<br>Scenario: determining a dialog's background color, detecting a page's theme color, identifying text color (the second most dominant color).<br>Input: a region. Output: the dominant color of that region (can return the top N dominant colors).</li>
+            <li><strong>Search (search)</strong> — finds positions within a region that match a target color.<br>Scenario: finding red dots on a minimap, finding green NPC markers in the view.<br>Input: region + target color + tolerance. Output: the coordinates of matching positions.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What does "tolerance" mean? How large should I set it?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>Tolerance controls the <strong>leniency</strong> of color matching. Because on-screen colors may not exactly match your expectation due to lighting, anti-aliasing, translucent overlays, and so on.</p>
+          <ul>
+            <li><strong>Tolerance = 0</strong>: must match exactly (nearly impossible, since anti-aliasing shifts the color of edge pixels)</li>
+            <li><strong>Tolerance = 20–30</strong>: allows slight deviation (recommended starting value)</li>
+            <li><strong>Tolerance = 50–80</strong>: fairly loose, matching even noticeably different colors</li>
+            <li><strong>Tolerance &gt; 100</strong>: too loose, may match unrelated colors</li>
+          </ul>
+          <p><strong>Recommendation:</strong> start at 30. If it doesn't match, increase gradually; if you get false matches, reduce it.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>I want to check whether a certain position is red. Which mode should I use?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>Use <strong>point mode (point)</strong> + a condition:</p>
+          <ol>
+            <li>Add a Color Detection node and set the mode to "Point"</li>
+            <li>Set the coordinate to the point you want to check</li>
+            <li>Store the result in a variable (e.g. <code>color</code>)</li>
+            <li>Add a Condition node and use the <code>color_is</code> function to check:<br><code>color_is(color, "red", 30)</code> — checks whether it's red, with a tolerance of 30</li>
+          </ol>
+          <p>You can also check precisely with RGB values: <code>color_is(color, {r=200, g=30, b=30}, 40)</code></p>
+          <p>If you don't want to check "a single point" but rather "find where red is within a large area", you should use <strong>search mode</strong> instead.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What are the hex/name/rgb values returned by color detection?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>Color detection returns the color in multiple formats for convenience in different scenarios:</p>
+          <ul>
+            <li><strong>rgb</strong> (e.g. r=200, g=30, b=30) — red/green/blue channel values, 0–255. The most basic color representation.</li>
+            <li><strong>hex</strong> (e.g. "#C81E1E") — hexadecimal color code, a format commonly used in web design.</li>
+            <li><strong>name</strong> (e.g. "red") — the closest color name (red/green/blue/yellow/white/black, etc.), handy for quick checks.</li>
+            <li><strong>hsv</strong> (e.g. h=0, s=85, v=78) — hue/saturation/value, suited for color-range checks.</li>
+            <li><strong>brightness</strong> (e.g. 0.35) — brightness value from 0 to 1, for judging light/dark.</li>
+          </ul>
+          <p>In most cases, just use the <code>color_is()</code> function to check — you don't need to parse these values yourself.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Android-Specific Questions - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI Android FAQ on permissions, accessibility service, floating window, and the editor">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">Android-Specific Questions</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <details class="faq-item">
+        <summary>Why do I need to enable the "Accessibility Service" permission? What happens if I don't?<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>The Accessibility Service is the <strong>core permission</strong> for MacroAI on Android. It's used for:</p>
+          <ul>
+            <li><strong>Simulating touch actions</strong> — injecting tap/swipe gestures into the system via dispatchGesture</li>
+            <li><strong>The floating window editor</strong> — displaying the editing interface on top of other apps</li>
+          </ul>
+          <p><strong>If you don't enable it:</strong> the script can't perform any tap/swipe actions — it's like "having a brain but no hands".</p>
+          <p><strong>How to enable it:</strong></p>
+          <ol>
+            <li>Go to your phone's Settings → Accessibility</li>
+            <li>Find "Downloaded apps" or "Installed services"</li>
+            <li>Find MacroAI and turn on the switch</li>
+            <li>The system will show a security notice — tap "OK"</li>
+          </ol>
+          <p>The exact path differs by phone brand (Huawei/Xiaomi/OPPO/vivo each vary). MacroAI will try to jump directly to the corresponding settings page for you.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Why is the "floating window" permission required?<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>On Android, both MacroAI's editor and run controls <strong>float on top of other apps</strong> (because your automation target is another app/game, and MacroAI can't take up the whole screen).</p>
+          <p>The floating window permission lets MacroAI:</p>
+          <ul>
+            <li>Show the editing bubble and node configuration panel on top of a game/app</li>
+            <li>Show the run control bubble (play/pause/stop)</li>
+            <li>Show the recording overlay</li>
+          </ul>
+          <p><strong>If you don't enable it:</strong> MacroAI can't display any interface on top of other apps, and both the editor and run controls become unusable.</p>
+          <p><strong>How to enable it:</strong> Settings → Apps → MacroAI → Floating window (or "Display over other apps") → Allow.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Can I skip the screen recording authorization dialog? It pops up every time and it's annoying.<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p><strong>No, it can't be skipped — this is a mandatory Android system requirement.</strong></p>
+          <p>MacroAI needs to capture the screen to perform image recognition, OCR, color detection, and so on. Android requires that any app capturing the screen must obtain explicit user authorization (the MediaProjection API), and must re-authorize every time the service starts.</p>
+          <p><strong>This is a system security mechanism that MacroAI cannot bypass.</strong></p>
+          <p>The good news:</p>
+          <ul>
+            <li>The dialog only appears once when you start running/editing — it doesn't pop up repeatedly</li>
+            <li>Some Android 11+ devices support "Don't show again" — once checked, it won't appear again</li>
+            <li>If you're only importing and running someone else's script (no screenshot features needed), you may be able to skip authorization in some scenarios</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Why does the Accessibility Service turn itself off after a while on my phone?<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>This is caused by the <strong>background management policies</strong> of many Android phones (Huawei/Xiaomi/OPPO/vivo/Honor) — to save battery, the system automatically "kills" background services.</p>
+          <p><strong>Solutions (by brand):</strong></p>
+          <ul>
+            <li><strong>General</strong>: Settings → Battery → find MacroAI → set to "Unrestricted"/"No restrictions"</li>
+            <li><strong>Xiaomi</strong>: Settings → Apps → Manage apps → MacroAI → Battery saver → No restrictions; also lock it in the recent tasks view (pull down to lock)</li>
+            <li><strong>Huawei/Honor</strong>: Settings → Battery → App launch → MacroAI → turn off "Manage automatically" and enable all switches manually</li>
+            <li><strong>OPPO/vivo</strong>: Settings → Battery → Background power management → MacroAI → allow background running</li>
+          </ul>
+          <p><strong>Extra tip:</strong> "lock" MacroAI in the recent tasks / multitasking view (usually by pulling down or long-pressing to lock it) to prevent it from being cleared by a one-tap cleanup.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Where is the editor on the Android version? How do I open it?<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>The Android editor <strong>isn't a standalone screen</strong> — it appears as a floating bubble on top of other apps.</p>
+          <p><strong>How to open it:</strong></p>
+          <ol>
+            <li>In the MacroAI main screen (project list), select a project</li>
+            <li>Tap the "Edit" button</li>
+            <li>MacroAI minimizes to the background and an <strong>editing bubble</strong> appears on screen</li>
+            <li>Tap the bubble to expand the editing menu (add nodes, configure, run, etc.)</li>
+          </ol>
+          <p><strong>Why is it designed this way?</strong> Because you need to see the target app/game's screen while editing your script. If the editor took up the whole screen, you wouldn't be able to see the target you're automating.</p>
+          <p>The bubble can be dragged around, and when you're not using it, it can be collapsed to a very small size so it doesn't block the view.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Which node types does the Android version support? Is it the same as Windows?<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>Most core nodes are supported on both platforms, but there are differences:</p>
+          <p><strong>Supported on both:</strong></p>
+          <ul>
+            <li>Find Image (including click), Color Detection, OCR Recognize/Compare</li>
+            <li>Wait for Change, Wait for Bar Change</li>
+            <li>Mouse Click (touch tap), Mouse Move, Mouse Drag</li>
+            <li>Wait, Loop, Condition, Set Variable, Log</li>
+            <li>Call Function, Call Recorded Macro</li>
+          </ul>
+          <p><strong>Where they differ:</strong></p>
+          <ul>
+            <li><strong>Key Press / Input Text</strong>: Windows uses virtual key codes, while Android inputs via the Accessibility Service; some special keys aren't supported</li>
+            <li><strong>Background input</strong>: Windows has a background/foreground mode switch, while Android always injects via the Accessibility Service (naturally "background")</li>
+            <li><strong>Custom Code</strong>: both support Lua, but the available APIs differ slightly</li>
+          </ul>
+          <p>When importing, incompatible nodes are automatically skipped — they won't cause the whole script to fail.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

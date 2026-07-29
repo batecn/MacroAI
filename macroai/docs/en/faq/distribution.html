@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distribution &amp; Import/Export - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI FAQ on script sharing, distribution packages, import/export, and user config variables">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">Distribution &amp; Import/Export</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <details class="faq-item">
+        <summary>How do I share a finished script with someone else?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI can export a project as a single file that others can import and use directly:</p>
+          <ol>
+            <li>Open your project in MacroAI</li>
+            <li>Click the menu <strong>Project → Export Project</strong></li>
+            <li>Choose a save location to generate a <code>.macroai</code> file</li>
+            <li>Send it to the other person via email, messaging apps, or any other method</li>
+          </ol>
+          <p><strong>After they receive it:</strong></p>
+          <ul>
+            <li>Windows: double-clicking the .macroai file automatically opens MacroAI and imports it (if installed)</li>
+            <li>Or in MacroAI, click Project → Import and select the file</li>
+            <li>Android: open the file with MacroAI — it's imported automatically and takes you to the run screen</li>
+          </ul>
+          <p>The exported file contains the complete project data: all nodes, images, variables, functions, and more.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What is a "distribution package"? How is it different from a normal export?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>When exporting, you have two options:</p>
+          <ul>
+            <li><strong>Normal export</strong> — a plaintext package. After import, all nodes are visible and editable. Suited for: backups, team collaboration, switching computers yourself.</li>
+            <li><strong>Distribution package</strong> (encrypted export) — the script content is encrypted. After import, it <strong>can only be run; nodes can't be viewed or edited</strong>. Suited for: distributing to end users, protecting your design work.</li>
+          </ul>
+          <p><strong>Characteristics of a distribution package:</strong></p>
+          <ul>
+            <li>After import, it automatically enters run mode; the design mode entry is grayed out and can't be clicked</li>
+            <li>Users can't see the node editor, code, or other design content</li>
+            <li>Users can only: calibrate the region, fill in personal configuration, and run/stop</li>
+            <li>Encryption-protected — the script can't be recovered by unpacking the file</li>
+          </ul>
+          <p>Check the "Distribution package" option when exporting to generate an encrypted package.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Why can't I see the node editor after importing a .macroai file?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>That's because what you imported is a <strong>distribution package</strong> (encrypted package). The whole purpose of a distribution package is "let users run it, but not view/modify the script".</p>
+          <p>After importing a distribution package:</p>
+          <ul>
+            <li>It automatically switches to run mode</li>
+            <li>The design mode entry is grayed out and can't be switched to</li>
+            <li>You can only see: project info, region calibration, personal configuration, and the run button</li>
+          </ul>
+          <p><strong>This is expected behavior, not a bug.</strong> If you need to edit the script, ask the designer for a normal export package (unencrypted), or have them give you the source project.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>After importing a script, what configuration does a user need before running it?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>After importing, switch to run mode. Usually you'll need to:</p>
+          <ol>
+            <li><strong>Calibrate the run region</strong> (if your screen resolution/window position differs from the designer's)
+              <ul>
+                <li>Click the "Calibrate" button and select the actual position of the target program on your screen</li>
+                <li>If the designer used full screen and you're also running full screen at the same resolution → you can skip this</li>
+              </ul>
+            </li>
+            <li><strong>Fill in the personal configuration</strong> (if the designer defined user config variables)
+              <ul>
+                <li>E.g. upload your own avatar image, or enter your in-game nickname</li>
+                <li>The interface shows the items that need to be filled in</li>
+              </ul>
+            </li>
+            <li><strong>Click Run</strong></li>
+          </ol>
+          <p>The run mode screen shows a "configuration completeness" indicator telling you which settings are still missing.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What are "user config variables"? How do designers and users each work with them?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>User config variables let the designer reserve "customizable slots" that users fill in with their own values before running.</p>
+          <p><strong>Typical scenario:</strong> the script needs to click the user's in-game avatar, but everyone's avatar is different → the designer defines an "avatar" image variable, and the user captures their own avatar before running.</p>
+          <p><strong>Designer's steps:</strong></p>
+          <ol>
+            <li>Define the variable in the "User Config" tab (<code>Ctrl+9</code>) (e.g. ID=avatar, Name=My Avatar, Type=Image)</li>
+            <li>In the Find Image node, reference that variable via the ◎ button (the field shows <code>u|avatar</code>)</li>
+          </ol>
+          <p><strong>User's steps:</strong></p>
+          <ol>
+            <li>See the "My Avatar" config item on the run mode screen</li>
+            <li>Click capture/upload to provide their own avatar image</li>
+            <li>At runtime, the script automatically uses the image the user provided</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Can project files be imported between Windows and Android?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p><strong>Yes.</strong> Both platforms use the same project format and encryption protocol, and .macroai files are compatible in both directions.</p>
+          <p>A script built on Windows can be exported and imported to run on Android, and vice versa.</p>
+          <p><strong>Things to note:</strong></p>
+          <ul>
+            <li>Coordinate strategy and resolution adaptation still need to be handled (the two platforms have different screen sizes, so calibrate before running)</li>
+            <li>Some nodes may be supported on one platform but not the other (unsupported nodes are skipped after import)</li>
+            <li>Windows "Key Press" nodes use virtual key codes, which may behave differently on Android</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

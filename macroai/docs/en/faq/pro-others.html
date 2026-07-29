@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro Features &amp; Others - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI FAQ on Pro licensing, data migration, auto-save, multi-monitor, and more">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">Pro Features &amp; Others</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin-bottom:20px;">Pro Features &amp; Licensing</h2>
+
+      <details class="faq-item">
+        <summary>What's the difference between the free version and Pro?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI's core features are <strong>free forever</strong>, with no ads. Pro unlocks advanced capabilities:</p>
+          <p><strong>Free features:</strong></p>
+          <ul>
+            <li>Node editor (Find Image, Mouse Click, Wait, Loop, Condition, Variables, Log, etc.)</li>
+            <li>Color Detection</li>
+            <li>Recording &amp; playback, Functions, Variables</li>
+            <li>Run/debug, logs, floating panel</li>
+            <li>Project import/export</li>
+          </ul>
+          <p><strong>Pro features:</strong></p>
+          <ul>
+            <li>OCR text recognition, OCR comparison</li>
+            <li>Wait for Change, Wait for Bar Change</li>
+            <li>Play Music, Custom Code (Lua)</li>
+            <li>Coordinate strategy override (node-level transform_policy)</li>
+          </ul>
+          <p>Features that require Pro are marked with a 🔒 icon in the interface.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Can I still run my existing scripts after Pro expires?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p><strong>Yes.</strong> The restrictions after Pro expires are:</p>
+          <ul>
+            <li>❌ You can't <strong>add</strong> new Pro nodes (the buttons are grayed out with an "Expired" notice)</li>
+            <li>❌ Existing Pro nodes <strong>can't be edited</strong> (double-clicking shows "Pro node expired, cannot edit")</li>
+            <li>✅ Existing scripts (including Pro nodes) <strong>still run normally</strong></li>
+          </ul>
+          <p>In short: Pro restricts "creating and editing", not "running". Your scripts won't become unusable just because Pro expires.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Which nodes/features are Pro-exclusive?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>In the node panel, Pro nodes are marked with a 🔒 icon. The current Pro-exclusive features are mainly:</p>
+          <ul>
+            <li><strong>OCR Recognize</strong>, <strong>OCR Compare</strong> (text recognition related)</li>
+            <li><strong>Wait for Change</strong>, <strong>Wait for Bar Change</strong> (screen monitoring related)</li>
+            <li><strong>Play Music</strong>, <strong>Custom Code</strong> (Lua scripting)</li>
+            <li><strong>Coordinate strategy override</strong> (node-level transform_policy setting)</li>
+          </ul>
+          <p>Most everyday nodes (Find Image, Color Detection, Click, Wait, Loop, Condition, etc.) are free.</p>
+          <p>If you're unsure whether a feature requires Pro, just click and try — a notice will pop up if Pro is needed, so you can't accidentally trigger anything.</p>
+        </div>
+      </details>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin: 40px 0 20px;">Other Common Questions</h2>
+
+      <details class="faq-item">
+        <summary>Where is my project data stored? How do I migrate to a new computer?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p><strong>Storage location:</strong> all projects are saved in the "workspace directory" you chose on first launch. Each project is a folder containing task.json (script data), resources/ (images and other assets), and macros/ (recorded macros).</p>
+          <p><strong>How to migrate:</strong></p>
+          <ul>
+            <li><strong>Option 1 (recommended)</strong>: export the project to a .macroai file in MacroAI → copy it to the new computer → import it</li>
+            <li><strong>Option 2</strong>: copy the entire workspace directory to the new computer → select the same directory in MacroAI on the new computer</li>
+          </ul>
+          <p><strong>Android version:</strong> project data lives in the app's private directory. Migrating by exporting .macroai files is the easiest way.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How does auto-save work? Could I lose my changes?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI has an <strong>auto-save mechanism</strong>, so you don't need to save manually all the time:</p>
+          <ul>
+            <li>After any change (adding a node, editing config, changing a variable, etc.), it auto-saves if there's no new action within 5 seconds</li>
+            <li>The status bar shows an "Auto-saving in 5s..." notice</li>
+            <li>It also auto-saves before switching projects, running a script, exporting, and quitting</li>
+          </ul>
+          <p><strong>Situations where changes could be lost:</strong></p>
+          <ul>
+            <li>The program crashes / the power goes out within 5 seconds of a change (extremely rare)</li>
+            <li>A disk write fails (e.g. the disk is full)</li>
+          </ul>
+          <p>To save immediately, press <code>Ctrl+S</code>. Under normal use, you don't need to worry about losing data.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Is multi-monitor supported? Can scripts run on a secondary display?<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p><strong>Yes.</strong> MacroAI can operate content on any monitor.</p>
+          <p><strong>How to use:</strong></p>
+          <ul>
+            <li>When creating the design region, just select the target window on the secondary display</li>
+            <li>Screenshots, image search, and mouse clicks are all based on absolute screen coordinates — they're not limited by "which monitor is primary"</li>
+          </ul>
+          <p><strong>Things to note:</strong></p>
+          <ul>
+            <li>If your two monitors use different DPI scaling (e.g. primary at 125%, secondary at 100%), pay attention to coordinate space consistency</li>
+            <li>We recommend using the same DPI scaling on both monitors</li>
+            <li>Don't move the target window across monitors while a script is running</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Can scripts run on a schedule?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI currently <strong>doesn't support scheduled execution</strong>. This feature will be supported in a future version.</p>
+          <p><strong>Workarounds:</strong></p>
+          <ul>
+            <li>Use "infinite loop + wait" inside the script for simple timing (e.g. run once every 30 minutes)</li>
+            <li>Windows users can use the system's Task Scheduler to launch MacroAI on a schedule</li>
+          </ul>
+          <p>Running scripts directly from the command line isn't currently supported either — after MacroAI starts, you need to trigger a run manually from the interface.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do I set up auto-start on boot / keep it running in the background?<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p><strong>Auto-start on boot:</strong></p>
+          <ul>
+            <li>Option 1: put a MacroAI shortcut in the Startup folder (<code>Win+R</code> → type <code>shell:startup</code> → Enter → place the shortcut there)</li>
+            <li>Option 2: create a task triggered "At log on" in Windows Task Scheduler</li>
+          </ul>
+          <p><strong>Stay in the background (minimize to tray):</strong></p>
+          <ul>
+            <li>MacroAI supports a system tray icon. Closing the window minimizes it to the tray instead of quitting</li>
+            <li>Right-click the tray icon to quickly open the main window or exit the program</li>
+          </ul>
+          <p>Combined with Windows Task Scheduler and an infinite loop inside the script, you can achieve "automatically keep a script running in the background after boot".</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

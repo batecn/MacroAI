@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coordinate Strategy &amp; Resolution Adaptation - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI coordinate strategy FAQ — uniform scaling, desktop offset, calibration, DPI, cross-device running">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">Coordinate Strategy &amp; Resolution Adaptation</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <details class="faq-item">
+        <summary>What is a "coordinate strategy"? What's the difference between uniform scaling and desktop offset?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The <strong>coordinate strategy</strong> determines "how coordinates are converted when the runtime environment differs from the design environment". MacroAI offers two strategies:</p>
+          <ul>
+            <li><strong>Uniform scaling (uniform)</strong> — the entire view is enlarged or shrunk. Coordinates are scaled proportionally, and template images are scaled proportionally too.<br>Best for: <strong>games and full-screen apps</strong>. These programs stretch the whole view proportionally at different resolutions.</li>
+            <li><strong>Desktop offset (desktop)</strong> — the view isn't scaled; it's simply shifted in position. Coordinates are only translated, and templates are not scaled.<br>Best for: <strong>browsers, Office, and file managers</strong>. When these windows get larger, the content doesn't enlarge — you just see more of it.</li>
+          </ul>
+          <p><strong>Quick rule of thumb:</strong> if your target program "looks the same size at different resolutions, just in a different position" → use desktop offset. If "the whole view gets bigger or smaller" → use uniform scaling.</p>
+          <p>Switch it in Project Settings (<code>Ctrl+,</code>) → Region settings.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>My script clicks the wrong spots after moving to another computer/phone. What should I do?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>This is the most common issue, and it's usually caused by <strong>the run region not being calibrated</strong>. Follow these steps:</p>
+          <ol>
+            <li>Switch to <strong>run mode</strong> (toolbar → 🏃 Run)</li>
+            <li>Find the <strong>Region Calibration</strong> section and click the "Calibrate" button</li>
+            <li>In the full-screen overlay that appears, select the actual display area of the target program
+              <ul>
+                <li>Uniform scaling mode: select freely, keeping the same aspect ratio as the design region</li>
+                <li>Desktop offset mode: you can only move the position; the width and height stay fixed</li>
+              </ul>
+            </li>
+            <li>Confirm, then run the script again</li>
+          </ol>
+          <p><strong>If it's still offset after calibration:</strong></p>
+          <ul>
+            <li>Check that the coordinate strategy is correct (uniform scaling for games, desktop offset for desktop programs)</li>
+            <li>If only certain images aren't found, it may be an image quality issue — try re-capturing the template images</li>
+            <li>Android users: check whether the game has black bars (if so, select the actual view area inside the bars)</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What does "calibrating the run region" mean? When do I need to calibrate?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>MacroAI has two region concepts:</p>
+          <ul>
+            <li><strong>Design region</strong> — the screen area you used while building the script (set when creating the project, rarely changed)</li>
+            <li><strong>Run region</strong> — the screen area where the target program actually sits when the script runs</li>
+          </ul>
+          <p>If you run on the same computer with the window in the same position, the two are identical and no calibration is needed.</p>
+          <p><strong>Situations that require calibration:</strong></p>
+          <ul>
+            <li>You've moved to a computer/phone with a different resolution</li>
+            <li>The target window's position or size has changed (e.g. moved from the left side to the right)</li>
+            <li>The Windows DPI scaling has changed (e.g. from 100% to 125%)</li>
+          </ul>
+          <p>Calibration only needs to be done once — the result is saved with the project. You won't need to recalibrate the next time you open the same project (unless the environment changes again).</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>My game renders at different sizes on different phones (with black bars). How do I handle this?<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>Android phones have highly fragmented aspect ratios (16:9, 19.5:9, 20:9...), so a game usually behaves in one of three ways on different devices:</p>
+          <ul>
+            <li><strong>Black bars</strong> (content centered, with black bars on top/bottom or left/right) → during calibration, select the actual view area <em>inside</em> the bars, and use uniform scaling mode</li>
+            <li><strong>Proportionally enlarged view</strong> (content gets bigger, no black bars) → just use full screen with uniform scaling mode</li>
+            <li><strong>Expanded viewport</strong> (content doesn't get bigger, you just see more background) → use desktop offset mode; UI button positions usually stay the same</li>
+          </ul>
+          <p><strong>Practical advice:</strong></p>
+          <ol>
+            <li>First, confirm how the game displays on your phone (whether there are black bars)</li>
+            <li>Black bars present → calibrate the region in the run settings, selecting only the view area</li>
+            <li>No black bars → the default full screen is fine; calibration is usually unnecessary</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Does Windows DPI scaling (125%/150%) affect script execution?<span class="faq-platform win">Windows</span></summary>
+        <div class="faq-answer">
+          <p><strong>MacroAI has built-in DPI correction. DPI is already factored into the coordinate scaling system, so under normal circumstances you don't need to worry about it.</strong></p>
+          <p>When an image isn't found, it's usually unrelated to DPI and more likely an image quality issue. If certain images aren't found, try re-capturing the template images.</p>
+          <p><strong>Multi-monitor note:</strong> if your two monitors use different DPI scaling (e.g. primary at 125%, secondary at 100%), avoid moving the target window across screens.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>In uniform scaling mode, why must the calibrated region keep the same aspect ratio as the design region?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>Because the core assumption of uniform scaling is: <strong>the view scales by the same factor in both the X and Y directions</strong> (scale_x = scale_y).</p>
+          <p>If the design region is 1920×1080 (16:9) but you calibrate a 1920×1200 (16:10) region, then X scales by 1.0× while Y scales by 1.11× — the view is stretched non-uniformly, and coordinate conversion will be wrong.</p>
+          <p>That's why MacroAI <strong>locks the aspect ratio</strong> during calibration. You can only adjust the region's size and position, not its ratio. This protects the accuracy of coordinate conversion.</p>
+          <p>If your target program really does stretch non-uniformly (very rare), consider switching to desktop offset mode, or recreate the design region at the actual ratio.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>When should I switch the coordinate strategy? What happens to existing nodes after switching?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p><strong>Signs that you should switch:</strong></p>
+          <ul>
+            <li>Using uniform scaling, but on another computer the script is "shifted as a whole" rather than "scaled bigger/smaller as a whole" → you should use desktop offset</li>
+            <li>Using desktop offset, but on another computer the click positions are "offset proportionally" → you should use uniform scaling</li>
+          </ul>
+          <p><strong>Impact of switching:</strong></p>
+          <ul>
+            <li>The <strong>interpretation</strong> of all existing coordinate points changes (the same numbers produce different actual positions under scaling vs. offset)</li>
+            <li>A warning dialog is shown when you switch</li>
+            <li>You may need to recalibrate the run region</li>
+            <li>Already-captured template images are unaffected (the images themselves don't change)</li>
+          </ul>
+          <p><strong>Advice:</strong> choose the right strategy when you create the project. If unsure, pick uniform scaling for games/full-screen and desktop offset for windowed programs. After switching, it's best to test the entire flow once.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What is the "coordinate strategy override" in node configuration? When do I use it?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>By default, every node follows the project's global coordinate strategy. But individual nodes can <strong>set a different strategy on their own</strong> — this is the "coordinate strategy override" (transform_policy).</p>
+          <p><strong>Example scenarios:</strong></p>
+          <ul>
+            <li>The project as a whole uses uniform scaling (a game), but one node needs to click a button on the system taskbar (which doesn't scale with the game) → set that node alone to desktop offset</li>
+            <li>The project as a whole uses desktop offset (a browser), but one image search targets video content (which does scale) → set that node alone to uniform scaling</li>
+          </ul>
+          <p>In the node configuration dialog, find the "Coordinate Strategy" dropdown and select "Uniform scaling" or "Desktop offset" to override. Selecting "Follow project" uses the global setting.</p>
+          <p><strong>Note:</strong> this is a Pro feature. In most cases you won't need it — it's only necessary when "a single project mixes scaled and non-scaled content".</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

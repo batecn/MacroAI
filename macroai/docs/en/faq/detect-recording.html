@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Change Detection &amp; Recording - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI FAQ on wait-for-change detection, bar change monitoring, and macro recording &amp; playback">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">Change Detection &amp; Recording</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin-bottom:20px;">Change Detection</h2>
+
+      <details class="faq-item">
+        <summary>What does the "Wait for Change" node do? How is it different from the "Wait" node?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <ul>
+            <li><strong>Wait</strong> — waits a fixed amount of time (e.g. 2 seconds), no matter what happens on screen. A "blind wait".</li>
+            <li><strong>Wait for Change</strong> — continuously monitors the screen and only continues when the <strong>view changes</strong> within the specified region. A "smart wait".</li>
+          </ul>
+          <p><strong>Typical scenarios:</strong></p>
+          <ul>
+            <li>Waiting for loading to finish → use "Wait for Change" to monitor the loading animation area; once the view changes (loading done), continue</li>
+            <li>Waiting for an opponent's move → monitor the game view and trigger a response when something changes</li>
+            <li>Waiting for a page transition → monitor the content area; a change means the page has navigated</li>
+          </ul>
+          <p>Smarter than "wait 3 seconds": if the change happens quickly, it executes sooner; if it's slow, it automatically waits longer. It neither wastes time nor misses the moment.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do I use the "Wait for Bar Change" node? What does it mean that I need to upload multiple templates?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>"Wait for Bar Change" is designed specifically to monitor length changes in bar-shaped elements such as <strong>health bars, progress bars, and energy bars</strong>.</p>
+          <p><strong>Why multiple templates?</strong> Because a bar looks different at different lengths (a full bar is long, a nearly empty bar is short). You need to capture screenshots of the same bar in different states as references:</p>
+          <ol>
+            <li>In the node configuration, click "Capture Reference Bar"</li>
+            <li>Select the health bar region → enter a name (e.g. "Full HP", "Low HP")</li>
+            <li>We recommend capturing 2 images: one at full health and one at roughly 1/4 or 1/3 health</li>
+          </ol>
+          <p>Note: don't use too many templates — too many reduces detection efficiency. Two is enough to cover most scenarios.</p>
+          <p>The engine continuously matches which template the current view is closest to. When the match result switches from one template to another, it determines that "the bar has changed".</p>
+          <p><strong>Typical usage:</strong> monitor a character's health bar, and when health drops by more than a certain ratio → automatically use a potion.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What do the "change threshold" and "match threshold" in bar change detection each control?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>These two thresholds are easy to confuse, but they control different things:</p>
+          <ul>
+            <li><strong>Match threshold</strong> (default 0.85) — controls "how similar the current view must be to a template to count as a match". Same meaning as the threshold in regular image search. Too low causes false matches; too high causes missed matches.</li>
+            <li><strong>Change threshold</strong> (default 0.1) — controls "how much the bar's length must change to count as a real change". 0.1 means it only reports when the length changes by more than 10%. This prevents frequent false alarms caused by slight view jitter.</li>
+          </ul>
+          <p><strong>Easy way to remember:</strong> the match threshold governs "whether it can be found", and the change threshold governs "how much change counts as a change".</p>
+          <p>Generally, keep the defaults. If small health bar fluctuations trigger false alarms → raise the change threshold to 0.15–0.2.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>I want to monitor my game's health bar and auto-use potions. How should I configure it?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>Full steps:</p>
+          <ol>
+            <li>Add a <strong>Loop</strong> node (infinite loop) so the script keeps monitoring</li>
+            <li>Inside the loop, add a <strong>Wait for Bar Change</strong> node:
+              <ul>
+                <li>Region: select the area where the health bar is located</li>
+                <li>Templates: capture 1 reference image at full health + 1 at low health (about 1/4)</li>
+                <li>Timeout: set to 0 (keep monitoring until a change occurs)</li>
+                <li>Change threshold: 0.1 (the default is fine)</li>
+              </ul>
+            </li>
+            <li>After Wait for Bar Change, add a <strong>Condition</strong>: check whether delta (the change ratio) indicates health has decreased</li>
+            <li>When the condition is met, add a <strong>Find Image</strong> node: find the potion icon and click it</li>
+            <li>Add a short <strong>Wait</strong> (e.g. 500ms) to prevent repeated triggering</li>
+          </ol>
+          <p>This way, the script continuously monitors the health bar and automatically clicks the potion once it detects a significant drop in health.</p>
+          <p><strong>Reference example:</strong> the Windows version ships with a built-in "Game Helper – Health Bar Monitor" demo project. You can import the demo package from the menu to view the full configuration (includes 2 templates: full health + 30% health).</p>
+        </div>
+      </details>
+
+      <h2 style="font-size:1.2rem; color:#8b5cf6; margin: 40px 0 20px;">Recording &amp; Playback</h2>
+
+      <details class="faq-item">
+        <summary>How do I record a macro?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p><strong>Windows version:</strong></p>
+          <ol>
+            <li>Switch to the "Macro Manager" tab (<code>Ctrl+7</code>)</li>
+            <li>Click <strong>+ New Recording</strong></li>
+            <li>A green border appears on screen (marking the design region), with a "■ Stop Recording" button in the bottom-left</li>
+            <li>Perform the steps you want to automate as usual (clicks, typing, etc.)</li>
+            <li>When done, click "■ Stop Recording"</li>
+            <li>Choose "Save to Project"</li>
+          </ol>
+          <p><strong>Android version:</strong> in the editor, switch to recording mode. Your actions are intercepted and recorded by a full-screen overlay, while the underlying interface simultaneously carries out your actions.</p>
+          <p>After recording, you can play it back from the macro list to test, or embed it in the main flow via a "Call Recorded Macro" node.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Why weren't some of my actions captured during recording?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>When recording, MacroAI only records actions <strong>inside the design region</strong>. This is intentional, to prevent accidental actions (such as clicking on MacroAI's own interface) from being recorded.</p>
+          <p><strong>Situations that are not recorded:</strong></p>
+          <ul>
+            <li>Clicking a position outside the design region (the border flashes red as a warning)</li>
+            <li>Clicking on MacroAI's own windows/buttons</li>
+            <li>Android version: clicking on the recording floating bubble area</li>
+          </ul>
+          <p><strong>Solutions:</strong></p>
+          <ul>
+            <li>Make sure all your actions stay within the green border</li>
+            <li>If the target window is larger than the design region, you'll need to recreate the project or modify the design region</li>
+            <li>Seeing the border flash red = that action wasn't recorded and needs to be redone</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>My recorded macro plays back too fast/too slowly. What can I do?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>Macro playback <strong>preserves the time intervals from recording</strong>. If you acted quickly while recording, playback will also be fast.</p>
+          <p><strong>How to adjust:</strong></p>
+          <ul>
+            <li>Deliberately slow down while recording, leaving enough gap between each step</li>
+            <li>If a step needs to wait for loading, actually wait for the loading to finish before performing the next step while recording</li>
+            <li>Delays can't be edited after recording — if you're not satisfied, delete it and record again</li>
+          </ul>
+          <p><strong>Better approach:</strong> for scenarios that need precise pacing, we recommend building the flow manually in the node editor (Wait nodes + Click nodes) rather than relying on recording. Recording is better suited for "fixed action sequences where the intervals don't matter".</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Can I edit a recorded macro? Can I add conditions to it?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p><strong>The macro itself cannot be edited.</strong> After recording, you can rename it, edit its description, play it back, or delete it — but you cannot modify the individual events inside (you can't remove a specific click, adjust a delay, or change a coordinate).</p>
+          <p><strong>Recorded it wrong?</strong> Delete it and record again.</p>
+          <p><strong>Want conditions?</strong> Use the node editor:</p>
+          <ol>
+            <li>Add a "Call Recorded Macro" node in the node editor and select your macro</li>
+            <li>Add condition, loop, image search, and other nodes before and after it</li>
+            <li>This way the macro handles "performing the actions" while the node editor handles "controlling the logic"</li>
+          </ol>
+          <p>You can also split a long sequence into several short macros, recording each separately and connecting them with node logic — more flexible.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How is recording on Android different from Windows?<span class="faq-platform android">Android</span></summary>
+        <div class="faq-answer">
+          <p>Main differences:</p>
+          <ul>
+            <li><strong>Action types</strong>: Android records touch actions (taps, swipes). There's no keyboard input (Android keyboard input goes through the IME and can't be intercepted directly)</li>
+            <li><strong>Recording method</strong>: Android uses a full-screen overlay to intercept touch events while replaying them on the layer beneath (you can see the effect of your own actions)</li>
+            <li><strong>Playback method</strong>: gestures are injected via the Accessibility Service's dispatchGesture — no root required</li>
+            <li><strong>Limitations</strong>: you can't interact with the status bar / navigation bar area while recording; multi-finger gestures (such as pinch-to-zoom) are not currently supported</li>
+          </ul>
+          <p>For this reason, on Android we recommend building flows with the node editor and using recording as a supplementary tool. The Windows version has a more complete recording feature (supports keyboard and Chinese IME input).</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Search &amp; Matching - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI image search FAQ — image not found, matching threshold, matching modes, template capture tips">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">Image Search &amp; Matching</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <details class="faq-item">
+        <summary>The Find Image node can't locate my image. What should I do?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>Troubleshoot in the following order:</p>
+          <ol>
+            <li><strong>Is the target actually on screen?</strong> The target image must be visible at runtime. If it's obscured, off-screen, or hasn't loaded yet, it can't be found.</li>
+            <li><strong>Debug with "Match Test" in Image Manager!</strong> This is the best way to troubleshoot: open the Image Manager tab, select the image, and click the "Match Test" button. It captures the screen in real time and shows whether each of the three modes (grayscale / perceptual luminance / color) can find it, and you can adjust the threshold to observe the effect.</li>
+            <li><strong>Is the template image accurate?</strong> Re-capture the template: in the node configuration, click the capture button and precisely select the target (don't include extra background).</li>
+            <li><strong>Is the matching threshold too high?</strong> The default is 0.85. If the view changes slightly (anti-aliasing, animation), try lowering it to 0.75–0.80.</li>
+            <li><strong>Is the search region restricting the range?</strong> If you've set a region, the target must be inside it. If unsure, leave the region unset (empty = full-screen search).</li>
+            <li><strong>Has the resolution changed?</strong> If you switched computers or changed the scaling, you'll need to re-capture the template or recalibrate the run region.</li>
+            <li><strong>Is the matching mode appropriate?</strong> Compare the results of the three modes in Match Test and choose the one that matches successfully.</li>
+          </ol>
+          <p><strong>Debugging tip:</strong> turn on "🔴 Click Visualization" in the toolbar. While running, you can see where MacroAI actually clicks (red dots), which helps you tell whether it "didn't find it" or "found it but clicked the wrong spot".</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What is the "matching threshold"? What value should I set?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The matching threshold (threshold) controls "how similar is similar enough to count as a match", ranging from 0 to 1:</p>
+          <ul>
+            <li><strong>1.0</strong> = must be pixel-perfect identical (nearly impossible to achieve)</li>
+            <li><strong>0.85</strong> = default value, suitable for most scenarios</li>
+            <li><strong>0.70–0.75</strong> = loose matching, suitable for views with slight variations</li>
+            <li><strong>Below 0.60</strong> = too loose, may falsely match unrelated areas</li>
+          </ul>
+          <p><strong>Recommendations:</strong></p>
+          <ul>
+            <li>Generally, keep the default of 0.85</li>
+            <li>If the target has animation effects, translucency, or lighting changes → lower to 0.75</li>
+            <li>If you get frequent false matches (finding the wrong position) → raise to 0.90</li>
+            <li>Don't go below 0.65, or reliability will be poor</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What's the difference between the grayscale, perceptual luminance, and color matching modes? Which should I choose?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The three modes determine "how two images are compared for similarity":</p>
+          <ul>
+            <li><strong>Grayscale (grayscale)</strong> — looks only at shape and brightness, completely ignoring color. Fastest, and insensitive to color changes.<br>👉 <strong>Use this for 80% of scenarios</strong>: locating buttons, icons, and UI elements.<br>ℹ️ Grayscale mode works best for images that "can be distinguished by shape alone, without looking at color".</li>
+            <li><strong>Perceptual luminance (perceptual)</strong> — also looks only at brightness, but is more sensitive to dark areas (the human eye is more sensitive to differences in dark regions).<br>👉 If grayscale mode matches dark targets inaccurately, try this one.</li>
+            <li><strong>Color (color)</strong> — compares both shape and color. A red button and a blue button will be distinguished.<br>👉 Use it when you need to tell colors apart: finding a red health bar, finding a green button, distinguishing markers of different colors.</li>
+          </ul>
+          <p><strong>Simple selection guide:</strong></p>
+          <ul>
+            <li>Target is distinguishable by shape alone (doesn't rely on color) → grayscale (fastest and most stable)</li>
+            <li>Target color changes (highlight / grayed out / reskinned) → grayscale</li>
+            <li>You must rely on color to distinguish different targets → color</li>
+            <li>Grayscale matches dark targets inaccurately → perceptual luminance</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Any tips for capturing template images? Why don't my captured images match?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The quality of your template image directly determines the match success rate. Key tips:</p>
+          <ul>
+            <li><strong>Select the target precisely</strong> — select only the target itself, without extra background. For example, if you're finding a button, select just the button, not the blank space around it.</li>
+            <li><strong>Avoid including dynamic content</strong> — don't capture parts that change (numbers, countdowns, animation frames). If a button has changing text on it, capture only the button's border/icon portion.</li>
+            <li><strong>Capture in the normal state</strong> — capture while the game/program is running normally, not while paused, loading, or in a special state.</li>
+            <li><strong>Don't capture too small</strong> — images that are too small (e.g. 10×10 pixels) lack distinctive features and are prone to false matches. Generally use at least 30×30.</li>
+            <li><strong>Don't capture too large</strong> — images that are too large include too much background, and the match will fail if the target shifts even slightly.</li>
+          </ul>
+          <p><strong>Common mistakes:</strong> capturing the mouse cursor, capturing changing numbers, or having the selection include translucent edges.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do I use "click after found" in the Find Image node? What are the three click targets?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The Find Image node has a built-in "click after found" option. When enabled, it automatically clicks once the image is found. Three click targets:</p>
+          <ul>
+            <li><strong>Match position (the found image)</strong> — clicks the center of the found image. Most common, e.g. "find the Start button and click it".</li>
+            <li><strong>Specified coordinates</strong> — after finding the image, clicks a different coordinate you've preset. Suited for "when a certain marker appears, click the spot next to it".</li>
+            <li><strong>Specified image</strong> — after finding image A, clicks the position of another image B. Suited for "after a confirmation dialog appears, click the OK button".</li>
+          </ul>
+          <p>If "click after found" is not enabled, the node only performs the search and stores the result in a variable, so you can use a condition to decide the next action.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What do "timeout" and "interval" mean in image search?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>These two parameters control "what to do when it's not found":</p>
+          <ul>
+            <li><strong>Timeout = 0</strong> (default): search only once. If found, continue; if not found, immediately treat it as failed and move to the next node.</li>
+            <li><strong>Timeout &gt; 0</strong> (e.g. 5000 ms): search repeatedly, once every "interval" milliseconds, until it's found or the timeout is exceeded.</li>
+          </ul>
+          <p><strong>Interval</strong> (e.g. 200 ms): how long to wait between searches. Too small wastes CPU; too large reacts slowly. Generally 200–500 ms is fine.</p>
+          <p><strong>Use cases:</strong></p>
+          <ul>
+            <li>Waiting for loading to finish → set timeout to 10000 (10 s), interval to 500, and continue once the "loading complete" image is found</li>
+            <li>Checking whether a certain button exists → set timeout to 0; a single search is enough</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What is the "search region (Region)"? What happens if I don't set it?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The search region limits the <strong>search range</strong> of image search. When set, it only searches within that rectangular area and completely ignores everything outside.</p>
+          <p><strong>Not set (empty)</strong> = search the entire design region (usually full screen).</p>
+          <p><strong>When should you set it?</strong></p>
+          <ul>
+            <li>The target can only appear in a fixed position (e.g. the health bar is always in the top-left) → setting a region speeds up the search</li>
+            <li>There are multiple similar patterns on screen and you only want the one in a specific position → use a region to rule out interference</li>
+            <li>Full-screen search is too slow (high resolution + large template) → shrink the region to improve performance</li>
+          </ul>
+          <p><strong>When shouldn't you set it?</strong></p>
+          <ul>
+            <li>The target position isn't fixed (e.g. a randomly appearing popup) → don't restrict the region</li>
+            <li>You're unsure where the target is → leave it unset at first; once you confirm it can be found, add a region to optimize performance</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do I use multi-image mode (multi-template matching)? What scenarios need it?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>Multi-image mode lets a single node search for <strong>multiple different template images</strong> at once. It counts as a success if any one of them is found.</p>
+          <p><strong>Typical scenarios:</strong></p>
+          <ul>
+            <li>The same button looks different in different states (normal / hover / pressed) → capture three images and click when any one matches</li>
+            <li>The target looks different under different skins/themes → capture one image per theme</li>
+            <li>You want to act when any one of several different targets appears → e.g. "click OK whether a 'Victory' or 'Defeat' dialog appears"</li>
+          </ul>
+          <p><strong>How to use:</strong> in the node configuration, click the "+" next to the template image to add multiple images. Set the search mode to "multi-image search".</p>
+          <p>Matching order: it tries them one by one from top to bottom of the list; the first successful match is used as the result.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Why did image search find a position but the click landed in the wrong place?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>When it finds something but clicks the wrong spot, it's usually caused by <strong>inconsistent coordinate systems</strong> or <strong>matching a similar image</strong>:</p>
+          <ul>
+            <li><strong>Matched a similar image</strong> — the interface contains a visually similar image that looks obviously different to you but still got matched. This is very likely caused by grayscale mode, which ignores color and only considers shape similarity. → Solution: try switching to color matching mode.</li>
+            <li><strong>Run region not calibrated</strong> — image search found the target on the "current screen" (returning screen coordinates), but if the coordinate strategy applies additional conversion when clicking, it will be offset.<br>→ Solution: calibrate the run region to make sure the relationship between the design region and run region is correct.</li>
+            <li><strong>Click target is set to "specified coordinates"</strong> — the coordinates you entered are design coordinates, but the actual run may require an offset.<br>→ Solution: confirm the coordinate strategy is correct, or switch to "match position" to click the found image directly.</li>
+          </ul>
+          <p><strong>How to debug:</strong> turn on "🔴 Click Visualization" and observe the red dot's position. If the red dot is in the right place but the actual click is offset → it's a coordinate strategy/calibration issue. If the red dot itself is in the wrong place → it may have matched a similar image; try switching the matching mode.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

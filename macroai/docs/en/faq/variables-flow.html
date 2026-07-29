@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variables, Functions &amp; Flow Control - FAQ - MacroAI</title>
+  <meta name="description" content="MacroAI FAQ on variables, conditions, loops, functions, and expressions">
+  <link rel="icon" href="/assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/en/" class="navbar-logo">
+        <img src="/assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/en/">Home</a>
+        <a href="/en/#features">Features</a>
+        <a href="/en/#download">Download</a>
+        <a href="/macroai/docs/en/faq/">FAQ</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="docs-header">
+    <div class="section-content">
+      <div class="section-label">FAQ</div>
+      <h1 class="section-title">Variables, Functions &amp; Flow Control</h1>
+    </div>
+  </section>
+
+  <section class="docs-section">
+    <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+      <a href="index.html" class="faq-back">← Back to all categories</a>
+
+      <details class="faq-item">
+        <summary>What is a variable? How do I use variables in nodes?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>A <strong>variable</strong> is a "named box" used to store data at runtime (such as the result coordinates of an image search, OCR-recognized text, a counter, and so on).</p>
+          <p><strong>How to use one:</strong></p>
+          <ol>
+            <li>Define the variable in the "Variables" tab (<code>Ctrl+3</code>): give it a name (e.g. <code>count</code>), choose a type (string/number/boolean), and set a default value</li>
+            <li><strong>Write</strong> to the variable in a node: e.g. a "Set Variable" node, or the "Result Variable" field of a Find Image node</li>
+            <li><strong>Read</strong> the variable in a node: e.g. reference it in a condition for comparison, or insert its value in an "Input Text" node</li>
+          </ol>
+          <p><strong>Typical usage:</strong></p>
+          <ul>
+            <li>The result of an image search is automatically stored in a variable (e.g. <code>result</code>), including coordinates and confidence</li>
+            <li>Use a "Set Variable" node as a counter: count + 1 on each loop iteration</li>
+            <li>Reference a variable in an "Input Text" node for dynamic input</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do I use the "Condition" node? What do On Success / On Failure / Custom Condition mean?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>Conditions let your script "take different paths depending on the situation". Every node can have an execution condition set (at the bottom of the node configuration):</p>
+          <ul>
+            <li><strong>Unconditional</strong> (default) — runs no matter what happened before</li>
+            <li><strong>On Success</strong> — runs only if the previous node succeeded. E.g. image found → then click</li>
+            <li><strong>On Failure</strong> — runs only if the previous node failed. E.g. image not found → take a fallback path</li>
+            <li><strong>Custom Condition</strong> — write an expression; it runs only when the expression is true. E.g. <code>count >= 5</code> (only run after more than 5 loop iterations)</li>
+          </ul>
+          <p><strong>How are "success/failure" defined?</strong></p>
+          <ul>
+            <li>Find Image: found = success, not found = failure</li>
+            <li>OCR Compare: text matches = success, doesn't match = failure</li>
+            <li>Wait for Change: change detected = success, timed out = failure</li>
+            <li>Wait / Click / Log: always succeeds</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How many modes does the "Loop" node have? How do I use them?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>The Loop node is a <strong>container</strong> — drag other nodes into it and they'll be executed repeatedly. Three modes:</p>
+          <ul>
+            <li><strong>Fixed count</strong> — loop N times. E.g. click 10 times → set the count to 10.</li>
+            <li><strong>Infinite loop</strong> — repeats forever until the script is stopped manually. E.g. continuously monitoring a health bar, continuous farming.</li>
+            <li><strong>Iterate array</strong> — takes each element of an array in turn and executes. E.g. click each button in a list one by one.</li>
+          </ul>
+          <p><strong>How to use:</strong></p>
+          <ol>
+            <li>Add a "Loop" node</li>
+            <li>Double-click to configure it, choosing the loop mode and parameters</li>
+            <li><strong>Drag the nodes to repeat into the loop container</strong> (they'll be shown indented)</li>
+          </ol>
+          <p><strong>Tip:</strong> in an infinite loop, we recommend adding a short "Wait" node (e.g. 100ms) to avoid excessive CPU usage.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What is a function? When should I turn a sequence into a function?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>A <strong>function</strong> "packages" a group of nodes into a reusable module. Define it once, then call it multiple times from the main flow.</p>
+          <p><strong>When to use one?</strong></p>
+          <ul>
+            <li>The same sequence appears 2 or more times in your flow → make it a function to avoid duplication</li>
+            <li>A sequence has an independent meaning (e.g. "return to town", "reload ammo", "turn the page") → making it a function makes the flow clearer</li>
+            <li>You want to call a sequence from a custom action → it must be a function first</li>
+          </ul>
+          <p><strong>How to use:</strong></p>
+          <ol>
+            <li>Create a function in the "Functions" tab (<code>Ctrl+5</code>) and edit its internal nodes</li>
+            <li>Add a "Call Function" node in the main flow and select the function to call</li>
+            <li>Functions can take parameters, letting you pass different values at each call</li>
+          </ol>
+          <p>Functions can call each other, and they can access global variables.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What is an expression? Where can I use expressions?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>An <strong>expression</strong> is a snippet of Lua code that produces a value when run. It lets you perform calculations, concatenation, comparisons, and other flexible operations.</p>
+          <p><strong>Places where you can use expressions:</strong></p>
+          <ul>
+            <li>Custom conditions in a <strong>Condition</strong>: <code>count >= 10 and hp < 30</code></li>
+            <li><strong>Set Variable</strong> with "Expression" checked: <code>count + 1</code>, <code>name .. "_done"</code></li>
+            <li><strong>Log Output</strong> with "Expression" checked: <code>"Loop #" .. count</code></li>
+            <li><strong>Wait time</strong>: <code>math.random(500, 1500)</code> (random wait)</li>
+          </ul>
+          <p><strong>Common syntax:</strong></p>
+          <ul>
+            <li>Arithmetic: <code>a + b</code>, <code>a * 2</code>, <code>a % 3</code></li>
+            <li>String concatenation: <code>"hello" .. name</code></li>
+            <li>Comparison: <code>x > 100</code>, <code>name == "test"</code></li>
+            <li>Logic: <code>a and b</code>, <code>a or b</code>, <code>not a</code></li>
+          </ul>
+          <p>When "Expression" is not checked, the input field's content is treated as plain text/a number.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/en/">Home</a>
+      <a href="/macroai/docs/en/faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
