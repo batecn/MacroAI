@@ -123,6 +123,7 @@
   "download.android.req.item4": "~30MB storage space",
   "download.android.changelog.v104": "v1.0.4 — First public Android release: Lua scripting, image recognition, OCR, and Accessibility Service automation",
   "download.changelog": "Changelog",
+  "download.changelog.v138": "v1.3.8 — Exported project extension changed to .macroai, supporting double-click import; function list supports copy and paste; added FAQ",
   "download.changelog.v135": "v1.3.5 — Enhanced macro recording security. Note: due to security reasons, not compatible with previously recorded macros",
   "download.changelog.v133": "v1.3.3 — Installer size significantly reduced; now available on Microsoft Store; GitHub and Gitee both offer installer and portable downloads",
   "download.changelog.v130": "v1.3.0 — Design/Run mode separation, improved script distribution, multi-image find refactor with performance boost, new trace mode, code preview with syntax highlighting/folding, fixed macro recording coordinate loss",
