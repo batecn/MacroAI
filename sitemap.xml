@@ -68,10 +68,24 @@
 
   <!-- Demo 页面 -->
   <url>
-    <loc>https://www.sowe.com/macroai/battle-demo.html</loc>
+    <loc>https://www.sowe.com/macroai/zh/battle-demo.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/zh/battle-demo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/en/battle-demo.html"/>
   </url>
   <url>
-    <loc>https://www.sowe.com/macroai/pengpeng-demo.html</loc>
+    <loc>https://www.sowe.com/macroai/en/battle-demo.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/zh/battle-demo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/en/battle-demo.html"/>
+  </url>
+  <url>
+    <loc>https://www.sowe.com/macroai/zh/pengpeng-demo.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/zh/pengpeng-demo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/en/pengpeng-demo.html"/>
+  </url>
+  <url>
+    <loc>https://www.sowe.com/macroai/en/pengpeng-demo.html</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/zh/pengpeng-demo.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/en/pengpeng-demo.html"/>
   </url>
 
 </urlset>

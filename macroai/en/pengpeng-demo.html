@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MacroAI - 匹配游戏演示</title>
+  <title>MacroAI - Match Game Demo</title>
+  <meta name="description" content="MacroAI Match Game Demo — demonstrating image recognition auto-matching with MacroAI desktop">
+  <link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/zh/pengpeng-demo.html">
+  <link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/en/pengpeng-demo.html">
+  <link rel="icon" href="../../assets/macroai.png" type="image/png">
   <style>
     :root {
       --bg-deep: #07060b;
@@ -134,34 +138,35 @@
 <body>
 
   <div class="demo-topbar">
-    <a href="../index.html">&larr; 首页</a>
+    <a href="/en/">&larr; Home</a>
+    <a href="/macroai/zh/pengpeng-demo.html">中文</a>
   </div>
 
   <section style="text-align:center; padding: 20px 28px 0;">
-    <h1 class="hero-title">匹配游戏演示</h1>
-    <p class="hero-desc">点击开始按钮，卡牌全部翻开。连续点击两张相同动物，即可消除。</p>
+    <h1 class="hero-title">Match Game Demo</h1>
+    <p class="hero-desc">Click the Start button to reveal all cards. Click two matching animals in a row to eliminate them.</p>
   </section>
 
   <div class="game-arena">
     <div class="game-field">
       <div class="game-controls">
-        <button class="btn" id="start-btn">开始游戏</button>
+        <button class="btn" id="start-btn">Start Game</button>
         <div class="game-stats">
-          <span>剩余: <strong id="card-count">36</strong></span>
-          <span>用时: <strong id="elapsed-time">0</strong>秒</span>
+          <span>Remaining: <strong id="card-count">36</strong></span>
+          <span>Time: <strong id="elapsed-time">0</strong>s</span>
         </div>
       </div>
 
       <div class="card-grid" id="card-grid"></div>
 
       <div class="game-result" id="game-result">
-        <h3>游戏结束!</h3>
-        <p id="result-text">你成功消除了所有卡牌</p>
-        <button class="btn" id="restart-btn">重新开始</button>
+        <h3>Game Over!</h3>
+        <p id="result-text">You eliminated all the cards</p>
+        <button class="btn" id="restart-btn">Restart</button>
       </div>
 
       <div class="game-log" id="game-log">
-        <div class="log-item">准备就绪，点击「开始游戏」</div>
+        <div class="log-item">Ready. Click "Start Game" to begin</div>
       </div>
     </div>
   </div>
@@ -169,9 +174,9 @@
   <footer class="footer">
     <p>&copy; 2026 MacroAI. All rights reserved.</p>
     <div class="footer-links">
-      <a href="../index.html">首页</a>
-      <a href="battle-demo.html">血条演示Demo</a>
-      <a href="pengpeng-demo.html">对对碰演示Demo</a>
+      <a href="/en/">Home</a>
+      <a href="battle-demo.html">HP Bar Demo</a>
+      <a href="pengpeng-demo.html">Match Game Demo</a>
     </div>
   </footer>
 
@@ -272,7 +277,7 @@
         document.getElementById('start-btn').disabled = true;
         document.getElementById('card-count').textContent = '36';
         document.getElementById('elapsed-time').textContent = '0';
-        this.addLog('游戏开始，所有卡牌已翻开', '');
+        this.addLog('Game started, all cards revealed', '');
 
         var self2 = this;
         this.timerHandle = setInterval(function() {
@@ -315,11 +320,11 @@
           prevEl.classList.remove('selected');
           prevEl.classList.add('matched');
           document.getElementById('card-count').textContent = (36 - this.eliminatedCount);
-          this.addLog('匹配成功! ' + card.emoji + ' 消除', 'success');
+          this.addLog('Match found! ' + card.emoji + ' eliminated', 'success');
           if (this.eliminatedCount >= 36) { this.onWin(); }
         } else {
           prevEl.classList.remove('selected');
-          this.addLog('不匹配', 'error');
+          this.addLog('No match', 'error');
         }
       },
 
@@ -327,10 +332,10 @@
         this.isRunning = false;
         if (this.timerHandle) { clearInterval(this.timerHandle); this.timerHandle = null; }
         var s = Math.floor((Date.now() - this.startTime) / 1000);
-        document.getElementById('result-text').textContent = '用时 ' + s + ' 秒，消除所有卡牌!';
+        document.getElementById('result-text').textContent = 'Completed in ' + s + ' seconds, all cards eliminated!';
         document.getElementById('game-result').classList.add('show');
         document.getElementById('start-btn').disabled = false;
-        this.addLog('游戏结束，用时 ' + s + ' 秒', 'success');
+        this.addLog('Game over, completed in ' + s + 's', 'success');
       },
 
       addLog: function(msg, cls) {

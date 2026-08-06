@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MacroAI - 战斗演示</title>
   <meta name="description" content="MacroAI 战斗演示——配合 MacroAI 桌面端演示自动血条监控与图像识别功能">
-  <link rel="icon" href="../assets/macroai.png" type="image/png">
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="alternate" hreflang="zh" href="https://www.sowe.com/macroai/zh/battle-demo.html">
+  <link rel="alternate" hreflang="en" href="https://www.sowe.com/macroai/en/battle-demo.html">
+  <link rel="icon" href="../../assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="../../css/style.css">
   <style>
     .demo-topbar {
       display: flex; align-items: center; justify-content: space-between;
@@ -120,13 +122,14 @@
   <div class="grid-overlay"></div>
 
   <div class="demo-topbar">
-    <a href="/index.html">← <span data-i18n="nav.home">首页</span></a>
+    <a href="/">← 首页</a>
+    <a href="/macroai/en/battle-demo.html">English</a>
   </div>
 
   <section style="text-align: center; padding: 20px 28px 0;">
     <div class="reveal">
-      <h1 class="hero-title" style="font-size: clamp(1.8rem,3.5vw,2.5rem);" data-i18n="game.title">战斗演示</h1>
-      <p class="hero-desc" style="margin: 8px auto 0; font-size: 0.95rem;" data-i18n="game.desc">打开 MacroAI 桌面端，用条块变化检测和图像识别来自动操作这个场景</p>
+      <h1 class="hero-title" style="font-size: clamp(1.8rem,3.5vw,2.5rem);">战斗演示</h1>
+      <p class="hero-desc" style="margin: 8px auto 0; font-size: 0.95rem;">打开 MacroAI 桌面端，用条块变化检测和图像识别来自动操作这个场景</p>
     </div>
   </section>
 
@@ -136,7 +139,7 @@
         <div class="combatant" id="player-side">
           <span class="combatant-avatar" id="player-avatar">⚔️</span>
           <div class="combatant-name">
-            <span data-i18n="game.player">勇者</span>
+            <span>勇者</span>
             <span class="hp-text" id="player-hp-text">100 / 100</span>
           </div>
           <div class="hp-bar-container">
@@ -152,7 +155,7 @@
         <div class="combatant" id="monster-side">
           <span class="combatant-avatar" id="monster-avatar">👹</span>
           <div class="combatant-name">
-            <span data-i18n="game.monster">怪物</span>
+            <span>怪物</span>
             <span class="hp-text" id="monster-hp-text">80 / 80</span>
           </div>
           <div class="hp-bar-container">
@@ -166,50 +169,49 @@
       <div class="game-controls">
         <button class="potion-btn" id="potion-btn">
           <span class="potion-icon">🧪</span>
-          <span data-i18n="game.potion">使用药水</span>
+          <span>使用药水</span>
           <span class="cooldown-note" id="potion-cooldown"></span>
         </button>
       </div>
 
       <div class="game-stats">
-        <span data-i18n="game.wave">波次</span>: <strong id="wave-count">1</strong>
-        <span data-i18n="game.kills">击杀</span>: <strong id="kill-count">0</strong>
+        <span>波次</span>: <strong id="wave-count">1</strong>
+        <span>击杀</span>: <strong id="kill-count">0</strong>
       </div>
 
       <div class="game-log" id="game-log"></div>
 
       <div class="game-reset-overlay" id="reset-overlay">
-        <h2 data-i18n="game.defeated">你被击败了！</h2>
-        <p data-i18n="game.defeated.desc">让 MacroAI 来帮你自动战斗吧</p>
-        <button class="btn btn-primary" onclick="resetGame()" data-i18n="game.restart">重新开始</button>
+        <h2>你被击败了！</h2>
+        <p>让 MacroAI 来帮你自动战斗吧</p>
+        <button class="btn btn-primary" onclick="resetGame()">重新开始</button>
       </div>
     </div>
   </div>
 
   <div class="usage-tip reveal">
     <div class="usage-tip-box glass-card">
-      <h3 data-i18n="game.tip.title">🎯 配合 MacroAI 使用</h3>
+      <h3>🎯 配合 MacroAI 使用</h3>
       <ol>
-        <li data-i18n="game.tip.step1">将此页面在浏览器中打开，调整窗口至合适位置</li>
-        <li data-i18n="game.tip.step2">在 MacroAI 中新建项目，设定设计区域覆盖游戏窗口</li>
-        <li data-i18n="game.tip.step3">使用「条块变化检测」监控勇者血条，设置阈值 30%</li>
-        <li data-i18n="game.tip.step4">使用「查找图像」识别药水按钮，条件触发时自动点击使用</li>
-        <li data-i18n="game.tip.step5">运行宏，观察 MacroAI 自动为你恢复血量！</li>
+        <li>将此页面在浏览器中打开，调整窗口至合适位置</li>
+        <li>在 MacroAI 中新建项目，设定设计区域覆盖游戏窗口</li>
+        <li>使用「条块变化检测」监控勇者血条，设置阈值 30%</li>
+        <li>使用「查找图像」识别药水按钮，条件触发时自动点击使用</li>
+        <li>运行宏，观察 MacroAI 自动为你恢复血量！</li>
       </ol>
     </div>
   </div>
 
   <footer class="footer">
-    <p data-i18n="footer.copyright">© 2026 MacroAI. All rights reserved.</p>
+    <p>© 2026 MacroAI. All rights reserved.</p>
     <div class="footer-links">
-      <a href="../index.html" data-i18n="nav.home">首页</a>
+      <a href="/">首页</a>
       <a href="battle-demo.html">血条演示Demo</a>
       <a href="pengpeng-demo.html">对对碰演示Demo</a>
     </div>
   </footer>
 
-  <script src="../js/i18n.js"></script>
-  <script src="../js/main.js"></script>
+  <script src="../../js/main.js"></script>
   <script>
     var game = {
       player: { hp: 100, maxHp: 100, minDmg: 5, maxDmg: 15, atkInterval: 1500 },
@@ -248,12 +250,12 @@
       if (!game.running) return;
       game.player.hp = Math.min(game.player.maxHp, game.player.hp + amount);
       updateHpBar(game.player, 'player');
-      log('\u52c7\u8005 \u4f7f\u7528\u836f\u6c34\uff0c\u6062\u590d +' + amount + ' HP', 'heal');
+      log('勇者使用药水，恢复 +' + amount + ' HP', 'heal');
       showDamage('+' + amount + ' HP', true);
     }
     function usePotion() {
       if (game.potion.cooldown > 0 || !game.running) return;
-      if (game.player.hp >= game.player.maxHp) { log('\u8840\u91cf\u5df2\u6ee1\uff0c\u65e0\u9700\u4f7f\u7528\u836f\u6c34', 'info'); return; }
+      if (game.player.hp >= game.player.maxHp) { log('血量已满，无需使用药水', 'info'); return; }
       healPlayer(game.potion.healAmount); game.potion.cooldown = game.potion.duration;
       updatePotionBtn();
       if (potionTimer) clearInterval(potionTimer);
@@ -275,21 +277,21 @@
       var idx = rand(0, avatarEmojis.length - 1);
       document.getElementById('monster-avatar').textContent = avatarEmojis[idx];
       updateHpBar(game.monster, 'monster'); document.getElementById('wave-count').textContent = game.wave;
-      log('\u7b2c ' + game.wave + ' \u6ce2\u602a\u7269\u51fa\u73b0\uff01', 'info');
+      log('第 ' + game.wave + ' 波怪物出现！', 'info');
     }
     function playerAttack() {
       if (!game.running || game.player.hp <= 0) return;
       var dmg = rand(game.player.minDmg, game.player.maxDmg);
       game.monster.hp -= dmg; showDamage('-' + dmg); shakeAvatar('monster');
-      log('\u52c7\u8005 \u653b\u51fb\u602a\u7269\uff0c\u9020\u6210 ' + dmg + ' \u70b9\u4f24\u5bb3', 'damage');
+      log('勇者攻击怪物，造成 ' + dmg + ' 点伤害', 'damage');
       updateHpBar(game.monster, 'monster');
-      if (game.monster.hp <= 0) { game.kills++; game.wave++; document.getElementById('kill-count').textContent = game.kills; log('\u602a\u7269\u88ab\u51fb\u8d25\uff01', 'kill'); spawnMonster(); }
+      if (game.monster.hp <= 0) { game.kills++; game.wave++; document.getElementById('kill-count').textContent = game.kills; log('怪物被击败！', 'kill'); spawnMonster(); }
     }
     function monsterAttack() {
       if (!game.running || game.monster.hp <= 0) return;
       var dmg = rand(game.monster.minDmg, game.monster.maxDmg);
       game.player.hp -= dmg; showDamage('-' + dmg); shakeAvatar('player');
-      log('\u602a\u7269 \u653b\u51fb\u52c7\u8005\uff0c\u9020\u6210 ' + dmg + ' \u70b9\u4f24\u5bb3', 'damage');
+      log('怪物攻击勇者，造成 ' + dmg + ' 点伤害', 'damage');
       updateHpBar(game.player, 'player');
       if (game.player.hp <= 0) { game.player.hp = 0; updateHpBar(game.player, 'player'); gameOver(); }
     }
@@ -300,7 +302,7 @@
       if (potionTimer) { clearInterval(potionTimer); potionTimer = null; }
       document.getElementById('potion-btn').disabled = true;
       document.getElementById('reset-overlay').classList.add('show');
-      log('\u52c7\u8005\u88ab\u51fb\u8d25\u4e86\uff01\u6e38\u620f\u7ed3\u675f', 'death');
+      log('勇者被击败了！游戏结束', 'death');
     }
     function resetGame() {
       game.player.hp = game.player.maxHp; game.wave = 1; game.kills = 0; game.running = true; game.potion.cooldown = 0;
@@ -310,7 +312,7 @@
       if (playerTimer) clearInterval(playerTimer); if (monsterTimer) clearInterval(monsterTimer);
       playerTimer = setInterval(playerAttack, game.player.atkInterval);
       monsterTimer = setInterval(monsterAttack, game.monster.atkInterval);
-      log('\u6e38\u620f\u91cd\u65b0\u5f00\u59cb\uff01', 'info');
+      log('游戏重新开始！', 'info');
     }
     document.getElementById('potion-btn').addEventListener('click', usePotion);
     resetGame();
