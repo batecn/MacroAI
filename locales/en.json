@@ -123,7 +123,7 @@
   "download.android.req.item4": "~30MB storage space",
   "download.android.changelog.v104": "v1.0.4 — First public Android release: Lua scripting, image recognition, OCR, and Accessibility Service automation",
   "download.changelog": "Changelog",
-  "download.changelog.v1311": "v1.3.11 — Added script recording (record scripts while performing operations, greatly lowering the learning curve; generated scripts can be further edited or modified with existing features); multi-color theme support (configurable in settings); multi-instance support (set an independent run region per custom action, ideal for game multi-instancing); project import files now use the .macroai extension with double-click auto import; simplified project creation flow",
+  "download.changelog.v1311": "v1.3.11 — Added script recording (record scripts while performing operations, greatly lowering the learning curve; generated scripts can be further edited or modified with existing features); multi-color theme support (configurable in settings); multi-instance support (set an independent run region per custom action, ideal for game multi-instancing); exported project files now use the .macroai extension with double-click auto import; simplified project creation flow",
   "download.changelog.v138": "v1.3.8 — Exported project extension changed to .macroai, supporting double-click import; function list supports copy and paste; added FAQ",
   "download.changelog.v135": "v1.3.5 — Enhanced macro recording security. Note: due to security reasons, not compatible with previously recorded macros",
   "download.changelog.v133": "v1.3.3 — Installer size significantly reduced; now available on Microsoft Store; GitHub and Gitee both offer installer and portable downloads",
