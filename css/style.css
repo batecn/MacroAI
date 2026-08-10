@@ -500,7 +500,7 @@ ul { list-style: none; }
    ============================================ */
 .screenshots-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -937,6 +937,14 @@ ul { list-style: none; }
 /* ============================================
    Responsive
    ============================================ */
+@media (max-width: 1024px) {
+  .screenshots-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .screenshots-grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 768px) {
   .navbar-links {
     position: fixed;
