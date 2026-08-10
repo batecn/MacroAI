@@ -179,7 +179,7 @@
 </tr>
 </tbody>
 </table>
-<p>The toolbar provides <strong>mode switching</strong> (🔧 Design/🏃 Run), Run/Stop, Background/Foreground, Click Visualization (🔴), and log level controls.</p>
+<p>The toolbar provides <strong>mode switching</strong> (🔧 Design/🏃 Run), Run/Stop, Background/Foreground, Click Marker (🔴), log level controls, and Record Script (🎬).</p>
 <h3 id="23-record-play-back-a-macro">2.3 Record &amp; Play Back a Macro</h3>
 <p>Recording is the fastest way to create a macro — record first, then refine:</p>
 <ol>
@@ -236,8 +236,8 @@
 </tr>
 <tr>
 <td>Log Levels</td>
-<td>Concise / Trace / Debug (3 levels)</td>
-<td>Concise / Trace / Debug (3 levels)</td>
+<td>Simple Debug / Trace Debug / Full Debug (3 levels)</td>
+<td>Simple Debug / Trace Debug / Full Debug (3 levels)</td>
 </tr>
 </tbody>
 </table>
@@ -560,23 +560,23 @@ User Config
 </thead>
 <tbody>
 <tr>
-<td><strong>Concise</strong></td>
+<td><strong>Simple Debug</strong></td>
 <td>Log node output + runtime errors</td>
 <td><strong>Default</strong></td>
 </tr>
 <tr>
-<td><strong>Trace</strong></td>
-<td>Concise + execution description for each node</td>
+<td><strong>Trace Debug</strong></td>
+<td>Simple Debug + execution description for each node</td>
 <td>Off</td>
 </tr>
 <tr>
-<td><strong>Debug</strong></td>
-<td>Trace + engine internal debug info (match scores, candidate boxes, etc.)</td>
+<td><strong>Full Debug</strong></td>
+<td>Trace Debug + engine internal debug info (match scores, candidate boxes, etc.)</td>
 <td>Off</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Trace mode output example:</strong></p>
+<p><strong>Trace Debug mode output example:</strong></p>
 <pre><code>[Image Find] Found &quot;avatar&quot; position=(520,340) confidence=0.95
 [Mouse Click] Click (520,340) left button
 [Mouse Move]  Move to (100,200)
@@ -623,8 +623,8 @@ User Config
 <p>Each <strong>Find Image</strong> node can independently set its own coordinate strategy, overriding the project default (Follow Project / Uniform Scaling / Pan Adaptation).</p>
 <h3 id="debugging-tools">Debugging Tools</h3>
 <ul>
-<li><strong>🔴 Click Visualization</strong>: when enabled, a red dot appears at each click position (disappears after 0.5s) for verifying coordinates</li>
-<li><strong>Log Level Control</strong>: switch between Concise/Trace/Debug</li>
+<li><strong>🔴 Click Marker</strong>: when enabled, a red dot appears at each click position (disappears after 0.5s) for verifying coordinates</li>
+<li><strong>Log Level Control</strong>: switch between Simple Debug/Trace Debug/Full Debug</li>
 <li><strong>Log Output</strong> node: write custom log messages at key steps</li>
 </ul>
 <h3 id="settings">Settings</h3>
@@ -638,14 +638,15 @@ User Config
 <hr />
 <h2 id="9-interface-reference">9. Interface Reference</h2>
 <h3 id="toolbar">Toolbar</h3>
-<pre><code>[ 🔧 Design ▼ ]  [▶ Run]  [■ Stop]  [🔄 Background]  [🔴 Click Vis]  [🐞 Debug: Concise | Trace | Debug]
+<pre><code>[ 🔧 Design ▼ ]  [▶ Run]  [■ Stop]  [🔄 Background]  [🔴 Click Marker]  [🐞 Simple Debug ▼]  [🎬 Record Script]
 </code></pre>
 <ul>
 <li><strong>Mode Switch</strong>: dropdown menu, one-click toggle between Design and Run modes</li>
 <li><strong>Run/Stop</strong>: execute or terminate the current project</li>
 <li><strong>Background/Foreground</strong>: switch input simulation mode</li>
-<li><strong>Click Visualization</strong>: show red dots at click positions</li>
-<li><strong>Log Level</strong>: three-segment button controlling log verbosity</li>
+<li><strong>Click Marker</strong>: show red dots at click positions</li>
+<li><strong>Log Level</strong>: dropdown button controlling log verbosity</li>
+<li><strong>Record Script</strong>: start visual script recording (Design mode only)</li>
 <li><strong>Config Completeness Indicator</strong> (Run mode only): 🟢 Ready / 🟡 Some defaults / 🔴 Needs calibration</li>
 </ul>
 <h3 id="9-tabs">9 Tabs</h3>
@@ -780,9 +781,9 @@ User Config
 <li><strong>Background Mode</strong> (default): simulates actions in the background without interfering with normal use</li>
 <li><strong>Foreground Mode</strong>: directly controls the mouse and keyboard, taking over control</li>
 </ul>
-<p>If background mode doesn't work for certain actions, switch to foreground mode. Use <strong>🔴 Click Visualization</strong> to verify coordinates.</p>
+<p>If background mode doesn't work for certain actions, switch to foreground mode. Use <strong>🔴 Click Marker</strong> to verify coordinates.</p>
 <p><strong>How do I debug my workflow?</strong></p>
-<p>Use the log level control in the toolbar to switch to <strong>Trace</strong> or <strong>Debug</strong> level for detailed logs, add <strong>Log Output</strong> nodes at key steps, and enable <strong>🔴 Click Visualization</strong> to see where clicks land.</p>
+<p>Use the log level control in the toolbar to switch to <strong>Trace Debug</strong> or <strong>Full Debug</strong> level for detailed logs, add <strong>Log Output</strong> nodes at key steps, and enable <strong>🔴 Click Marker</strong> to see where clicks land.</p>
 <p><strong>What is the relationship between the Code Preview and Node Editor?</strong></p>
 <p>Operations in the node editor automatically generate Lua script code. You can view the code in the code preview (read-only), synced from the node editor.</p>
 <p><strong>How do I allow end users to personalize settings?</strong></p>
