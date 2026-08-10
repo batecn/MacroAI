@@ -116,6 +116,49 @@
     </div>
   </section>
 
+  <!-- ===== Screenshots Showcase ===== -->
+  <section class="full-section" id="screenshots">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label">软件界面展示</div>
+        <h2 class="section-title">可视化编排，所见即所得</h2>
+        <p class="section-desc">Windows 与 Android 双平台，同一份脚本到处运行</p>
+      </div>
+      <div class="screenshots-grid stagger-children">
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img src="assets/screenshots/zh/node-editor.png" alt="可视化节点编辑器"></div>
+          <h4>可视化节点编辑器</h4>
+          <p>拖拽编排自动化流程，LOOP/CONDITION 容器节点直观展示层级。</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img src="assets/screenshots/zh/codeview.png" alt="Lua 代码预览"></div>
+          <h4>Lua 代码预览</h4>
+          <p>节点操作自动生成 Lua 代码，支持语法高亮与代码折叠。</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img src="assets/screenshots/zh/configuration.png" alt="节点配置面板"></div>
+          <h4>节点配置面板</h4>
+          <p>图像匹配、OCR、颜色检测等参数可视化配置，实时生效。</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img class="phone" src="assets/screenshots/zh/android-editor.jpg" alt="安卓版编辑器"></div>
+          <h4>安卓版悬浮编辑器</h4>
+          <p>无障碍服务驱动，悬浮气泡编辑脚本，无需 Root。</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img class="phone" src="assets/screenshots/zh/android-project.jpg" alt="安卓版项目"></div>
+          <h4>安卓版项目运行</h4>
+          <p>与 Windows 版共享 Lua 脚本和图像模板，一键运行。</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img class="phone" src="assets/screenshots/zh/android-setting.jpg" alt="安卓版设置"></div>
+          <h4>安卓版权限设置</h4>
+          <p>无障碍服务与屏幕录制权限按需开启，数据本地存储。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== Scenarios ===== -->
   <section class="full-section" id="scenarios">
     <div class="section-content">
@@ -220,7 +263,7 @@
           <div class="glass-card download-card stagger-item">
             <div style="font-size: 2.8rem; margin-bottom: 16px;">📱</div>
             <h3 data-i18n="download.android.apk">APK 安装包</h3>
-            <p data-i18n="download.android.apk.desc">下载 APK 直接安装，当前版本 v1.0.4</p>
+            <p data-i18n="download.android.apk.desc">下载 APK 直接安装，当前版本 v1.0.8</p>
             <a href="https://gitee.com/batecn/MacroAI/releases" class="btn btn-primary" target="_blank" data-i18n-href="download.android.apk.link" data-i18n="download.android.apk.btn">前往下载</a>
             <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases" target="_blank" data-i18n-href="download.android.apk.mirror.link" data-i18n="download.android.apk.mirror">备用下载：GitHub</a></p>
           </div>
@@ -229,6 +272,11 @@
             <h3 data-i18n="download.android.feature">安卓版特性</h3>
             <p data-i18n="download.android.feature.desc">无障碍服务驱动，无需 Root；与 Windows 版共享 Lua 脚本和图像模板</p>
           </div>
+        </div>
+
+        <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.android.note.title">下载说明</h3>
+          <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;" data-i18n="download.android.note.body">v1.0.8 更换了应用包名，无法在旧版本上直接覆盖安装。之前安装过旧版本的用户，请先在旧版本中导出项目（.macroai 文件），卸载旧版本后，再安装新版本并重新导入项目。</p>
         </div>
 
         <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
@@ -243,6 +291,7 @@
 
         <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
           <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;" data-i18n="download.changelog">更新日志</h3>
+          <div class="changelog-item" data-i18n="download.android.changelog.v108"><strong>v1.0.8</strong> — 新增录制脚本功能（操作时同步录制脚本，大幅降低使用门槛，生成的脚本可通过原有功能继续加工或修改）；支持多开（自定义动作可设定独立运行区域，适用于安卓平板分屏游戏多开）；图像匹配性能优化，修复图像多点匹配与条块检测 bug；新增新手模式</div>
           <div class="changelog-item" data-i18n="download.android.changelog.v104"><strong>v1.0.4</strong> — 安卓版首个公开版本，支持 Lua 脚本执行、图像识别、OCR、无障碍服务自动化</div>
         </div>
       </div>

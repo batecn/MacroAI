@@ -116,6 +116,49 @@
     </div>
   </section>
 
+  <!-- ===== Screenshots Showcase ===== -->
+  <section class="full-section" id="screenshots">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label">Interface Showcase</div>
+        <h2 class="section-title">Visual Workflow, What You See Is What You Get</h2>
+        <p class="section-desc">One script, run everywhere — on both Windows and Android</p>
+      </div>
+      <div class="screenshots-grid stagger-children">
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img src="../assets/screenshots/en/node-editor.png" alt="Visual Node Editor"></div>
+          <h4>Visual Node Editor</h4>
+          <p>Drag and drop to build automation flows. LOOP/CONDITION container nodes show hierarchy at a glance.</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img src="../assets/screenshots/en/codeview.png" alt="Lua Code Preview"></div>
+          <h4>Lua Code Preview</h4>
+          <p>Node operations auto-generate Lua code with syntax highlighting and code folding.</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img src="../assets/screenshots/en/configuration.png" alt="Node Configuration Panel"></div>
+          <h4>Node Configuration Panel</h4>
+          <p>Visual configuration for image matching, OCR, color detection and more, applied in real time.</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img class="phone" src="../assets/screenshots/en/android-editor.jpg" alt="Android Editor"></div>
+          <h4>Android Floating Editor</h4>
+          <p>Powered by Accessibility Service. Edit scripts from a floating bubble, no Root required.</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img class="phone" src="../assets/screenshots/en/android-project.jpg" alt="Android Project"></div>
+          <h4>Run Projects on Android</h4>
+          <p>Shares Lua scripts and image templates with the Windows edition. Run with one tap.</p>
+        </div>
+        <div class="glass-card screenshot-card reveal stagger-item">
+          <div class="screenshot-img"><img class="phone" src="../assets/screenshots/en/android-setting.jpg" alt="Android Settings"></div>
+          <h4>Android Permission Settings</h4>
+          <p>Enable Accessibility Service and screen capture on demand. All data stays on device.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== Scenarios ===== -->
   <section class="full-section" id="scenarios">
     <div class="section-content">
@@ -220,7 +263,7 @@
           <div class="glass-card download-card stagger-item">
             <div style="font-size: 2.8rem; margin-bottom: 16px;">📱</div>
             <h3>APK Download</h3>
-            <p>Download the APK and install directly. Current version: v1.0.4</p>
+            <p>Download the APK and install directly. Current version: v1.0.8</p>
             <a href="https://github.com/batecn/MacroAI/releases" class="btn btn-primary" target="_blank">Go to Download</a>
             <p class="download-mirror"><a href="https://gitee.com/batecn/MacroAI/releases" target="_blank">Mirror: Gitee</a></p>
           </div>
@@ -229,6 +272,11 @@
             <h3>Android Features</h3>
             <p>Powered by Accessibility Service, no Root required. Shares Lua scripts and image templates with the Windows edition</p>
           </div>
+        </div>
+
+        <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;">Download Notes</h3>
+          <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">v1.0.8 uses a new package name and cannot be installed over the old version. If you have the old version installed, export your project (.macroai file) from the old version first, uninstall the old version, then install the new version and re-import your project.</p>
         </div>
 
         <div class="glass-card" style="max-width:600px; margin:32px auto 0; padding:28px; border-radius:var(--radius);">
@@ -243,6 +291,7 @@
 
         <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
           <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;">Changelog</h3>
+          <div class="changelog-item">v1.0.8 — Added script recording (record scripts in real time while operating, greatly lowering the learning curve; generated scripts can be further edited or modified with existing features); multi-instance support (set an independent run region per custom action, ideal for split-screen game multi-instancing on Android tablets); image matching performance optimization, fixed multi-point matching and bar segment detection bugs; added beginner mode<strong></strong></div>
           <div class="changelog-item">v1.0.4 — First public Android release: Lua scripting, image recognition, OCR, and Accessibility Service automation<strong></strong></div>
         </div>
       </div>
