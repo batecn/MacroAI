@@ -153,7 +153,7 @@ end
 </code></pre>
 <hr />
 <h2 id="ocr">OCR</h2>
-<pre><code>ocr_recognize(region?, lang?) -&gt; string
+<pre><code>ocr_recognize(region?, lang?) -&gt; OcrResult
 ocr_compare(text, region?, threshold?, lang?) -&gt; OcrCompareResult
 ocr_find_text(text, region?, lang?) -&gt; number, number
 ocr_log(msg) -&gt; void
@@ -169,12 +169,23 @@ ocr_log(msg) -&gt; void
 - <code>.found_text</code> (string) — recognized text
 - <code>.similarity</code> (number) — similarity score
 - <code>.confidence</code> (number) — confidence score</p>
+<p><strong>ocr_recognize returns (OcrResult):</strong>
+- <code>.text</code> (string) — all recognized segments joined by newline (nil if none)
+- <code>.confidence</code> (number) — max confidence across segments, 0~1
+- <code>.count</code> (number) — number of segments
+- <code>.box</code> (table) — outer bounding box of all segments (4 corners, absolute logical screen coords), nil if no coords
+- <code>.items</code> (table) — per-segment details, each entry has:
+  - <code>.text</code> (string) — that segment's text
+  - <code>.confidence</code> (number) — that segment's confidence, 0~1
+  - <code>.box</code> (table) — that segment's coord box (4 corners, absolute logical screen coords), nil if no coords</p>
 <p><strong>ocr_find_text returns:</strong>
 - Success: <code>center_x, center_y</code> (number, number)
 - Failure: <code>nil, nil</code></p>
 <p><strong>Example:</strong></p>
-<pre><code class="language-lua">local text = ocr_recognize({100, 100, 500, 100}, &quot;en-US&quot;)
-ocr_log(&quot;Recognized: &quot; .. text)
+<pre><code class="language-lua">local r = ocr_recognize({100, 100, 500, 100}, &quot;en-US&quot;)
+if r and r.text then
+    ocr_log(&quot;Recognized: &quot; .. r.text .. &quot;, confidence: &quot; .. r.confidence)
+end
 
 local r = ocr_compare(&quot;Submit&quot;, {100, 100, 500, 100})
 if r and r.matched then

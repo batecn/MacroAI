@@ -154,7 +154,7 @@ end
 </code></pre>
 <hr />
 <h2 id="ocr">OCR</h2>
-<pre><code>ocr_recognize(region?, lang?) -&gt; string
+<pre><code>ocr_recognize(region?, lang?) -&gt; OcrResult
 ocr_compare(text, region?, threshold?, lang?) -&gt; OcrCompareResult
 ocr_find_text(text, region?, lang?) -&gt; number, number
 ocr_log(msg) -&gt; void
@@ -170,12 +170,23 @@ ocr_log(msg) -&gt; void
 - <code>.found_text</code> (string) — 识别到的文字
 - <code>.similarity</code> (number) — 相似度
 - <code>.confidence</code> (number) — 置信度</p>
+<p><strong>ocr_recognize 返回值 (OcrResult)：</strong>
+- <code>.text</code> (string) — 各识别段按换行组合的全部文字（未识别到返回 nil）
+- <code>.confidence</code> (number) — 各段中最高置信度 0~1
+- <code>.count</code> (number) — 识别段数量
+- <code>.box</code> (table) — 所有段的外接框（4 角点，屏幕绝对逻辑坐标），无坐标时为 nil
+- <code>.items</code> (table) — 各段明细数组，每项含：
+  - <code>.text</code> (string) — 该段文字
+  - <code>.confidence</code> (number) — 该段置信度 0~1
+  - <code>.box</code> (table) — 该段坐标框（4 角点，屏幕绝对逻辑坐标），无坐标时为 nil</p>
 <p><strong>ocr_find_text 返回值：</strong>
 - 成功: <code>center_x, center_y</code> (number, number)
 - 失败: <code>nil, nil</code></p>
 <p><strong>示例：</strong></p>
-<pre><code class="language-lua">local text = ocr_recognize({100, 100, 500, 100}, &quot;zh-CN&quot;)
-ocr_log(&quot;识别到文字: &quot; .. text)
+<pre><code class="language-lua">local r = ocr_recognize({100, 100, 500, 100}, &quot;zh-CN&quot;)
+if r and r.text then
+    ocr_log(&quot;识别到文字: &quot; .. r.text .. &quot;，置信度: &quot; .. r.confidence)
+end
 
 local r = ocr_compare(&quot;确定&quot;, {100, 100, 500, 100})
 if r and r.matched then
