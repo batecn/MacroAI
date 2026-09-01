@@ -63,6 +63,8 @@
 <a href="#3-config-completeness-indicator" class="toc-h2">3. Config Completeness Indicator</a>
 <a href="#4-log-panel" class="toc-h2">4. Log Panel</a>
 <a href="#5-floating-control-panel" class="toc-h2">5. Floating Control Panel</a>
+  <a href="#task-zone-status-wall-to-do-button" class="toc-h3">Task Zone: Status Wall & To-Do Button</a>
+  <a href="#task-reminders" class="toc-h3">Task Reminders</a>
 <a href="#6-faq" class="toc-h2">6. FAQ</a>
 <a href="#7-keyboard-shortcuts" class="toc-h2">7. Keyboard Shortcuts</a>
 
@@ -213,13 +215,52 @@
 </table>
 <hr />
 <h2 id="5-floating-control-panel">5. Floating Control Panel</h2>
-<p>When a script is running, a floating control panel appears (always on top):</p>
+<p>When a script is running, a floating control panel appears (always on top, draggable):</p>
 <ul>
 <li><strong>Pause/Resume</strong>: temporarily stop or continue execution</li>
-<li><strong>Custom Action Buttons</strong>: quick actions defined by the designer (e.g., "Pause and adjust window")</li>
+<li><strong>Custom Action Buttons</strong>: quick actions defined by the designer (e.g., "Pause and adjust window"). The designer can also set an action as a <strong>standalone floating button</strong> — a small independent window you can drag anywhere; its position is remembered. Actions set to "hidden" don't appear in the runtime UI</li>
+<li><strong>Task Zone</strong> (Pro feature): shows the status wall and to-do count of periodic tasks — see below</li>
 <li><strong>Music Controls</strong>: if the script includes background music, shows pause/resume/mute buttons</li>
 <li><strong>Close Panel</strong>: stops script execution</li>
 </ul>
+<h3 id="task-zone-status-wall-to-do-button">Task Zone: Status Wall &amp; To-Do Button</h3>
+<p>When the designer configured periodic tasks (e.g., "daily check-in", "drink water every 2 hours"), a task zone appears in the panel:</p>
+<ul>
+<li><strong>Status Wall</strong>: one small square per task. <strong>Solid = has a result this round, hollow = not yet done</strong>; green = completed, blue = waiting to run, yellow = currently running, gray = idle or disabled. Hover over a square to see the task name and progress</li>
+<li><strong>To-Do Button</strong>: shows "To-Do N" or "✓ All Done"</li>
+</ul>
+<p>Click any square or the to-do button to open the <strong>task popup panel</strong>:</p>
+<ul>
+<li><strong>Click a row to run</strong>: tasks bound to an action run on click (click again while running = stop)</li>
+<li><strong>Confirm completion</strong>: reminder-only tasks are confirmed done with one click on the row</li>
+<li><strong>Right-click a row</strong>: run once manually and other operations</li>
+<li><strong>⚙ Settings</strong>: quick switches — show status wall, reminder channels (tray bubble / in-app toast / sound), all-done notification, auto-execution master switch</li>
+</ul>
+<h3 id="task-reminders">Task Reminders</h3>
+<p>When a task falls due or enters a new cycle, you are notified through the channels enabled in ⚙ Settings:</p>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>In-app toast</td>
+<td>On</td>
+</tr>
+<tr>
+<td>Tray bubble</td>
+<td>On</td>
+</tr>
+<tr>
+<td>Sound</td>
+<td>Off</td>
+</tr>
+</tbody>
+</table>
+<p>If the designer set a task to "auto-execute when due", the bound actions run automatically in sequence when due, as long as the <strong>auto-execution master switch</strong> is on — no need for you to be present. Every due event, queue entry, and execution result can be traced in the execution log.</p>
 <hr />
 <h2 id="6-faq">6. FAQ</h2>
 <p><strong>I made a mistake during calibration — what now?</strong></p>
@@ -236,6 +277,12 @@
 <li><strong>Foreground Mode</strong>: directly controls the mouse and keyboard, taking over control</li>
 </ul>
 <p>Switch to foreground mode if background mode doesn't work for certain actions.</p>
+<p><strong>What do the squares in the status wall mean?</strong></p>
+<p>Solid = has a result this round, hollow = not yet done. Green = completed, blue = waiting to run, yellow = currently running, gray = idle or disabled. <strong>Solid red</strong> = the period ended without completion; <strong>hollow red</strong> = the action bound to the task is missing (reminders and counting pause; contact the script's designer to fix it).</p>
+<p><strong>I'm not receiving task reminders?</strong></p>
+<p>Open the task popup panel's <strong>⚙ Settings</strong> and check whether the corresponding channel is enabled (in-app toast and tray bubble are on by default; sound is off by default). Note: reminders pause while a task shows the hollow-red "missing action" state.</p>
+<p><strong>Why didn't my task auto-execute when due?</strong></p>
+<p>Two conditions must hold: the designer selected "auto-execute" for the task, and the <strong>auto-execution master switch</strong> in the popup panel's ⚙ Settings is on. Auto-execution also requires the app to be open — missed due times are not made up afterwards; you can trace what happened in the execution log.</p>
 <hr />
 <h2 id="7-keyboard-shortcuts">7. Keyboard Shortcuts</h2>
 <table>

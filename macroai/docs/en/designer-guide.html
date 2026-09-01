@@ -88,12 +88,13 @@
 <a href="#7-log-level-control" class="toc-h2">7. Log Level Control</a>
 <a href="#8-advanced-features" class="toc-h2">8. Advanced Features</a>
   <a href="#functions-custom-actions" class="toc-h3">Functions & Custom Actions</a>
+  <a href="#periodic-task-system-pro" class="toc-h3">Periodic Task System (Pro)</a>
   <a href="#regions-multi-resolution-support" class="toc-h3">Regions & Multi-Resolution Support</a>
   <a href="#debugging-tools" class="toc-h3">Debugging Tools</a>
   <a href="#settings" class="toc-h3">Settings</a>
 <a href="#9-interface-reference" class="toc-h2">9. Interface Reference</a>
   <a href="#toolbar" class="toc-h3">Toolbar</a>
-  <a href="#9-tabs" class="toc-h3">9 Tabs</a>
+  <a href="#10-tabs" class="toc-h3">10 Tabs</a>
   <a href="#floating-control-panel" class="toc-h3">Floating Control Panel</a>
   <a href="#system-tray" class="toc-h3">System Tray</a>
   <a href="#keyboard-shortcuts" class="toc-h3">Keyboard Shortcuts</a>
@@ -122,7 +123,7 @@
 <li><strong>Custom Selection</strong>: drag to select a window or region</li>
 </ol>
 <h3 id="22-interface-overview">2.2 Interface Overview</h3>
-<p>The main window has <strong>9 tabs</strong> (switch via <code>Ctrl+1</code>~<code>Ctrl+9</code>):</p>
+<p>The main window has <strong>10 tabs</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -161,6 +162,11 @@
 <td><strong>Custom Actions</strong></td>
 <td><code>Ctrl+6</code></td>
 <td>Bind functions to floating panel buttons</td>
+</tr>
+<tr>
+<td><strong>Tasks</strong></td>
+<td>—</td>
+<td>Manage periodic tasks (reminders / auto-execution; Pro feature)</td>
 </tr>
 <tr>
 <td><strong>Macro Manager</strong></td>
@@ -221,7 +227,7 @@
 </tr>
 <tr>
 <td>Interface</td>
-<td>9 design tabs + full menu/toolbar</td>
+<td>10 design tabs + full menu/toolbar</td>
 <td>Project info + area calibration + personalized config + run button</td>
 </tr>
 <tr>
@@ -251,7 +257,7 @@
 <h3 id="33-design-mode-creating-scripts">3.3 Design Mode (Creating Scripts)</h3>
 <p>Design mode provides full editing capabilities:</p>
 <ul>
-<li>9 tabs covering node editing, code, variables, images, functions, custom actions, macros, regions, and user config</li>
+<li>10 tabs covering node editing, code, variables, images, functions, custom actions, tasks, macros, regions, and user config</li>
 <li>Menu <strong>Project → Settings</strong> opens the settings dialog</li>
 <li><strong>▶ Run</strong> button is available (for designer testing)</li>
 <li>Log displayed in a separate window</li>
@@ -283,6 +289,7 @@
 <li>Enable <strong>Click</strong> to automatically click when found; set a <strong>Timeout</strong> to keep searching until the image appears</li>
 <li>The result is accessible via variables: <code>result.center_x</code>, <code>result.center_y</code>, etc.</li>
 </ol>
+<p>The Image Manager also offers a <strong>Match Test</strong>: pick a template image and run one actual match against the current screen — a dialog shows the hit position and similarity, useful for quickly validating template quality. The test range defaults to the current calibration (or full screen); Pro users can pick a <strong>Run Area Library</strong> entry from the dropdown instead (e.g., verifying each emulator window's template hits one by one).</p>
 <p><strong>Node Types:</strong></p>
 <table>
 <thead>
@@ -595,20 +602,55 @@ User Config
 <h2 id="8-advanced-features">8. Advanced Features</h2>
 <h3 id="functions-custom-actions">Functions &amp; Custom Actions</h3>
 <p><strong>Functions</strong>: package a group of nodes into a reusable sub-workflow with parameter support. Create and edit them in the <strong>Functions</strong> tab (<code>Ctrl+5</code>).</p>
-<p><strong>Custom Actions</strong>: bind a function to a one-click button on the floating panel. Configure them in the <strong>Custom Actions</strong> tab (<code>Ctrl+6</code>); the buttons appear on the floating panel when running.</p>
+<p><strong>Custom Actions</strong>: bind a function to a one-click button on the floating panel. Configure them in the <strong>Custom Actions</strong> tab (<code>Ctrl+6</code>); the buttons appear on the floating panel when running. Each action has its own <strong>runtime display mode</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Display Mode</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Panel button (default)</td>
+<td>Appears on the floating control panel at runtime</td>
+</tr>
+<tr>
+<td>Standalone floating button</td>
+<td>A small independent window floating on screen; drag to position, position is remembered</td>
+</tr>
+<tr>
+<td>Hidden</td>
+<td>Not shown in the runtime UI; used by periodic tasks or for debugging</td>
+</tr>
+</tbody>
+</table>
+<p>The list groups actions as "Panel button → Standalone floating → Hidden" (drag to reorder within a group). Renaming an action automatically syncs to periodic tasks referencing it; deleting an action referenced by tasks shows a confirmation prompt.</p>
+<h3 id="periodic-task-system-pro">Periodic Task System (Pro)</h3>
+<p>Define periodic tasks for your project in the <strong>Tasks</strong> tab (e.g., "daily check-in", "remind me to drink water every 2 hours"). At runtime, the floating panel's task zone shows progress and delivers reminders according to the strategy:</p>
+<ul>
+<li><strong>Task definition</strong>: name, bound custom action (leave empty for a reminder-only task), enable toggle</li>
+<li><strong>Period</strong>: daily / weekly (with reset weekday) / monthly, plus a reset hour (e.g., 4 AM for game dailies); daily tasks can have a separate end time</li>
+<li><strong>Target count</strong>: target executions per period (0 = unlimited, tracking only)</li>
+<li><strong>Reminders</strong>: new-cycle reminder plus two reminder modes — fixed time points (e.g., 08:00, 20:00) or a fixed interval (minutes)</li>
+<li><strong>Due behavior</strong>: reminder only (default) or <strong>auto-execute</strong> — the bound action runs automatically when due, no user presence required</li>
+</ul>
+<p>Tasks flow through Idle → Waiting → Pending → Running → Completed/Expired, and the UI follows the "solid = has a result, hollow = no result yet" shape semantics. If the bound action is deleted, the task enters a <strong>missing action</strong> warning overlay (hollow red + ⚠): progress is kept, reminders pause, nothing is auto-deleted, and rebinding the action resumes seamlessly.</p>
+<p>The Tasks tab provides an <strong>Execution Log</strong> (kept for 2 days) recording every due trigger, queue entry, and execution result — answering "why didn't it run when due". For the end-user runtime experience, see Chapter 5 of the User Guide.</p>
 <h3 id="regions-multi-resolution-support">Regions &amp; Multi-Resolution Support</h3>
 <p>A region is a named rectangular area on the screen:</p>
 <ul>
 <li><strong>Design Area</strong>: the reference coordinate space defined when creating the project</li>
 <li><strong>Run Area</strong>: the actual screen region at runtime (can differ from the design area)</li>
 <li><strong>Custom Regions</strong>: user-named areas that can be referenced in node configuration</li>
+<li><strong>Run Area Library</strong> (Pro): store multiple named run areas (e.g., several emulator windows) that custom actions and match tests can bind to</li>
 <li><strong>Coordinate Strategy</strong>: determines how coordinates are mapped from design area to run area</li>
 </ul>
 <h4 id="coordinate-strategy">Coordinate Strategy</h4>
 <p>Switch in <strong>Project → Settings → Region Settings</strong> (<code>Ctrl+,</code>):</p>
 <ul>
-<li><strong>Uniform Scaling (uniform)</strong> — games, full-screen apps: coordinates scale by the proportional size of design/run areas. During calibration, freely drag-select the area while maintaining the same aspect ratio as the design area</li>
-<li><strong>Pan Adaptation (desktop)</strong> — browsers, Office windows: coordinates shift only by translation, no scaling. During calibration, only the position can be adjusted; width and height are fixed to the design area</li>
+<li><strong>Uniform Scaling (uniform)</strong> — games, full-screen apps: coordinates scale by the proportional size of design/run areas. During calibration, drag-select freely — the selection box automatically locks to the design area's aspect ratio</li>
+<li><strong>Pan Adaptation (desktop)</strong> — browsers, Office windows: coordinates shift only by translation, no scaling. During calibration, select the run area's position and size freely</li>
 </ul>
 <p>Switching strategies changes how all existing coordinate points are interpreted. A warning is shown, and you may need to re-adjust existing coordinate points.</p>
 <h4 id="calibrating-the-run-area">Calibrating the Run Area</h4>
@@ -616,11 +658,28 @@ User Config
 <ol>
 <li>If the design area is <strong>Full Screen</strong>: the run area is automatically set to the current full screen — no manual selection needed</li>
 <li>If the design area is <strong>Custom Selection</strong>:</li>
-<li><strong>Uniform mode</strong>: drag to select the run area, maintaining the same aspect ratio as the design area</li>
-<li><strong>Desktop mode</strong>: click or drag to specify the run area's position (top-left corner); width and height are fixed to the design area</li>
+<li><strong>Uniform mode</strong>: drag to select the run area — the selection box locks to the design area's aspect ratio</li>
+<li><strong>Desktop mode</strong>: select the run area's position and size freely</li>
 </ol>
+<p>The selection box stays white-highlighted throughout, supports 8 resize handles, dragging inside the box to move, and clicking outside to redraw. All selection entries (calibration, run area library, custom action area, modify region) share the same interaction.</p>
 <p>After calibration, all coordinates are automatically recalculated according to the current coordinate strategy.</p>
 <p>Each <strong>Find Image</strong> node can independently set its own coordinate strategy, overriding the project default (Follow Project / Uniform Scaling / Pan Adaptation).</p>
+<h4 id="auto-recognizing-the-run-area">Auto-Recognizing the Run Area</h4>
+<p>Rather than selecting manually, the app can auto-recognize the run area on the current screen based on the project's template images:</p>
+<ul>
+<li>Three entries: menu <strong>Tools → Auto-Recognize Run Area</strong>, <strong>Project → Settings → Region Settings</strong>, and the Regions tab's <strong>⌖ Auto-Recognize to Library</strong> (saves directly to the run area library)</li>
+<li>Low-confidence results show a warning; verify them manually</li>
+<li>The recognized result can be used to calibrate the run area, or saved as a run area library entry</li>
+</ul>
+<h4 id="run-area-library-region-references-pro-multi-instance">Run Area Library &amp; Region References (Pro, Multi-Instance)</h4>
+<p>Manage the run area library in the <strong>Regions</strong> tab (visible but locked in the free edition):</p>
+<ul>
+<li><strong>+ Run Area</strong>: select and name a screen area</li>
+<li><strong>⊞ Grid Generate</strong>: batch-generate equally divided areas by rows/columns (e.g., 4×2 for eight emulator windows)</li>
+<li><strong>⌖ Auto-Recognize to Library</strong>: auto-recognize the current screen and save as an entry</li>
+<li>Entries support <strong>modify</strong> (preloads the original selection) and delete</li>
+</ul>
+<p>Run area entries can be referenced by <strong>custom actions</strong> and the Image Manager's <strong>match tests</strong> — when the same project runs in multiple windows (multi-instance), each action can use its own run area.</p>
 <h3 id="debugging-tools">Debugging Tools</h3>
 <ul>
 <li><strong>🔴 Click Marker</strong>: when enabled, a red dot appears at each click position (disappears after 0.5s) for verifying coordinates</li>
@@ -649,7 +708,7 @@ User Config
 <li><strong>Record Script</strong>: start visual script recording (Design mode only)</li>
 <li><strong>Config Completeness Indicator</strong> (Run mode only): 🟢 Ready / 🟡 Some defaults / 🔴 Needs calibration</li>
 </ul>
-<h3 id="9-tabs">9 Tabs</h3>
+<h3 id="10-tabs">10 Tabs</h3>
 <table>
 <thead>
 <tr>
@@ -690,6 +749,11 @@ User Config
 <td>Bind functions to floating panel buttons</td>
 </tr>
 <tr>
+<td>Tasks</td>
+<td>—</td>
+<td>Manage periodic tasks (Pro feature)</td>
+</tr>
+<tr>
 <td>Macro Manager</td>
 <td><code>Ctrl+7</code></td>
 <td>Record, manage, and replay macros</td>
@@ -697,7 +761,7 @@ User Config
 <tr>
 <td>Regions</td>
 <td><code>Ctrl+8</code></td>
-<td>Manage named regions</td>
+<td>Manage named regions and the run area library</td>
 </tr>
 <tr>
 <td>User Config</td>
@@ -707,7 +771,7 @@ User Config
 </tbody>
 </table>
 <h3 id="floating-control-panel">Floating Control Panel</h3>
-<p>Automatically appears when running a macro — always on top, draggable. Provides pause/resume, custom action buttons, background music controls (visible when music is playing), and close to stop execution.</p>
+<p>Automatically appears when running a macro — always on top, draggable. Provides pause/resume, custom action buttons, the task zone (Pro: status wall + to-do button + task popup panel), background music controls (visible when music is playing), and close to stop execution.</p>
 <h3 id="system-tray">System Tray</h3>
 <p>Closing the window minimizes it to the system tray. Double-click the tray icon to show the main window. Tray menu: Show Window / Run Current Macro / Stop / Exit.</p>
 <h3 id="keyboard-shortcuts">Keyboard Shortcuts</h3>
@@ -790,6 +854,12 @@ User Config
 <p>Define config variables in the <strong>User Config</strong> tab (<code>Ctrl+9</code>), reference them in node configuration via the <code>◎</code> menu (<code>u|var_id</code> format), and mark the project as a distribution package when exporting. End users will see and fill in their values in Run mode.</p>
 <p><strong>What's the difference between a distribution package and a normal project?</strong></p>
 <p>A distribution package defaults to Run mode upon import (Design mode is grayed out), while a normal project restores the last used mode (freely switchable). The distinction is controlled by the "Mark as distribution package" checkbox during export.</p>
+<p><strong>Why is the task system locked?</strong></p>
+<p>The task system and the run area library are Pro features: in the free edition, the <strong>Tasks</strong> tab and the run area library buttons in the Regions tab appear as locked placeholders. Existing definitions are kept and resume seamlessly after upgrading.</p>
+<p><strong>What happens to tasks when I rename or delete a custom action?</strong></p>
+<p>Renaming automatically syncs to tasks referencing the action; deleting an action referenced by tasks shows a confirmation prompt. After deletion, the task enters a "missing action" warning state (hollow red + ⚠): progress is kept, reminders pause, and nothing is auto-deleted — rebind the action to resume seamlessly, or edit the task into a reminder-only task.</p>
+<p><strong>How do I adapt one script to multiple emulator windows (multi-instance)?</strong></p>
+<p>Use the <strong>Run Area Library</strong> (Pro): save each window's screen area as an entry (via selection, grid generation, or auto-recognition), then bind them individually in custom actions and match tests — each window runs with its own run area.</p>
 <hr />
 <h2 id="11-demo-projects">11. Demo Projects</h2>
 <p>MacroAI comes with built-in demo projects to help you quickly understand the software's capabilities.</p>
