@@ -72,6 +72,7 @@
 <a href="#check-stop" class="toc-h2">Check Stop</a>
 <a href="#common-conventions" class="toc-h2">Common Conventions</a>
   <a href="#coordinate-system" class="toc-h3">Coordinate System</a>
+  <a href="#lua-sandbox" class="toc-h3">Lua Sandbox</a>
   <a href="#return-value-convention" class="toc-h3">Return Value Convention</a>
 
       </aside>
@@ -254,10 +255,17 @@ log(&quot;Screen resolution: &quot; .. w .. &quot;x&quot; .. h)
 <h2 id="wait">Wait</h2>
 <pre><code>wait(milliseconds) -&gt; void
 wait_seconds(seconds) -&gt; void
+wait_interruptible(milliseconds) -&gt; void
 </code></pre>
+<p><strong>Parameters:</strong>
+- <code>milliseconds</code> (number) — wait duration in milliseconds
+- <code>seconds</code> (number) — wait duration in seconds</p>
+<p><strong>Notes:</strong>
+- <code>wait_interruptible</code> is an interruptible wait that checks pause/stop signals every 100ms; prefer it for long waits</p>
 <p><strong>Example:</strong></p>
 <pre><code class="language-lua">wait(1000)         -- wait 1000 ms (1 second)
 wait_seconds(2.5)  -- wait 2.5 seconds
+wait_interruptible(5000)  -- wait 5 seconds, pausable/stoppable at any time
 </code></pre>
 <hr />
 <h2 id="variables">Variables</h2>
@@ -606,15 +614,18 @@ print(&quot;Values:&quot;, x, y, z)  -- output: Values: 100 200 300
 <h2 id="notifications">Notifications</h2>
 <pre><code>show_dialog(text, image?, btn_text?) -&gt; void
 show_toast(text, image?, duration?) -&gt; void
+show_notification(text, image?, mode?, btn_text?, duration?) -&gt; void
 </code></pre>
 <p><strong>Parameters:</strong>
 - <code>text</code> (string) — notification text
 - <code>image</code> (string, optional) — image file path to display
 - <code>btn_text</code> (string, optional) — dialog button text (default "OK")
-- <code>duration</code> (number, optional) — toast display duration in seconds, default <code>3</code></p>
+- <code>duration</code> (number, optional) — toast display duration in seconds, default <code>3</code>
+- <code>mode</code> (string, optional) — notification mode: <code>"dialog"</code> (default, modal dialog) or <code>"toast"</code> (auto-dismissing notification)</p>
 <p><strong>Notes:</strong>
 - <code>show_dialog</code> shows a modal dialog, pauses until user confirms
-- <code>show_toast</code> shows a system toast notification that auto-dismisses</p>
+- <code>show_toast</code> shows a system toast notification that auto-dismisses
+- <code>show_notification</code> is a unified entry that shows a dialog or toast depending on <code>mode</code></p>
 <p><strong>Example:</strong></p>
 <pre><code class="language-lua">show_dialog(&quot;Operation complete!&quot;)
 show_toast(&quot;Task completed successfully&quot;, 5)
@@ -664,6 +675,12 @@ end
 <li>All coordinates are in pixels</li>
 <li>Region format: <code>{left, top, width, height}</code></li>
 <li>Coordinates are automatically scaled between design area and run area (multi-resolution)</li>
+</ul>
+<h3 id="lua-sandbox">Lua Sandbox</h3>
+<ul>
+<li>Only whitelisted standard libraries are available: <code>string</code>, <code>table</code>, <code>math</code>, <code>coroutine</code>, <code>utf8</code>, etc.</li>
+<li>Dangerous globals such as <code>os</code>, <code>io</code>, <code>require</code>, <code>dofile</code>, and <code>loadfile</code> are removed by the sandbox</li>
+<li>lupa's Python bridge (<code>python</code> table) is disabled — Lua cannot access Python objects</li>
 </ul>
 <h3 id="return-value-convention">Return Value Convention</h3>
 <ul>

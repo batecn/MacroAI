@@ -72,6 +72,7 @@
 <a href="#检查停止" class="toc-h2">检查停止</a>
 <a href="#通用约定" class="toc-h2">通用约定</a>
   <a href="#坐标系统" class="toc-h3">坐标系统</a>
+  <a href="#lua-沙箱" class="toc-h3">Lua 沙箱</a>
   <a href="#返回值约定" class="toc-h3">返回值约定</a>
 
       </aside>
@@ -254,10 +255,17 @@ log(&quot;屏幕分辨率: &quot; .. w .. &quot;x&quot; .. h)
 <h2 id="等待">等待</h2>
 <pre><code>wait(milliseconds) -&gt; void
 wait_seconds(seconds) -&gt; void
+wait_interruptible(milliseconds) -&gt; void
 </code></pre>
+<p><strong>参数说明：</strong>
+- <code>milliseconds</code> (number) — 等待毫秒数
+- <code>seconds</code> (number) — 等待秒数</p>
+<p><strong>说明：</strong>
+- <code>wait_interruptible</code> 为可中断等待，每 100ms 检查一次暂停/停止信号，长等待建议优先使用</p>
 <p><strong>示例：</strong></p>
 <pre><code class="language-lua">wait(1000)        -- 等待 1000 毫秒（1 秒）
 wait_seconds(2.5) -- 等待 2.5 秒
+wait_interruptible(5000)  -- 等待 5 秒，期间可随时暂停/停止
 </code></pre>
 <hr />
 <h2 id="变量">变量</h2>
@@ -612,15 +620,18 @@ print(&quot;变量值:&quot;, x, y, z)  -- 输出: 变量值: 100 200 300
 <h2 id="通知">通知</h2>
 <pre><code>show_dialog(text, image?, btn_text?) -&gt; void
 show_toast(text, image?, duration?) -&gt; void
+show_notification(text, image?, mode?, btn_text?, duration?) -&gt; void
 </code></pre>
 <p><strong>参数说明：</strong>
 - <code>text</code> (string) — 通知文本内容
 - <code>image</code> (string, 可选) — 显示的图片路径
 - <code>btn_text</code> (string, 可选) — 对话框按钮文字（默认 "确定"）
-- <code>duration</code> (number, 可选) — Toast 显示时长（秒），默认 <code>3</code></p>
+- <code>duration</code> (number, 可选) — Toast 显示时长（秒），默认 <code>3</code>
+- <code>mode</code> (string, 可选) — 通知方式：<code>"dialog"</code>（默认，模态对话框）或 <code>"toast"</code>（自动消失通知）</p>
 <p><strong>说明：</strong>
 - <code>show_dialog</code> 弹出模态对话框，需用户确认后继续
-- <code>show_toast</code> 显示系统 Toast 通知，自动消失</p>
+- <code>show_toast</code> 显示系统 Toast 通知，自动消失
+- <code>show_notification</code> 为统一入口，按 <code>mode</code> 参数分别调用对话框或 Toast</p>
 <p><strong>示例：</strong></p>
 <pre><code class="language-lua">show_dialog(&quot;操作完成！&quot;)
 show_toast(&quot;任务执行成功&quot;, 5)
@@ -670,6 +681,12 @@ end
 <li>所有坐标单位为像素</li>
 <li>区域格式统一为 <code>{left, top, width, height}</code></li>
 <li>坐标会自动根据设计区域和运行区域缩放适配（多分辨率）</li>
+</ul>
+<h3 id="lua-沙箱">Lua 沙箱</h3>
+<ul>
+<li>仅开放白名单标准库：<code>string</code>、<code>table</code>、<code>math</code>、<code>coroutine</code>、<code>utf8</code> 等</li>
+<li><code>os</code>、<code>io</code>、<code>require</code>、<code>dofile</code>、<code>loadfile</code> 等危险全局已被沙箱移除</li>
+<li>lupa 的 Python 桥接（<code>python</code> 表）已关闭，Lua 侧无法访问 Python 对象</li>
 </ul>
 <h3 id="返回值约定">返回值约定</h3>
 <ul>
