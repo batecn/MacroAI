@@ -121,6 +121,7 @@
   "download.android.req.item2": "Accessibility Service permission required (for automation)",
   "download.android.req.item3": "Screen capture permission required for image recognition",
   "download.android.req.item4": "~30MB storage space",
+  "download.android.changelog.v110": "v1.1.0 — New task feature: create scheduled tasks that run automatically with progress tracking; new multi-region management with automatic screen area detection and correction; more complete and accurate text recognition, now including confidence information; fixed multiple display issues, such as blocked buttons, misaligned menus, and unsmooth dragging",
   "download.android.changelog.v108": "v1.0.8 — Added script recording (record scripts in real time while operating, greatly lowering the learning curve; generated scripts can be further edited or modified with existing features); multi-instance support (set an independent run region per custom action, ideal for split-screen game multi-instancing on Android tablets); image matching performance optimization, fixed multi-point matching and bar segment detection bugs; added beginner mode",
   "download.android.changelog.v104": "v1.0.4 — First public Android release: Lua scripting, image recognition, OCR, and Accessibility Service automation",
   "download.android.note.title": "Download Notes",

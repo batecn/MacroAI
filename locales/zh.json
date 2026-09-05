@@ -110,7 +110,7 @@
   "download.mirror.notice": "国内用户如果无法访问 GitHub，可通过 Gitee 镜像下载",
   "download.mirror.btn": "Gitee 镜像下载",
   "download.android.apk": "APK 安装包",
-  "download.android.apk.desc": "下载 APK 直接安装，当前版本 v1.0.8",
+  "download.android.apk.desc": "下载 APK 直接安装，当前版本 v1.1.0",
   "download.android.apk.btn": "前往下载",
   "download.android.apk.link": "https://gitee.com/batecn/MacroAI/releases",
   "download.android.apk.mirror": "备用下载：GitHub",
