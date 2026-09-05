@@ -25,6 +25,23 @@ Core positioning: **Visual node-based workflow + Intelligent execution + Cross-p
 
 ---
 
+## 🧪 Google Play Closed Beta Recruitment
+
+> We are recruiting **20 testers** for a **2-week** closed beta. Complete participants will receive a **lifetime Pro license** (valid on 1 device; it will be sent by email once the Pro mechanism is finalized).
+>
+> **Requirements:**
+> - A real Android device running Android 8.0 or later (emulators don't count)
+> - Once you join via the official link, **do not leave the testing program for 14 consecutive days** (opting out resets the testing clock)
+> - Open and use the app at least once daily, noting any issues you encounter
+> - Submit a brief test summary at the end (usage, issue list, and suggestions)
+>
+> **How to join:**
+> Send an email to **batecn@gmail.com** from the Gmail account you use on Google Play, including your **device model and Android version**, to confirm participation. We will reply with the store link as soon as it's ready.
+>
+> Limited spots — first come, first served. Thank you!
+
+---
+
 ## ✨ Key Features
 
 ### Cross-Platform Scripts · Write Once, Run Anywhere
