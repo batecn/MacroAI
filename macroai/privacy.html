@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MacroAI 隐私政策 | MacroAI Privacy Policy</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; max-width: 860px; margin: 0 auto; padding: 24px 16px; color: #222; line-height: 1.7; }
+  h1 { font-size: 1.5em; } h2 { font-size: 1.15em; margin-top: 1.8em; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+  h3 { font-size: 1.05em; margin-top: 1.2em; }
+  .meta { color: #666; font-size: 0.92em; }
+  .note { background: #fff8e1; border: 1px solid #f0d060; border-radius: 6px; padding: 8px 12px; font-size: 0.9em; }
+  hr.section { border: none; border-top: 3px double #bbb; margin: 3em 0 1.5em; }
+</style>
+</head>
+<body>
+
+<!--
+  MacroAI 隐私政策（官网 / Google Play 通用版，中英双语）
+  合并来源:
+  - Windows 官网政策 e:\Cowork\MacroAI\website\privacy.html（结构与无收集承诺）
+  - Google Play 上架要求（数据删除条款、悬浮窗/前台服务权限说明、Play 更新表述）
+  部署建议:
+  1. 官网: 可部署为 https://www.sowe.com/macroai/privacy.html（Play Console 填此 URL）
+     或由有权限者据此更新官网 website/privacy.html 与 website/en/privacy.html（Android 项目侧无修改权限）
+  2. Play Console → App content → Privacy policy 填最终 URL
+  注意:
+  - 联系邮箱沿用官网真实邮箱 macroai@sowe.com
+  - 生效日期与"最后更新"需在发布时核对
+-->
+
+<h1>MacroAI 隐私政策</h1>
+<p class="meta">生效日期：2026 年 9 月 3 日 | 应用名称：MacroAI（Windows 版 / Android 版，包名 com.sowe.macroai）</p>
+
+<h2>一、引言</h2>
+<p>MacroAI（以下简称"本软件"）尊重并保护用户隐私。本隐私政策说明本软件在运行过程中如何处理您的信息。使用本软件即表示您同意本政策的条款。</p>
+
+<h2>二、信息收集</h2>
+<p><strong>本软件不收集、不上传、不共享任何个人数据。</strong></p>
+<ul>
+  <li>本软件不会收集您的个人信息、使用习惯或操作记录；</li>
+  <li>本软件不包含任何遥测、统计分析或广告 SDK；</li>
+  <li>您创建的脚本、图像模板、节点配置、用户配置等数据均仅存储在您的设备本地，不会上传至任何服务器；</li>
+  <li>本软件的图像识别（OpenCV 模板匹配）、文字识别（OCR）、颜色识别均在设备端离线完成。</li>
+</ul>
+
+<h2>三、网络访问</h2>
+<h3>Windows 版</h3>
+<p>运行过程中不主动建立任何网络连接。版本更新通过您主动访问官网或发布页面下载安装包完成。</p>
+<h3>Android 版（Google Play 渠道）</h3>
+<p>本版本不含任何网络通信功能，不建立任何网络连接。版本更新完全由 Google Play 提供。</p>
+<h3>Android 版（官网等其他渠道）</h3>
+<p>仅会定期向我们的服务器（sowe.com）发起版本更新检查请求。该请求仅用于判断是否有新版本，不携带或上传您的任何个人数据、脚本内容或屏幕信息。</p>
+
+<h2>四、第三方服务</h2>
+<p>本软件不集成任何第三方分析、广告或数据收集服务。所使用的开源组件（包括图像处理与文字识别引擎）均以本地库形式运行，不会与外部服务器通信。</p>
+
+<h2>五、Android 权限说明</h2>
+<p>MacroAI Android 版使用以下系统权限。所有权限仅用于实现自动化功能，绝不用于收集个人信息；所有权限均由您在系统中主动授予，可随时撤销，撤销后相关功能停止工作且不留存任何数据处理行为：</p>
+<ul>
+  <li><strong>无障碍服务（AccessibilityService）</strong>：用于执行自动化点击、滑动等手势操作，以及读取界面元素信息；读取的屏幕内容仅用于脚本运行时的本地匹配与判断；</li>
+  <li><strong>屏幕录制/截图权限（MediaProjection）</strong>：仅在脚本需要图像识别、OCR 或取色时使用，用于获取屏幕内容进行本地分析；截图内容仅在内存中临时处理，不会保存、上传或分享给任何第三方；</li>
+  <li><strong>悬浮窗权限（SYSTEM_ALERT_WINDOW）</strong>：用于显示运行气泡、任务面板与节点编辑器等操作界面；</li>
+  <li><strong>前台服务</strong>：用于保持自动化任务与编辑器在后台稳定运行。</li>
+</ul>
+
+<h2>六、数据存储与删除</h2>
+<p>您在使用本软件时产生的所有数据（包括脚本配置、模板图片、用户配置等）均存储在设备本地目录中。由于数据完全存储在本地，数据安全由您自身的系统安全措施保障，我们建议您定期备份重要数据。</p>
+<p>您可随时通过卸载本软件或清除应用数据的方式彻底删除全部本地数据；我们无法在远程获取、保留或恢复这些数据。</p>
+
+<h2>七、儿童隐私</h2>
+<p>本软件不面向 13 周岁以下的儿童，我们不会故意收集儿童的个人信息。</p>
+
+<h2>八、隐私政策的更新</h2>
+<p>我们可能会不时更新本隐私政策。更新后的政策将在本页面发布，并更新顶部的生效日期。如果未来本软件引入账号系统、云服务或其他需要收集数据的功能，我们会及时更新本政策并通过应用内通知告知您。</p>
+
+<h2>九、联系方式</h2>
+<p>如果您对本隐私政策有任何疑问或建议，请通过以下方式联系我们：</p>
+<p><strong>邮箱：macroai@sowe.com</strong></p>
+
+<hr class="section">
+
+<h1>MacroAI Privacy Policy</h1>
+<p class="meta">Effective Date: September 3, 2026 | App Name: MacroAI (Windows / Android, Package: com.sowe.macroai)</p>
+
+<h2>1. Introduction</h2>
+<p>MacroAI ("the Software") respects and protects user privacy. This policy explains how the Software handles your information. By using the Software, you agree to this policy.</p>
+
+<h2>2. Information We Collect</h2>
+<p><strong>The Software does not collect, upload, or share any personal data.</strong></p>
+<ul>
+  <li>We do not collect personal information, usage habits, or operation records;</li>
+  <li>The Software contains no telemetry, analytics, or advertising SDKs;</li>
+  <li>Your scripts, image templates, node configurations, and user settings are stored only locally on your device and are never uploaded to any server;</li>
+  <li>Image matching (OpenCV template matching), OCR, and color detection all run offline on the device.</li>
+</ul>
+
+<h2>3. Network Access</h2>
+<h3>Windows version</h3>
+<p>No network connections are established during operation. Updates are installed manually by downloading installers from our website or release pages.</p>
+<h3>Android version (Google Play channel)</h3>
+<p>This build contains no networking functionality and establishes no network connections. Updates are provided entirely by Google Play.</p>
+<h3>Android version (official website and other channels)</h3>
+<p>The App periodically sends an update-check request to our server (sowe.com). This request is used solely to determine whether a newer version exists; it carries none of your personal data, script content, or screen information.</p>
+
+<h2>4. Third-Party Services</h2>
+<p>The Software integrates no third-party analytics, advertising, or data-collection services. Its open-source components (including image processing and text recognition engines) run as local libraries and never communicate with external servers.</p>
+
+<h2>5. Android Permissions</h2>
+<p>MacroAI for Android uses the following system permissions. All permissions are used solely to implement automation features, never to collect personal information. All permissions are granted by you in system settings and may be revoked at any time; once revoked, related features stop working and no data processing remains:</p>
+<ul>
+  <li><strong>Accessibility Service</strong>: used to perform automated taps, swipes, and other gestures, and to read on-screen elements; screen content is used only for on-device matching during script execution;</li>
+  <li><strong>Screen Capture (MediaProjection)</strong>: used only when scripts require image recognition, OCR, or color picking; captured content is processed temporarily in memory only and is never saved, uploaded, or shared with any third party;</li>
+  <li><strong>Overlay (SYSTEM_ALERT_WINDOW)</strong>: used to display the runner bubble, task panel, and node editor;</li>
+  <li><strong>Foreground Service</strong>: used to keep automation tasks and the editor running reliably in the background.</li>
+</ul>
+
+<h2>6. Data Storage and Deletion</h2>
+<p>All data you create (scripts, template images, user settings) is stored in local directories on your device. We recommend backing up important data regularly; data security is governed by your own system security measures.</p>
+<p>You may delete all local data at any time by uninstalling the App or clearing its data; we cannot remotely access, retain, or recover it.</p>
+
+<h2>7. Children's Privacy</h2>
+<p>The Software is not directed at children under 13, and we do not knowingly collect personal information from children.</p>
+
+<h2>8. Changes to This Policy</h2>
+<p>We may update this policy from time to time. Updates will be posted on this page with a revised effective date. If future versions introduce accounts, cloud services, or any data collection, we will update this policy and notify you in-app.</p>
+
+<h2>9. Contact</h2>
+<p>For questions or suggestions about this privacy policy, contact us at:</p>
+<p><strong>Email: macroai@sowe.com</strong></p>
+
+</body>
+</html>
