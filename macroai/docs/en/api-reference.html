@@ -269,17 +269,17 @@ wait_interruptible(5000)  -- wait 5 seconds, pausable/stoppable at any time
 </code></pre>
 <hr />
 <h2 id="variables">Variables</h2>
-<pre><code>var_set(name, value, scope?) -&gt; void
+<pre><code>var_set(name, value) -&gt; void
 var_get(name) -&gt; any
 var_has(name) -&gt; boolean
 </code></pre>
 <p><strong>Parameters:</strong>
 - <code>name</code> (string) — variable name
-- <code>value</code> (any) — variable value (string, number, boolean, table)
-- <code>scope</code> (string, optional) — variable scope: <code>"local"</code> (default, script-local), <code>"global"</code> (shared across scripts)</p>
+- <code>value</code> (any) — variable value (string, number, boolean, table)</p>
+<p><strong>Notes:</strong> These three functions operate on <strong>user-configured variables</strong> (those defined in the <strong>Variables</strong> tab), letting nodes and custom code share values across nodes and functions. Variables are <strong>not persisted</strong> — every run re-injects the defaults defined in the Variables tab. For a throwaway value within a single run, just write the variable name directly (see "Variables &amp; Data Passing" in the designer guide).</p>
 <p><strong>Example:</strong></p>
 <pre><code class="language-lua">var_set(&quot;count&quot;, 10)
-var_set(&quot;name&quot;, &quot;MacroAI&quot;, &quot;global&quot;)
+var_set(&quot;name&quot;, &quot;MacroAI&quot;)
 
 local c = var_get(&quot;count&quot;)
 log(&quot;count = &quot; .. c)

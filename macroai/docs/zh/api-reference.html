@@ -269,17 +269,17 @@ wait_interruptible(5000)  -- 等待 5 秒，期间可随时暂停/停止
 </code></pre>
 <hr />
 <h2 id="变量">变量</h2>
-<pre><code>var_set(name, value, scope?) -&gt; void
+<pre><code>var_set(name, value) -&gt; void
 var_get(name) -&gt; any
 var_has(name) -&gt; boolean
 </code></pre>
 <p><strong>参数说明：</strong>
 - <code>name</code> (string) — 变量名
-- <code>value</code> (any) — 变量值（支持 string、number、boolean、table）
-- <code>scope</code> (string, 可选) — 作用域，可选：<code>"local"</code>（默认，仅当前脚本可见）、<code>"global"</code>（跨脚本共享）</p>
+- <code>value</code> (any) — 变量值（支持 string、number、boolean、table）</p>
+<p><strong>说明：</strong> 这三个函数操作的是<strong>用户配置变量</strong>（<code>变量</code> 标签页里定义的），供节点和自定义代码跨节点、跨函数共享取值。变量<strong>不做持久化</strong>——每次运行会重新注入标签页里定义的默认值。想在单次运行内用临时变量，直接写变量名即可（见设计者指南「变量与数据传递」）。</p>
 <p><strong>示例：</strong></p>
 <pre><code class="language-lua">var_set(&quot;count&quot;, 10)
-var_set(&quot;name&quot;, &quot;MacroAI&quot;, &quot;global&quot;)
+var_set(&quot;name&quot;, &quot;MacroAI&quot;)
 
 local c = var_get(&quot;count&quot;)
 log(&quot;count = &quot; .. c)
