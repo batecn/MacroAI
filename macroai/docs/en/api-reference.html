@@ -686,6 +686,8 @@ end
 <ul>
 <li>Success returns a valid value, failure returns <code>nil</code></li>
 <li>For <code>ImageMatchResult</code>, check <code>if r and r.success</code> to determine match status</li>
+<li><strong>Business failure signal</strong>: a user function may explicitly <code>return false</code> to signal "the goal was not achieved" (e.g. the target never appeared, the reward was not claimed). When the entry function invoked by a task returns <code>false</code>, the run is treated as a <strong>business failure</strong>: it is <strong>not counted toward completion</strong> and is automatically retried by the failure-retry mechanism. <code>return true</code> or any other value counts as success; not returning at all (<code>nil</code>) keeps the technical-layer rule (no exception means success)</li>
+<li><code>return</code> must be the last statement of its block (same constraint as <code>break</code>); anything after it causes a Lua syntax error</li>
 </ul>
       </main>
     </div>

@@ -692,6 +692,8 @@ end
 <ul>
 <li>成功返回有效值，失败返回 <code>nil</code></li>
 <li><code>ImageMatchResult</code> 可通过 <code>if r and r.success</code> 判断是否匹配成功</li>
+<li><strong>业务失败信号</strong>：用户函数可显式 <code>return false</code> 表示"业务未达成"（如目标没出现、奖励没领到）。任务直接调用的入口函数返回 <code>false</code> 时判定为<strong>业务失败</strong>：本次执行<strong>不计完成次数</strong>，并按失败重试机制自动重试。<code>return true</code> 或其他值算成功；不返回（<code>nil</code>）则按技术层判定（无异常即成功）</li>
+<li><code>return</code> 必须是所在代码块的最后一条语句（与 <code>break</code> 同约束），其后追加语句会导致 Lua 语法错误</li>
 </ul>
       </main>
     </div>

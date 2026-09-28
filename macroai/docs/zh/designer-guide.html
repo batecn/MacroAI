@@ -191,10 +191,11 @@
 <ol>
 <li>切换到<strong>宏管理</strong>标签页（<code>Ctrl+7</code>），点击 <strong>+ 新建录制</strong></li>
 <li>设计区域出现绿色边框，左下角有 <strong>「■ 停止录制」</strong> 按钮</li>
-<li>正常执行你想自动化的操作（点击、输入文字等）</li>
+<li>正常执行你想自动化的操作（点击、输入文字、拖拽等）</li>
 <li>点击 <strong>「■ 停止录制」</strong> 结束录制，保存到项目</li>
 <li>在宏列表中选中刚录制的宏，点击 <strong>▶ 播放</strong> 即可回放</li>
 </ol>
+<p>录制会<strong>自动区分点击与拖拽</strong>：按下后鼠标位移超过 8 像素记为一次拖拽（列表显示为 <code>🖱 拖拽 (起点) → (终点)</code>），小幅手抖仍算普通点击，滑动滑块、框选、拖动窗口这类操作不会再丢失。右键和中键同样支持。</p>
 <h3 id="4-用节点编辑器增强流程">4. 用节点编辑器增强流程</h3>
 <p>录制的宏只能原样回放。想加入<strong>条件判断、循环、图像识别</strong>等逻辑？用节点编辑器：</p>
 <ol>
@@ -367,6 +368,10 @@
 <td>在循环中提前跳出</td>
 </tr>
 <tr>
+<td><strong>返回</strong></td>
+<td>结束当前函数并返回值。留空＝返回 nil；填 <code>false</code> 表示业务失败（入口函数失败时任务不计次并自动重试）；填 <code>true</code> 或其他值表示成功</td>
+</tr>
+<tr>
 <td><strong>调用函数</strong></td>
 <td>执行已定义的可复用子流程</td>
 </tr>
@@ -409,7 +414,29 @@
 </tr>
 </tbody>
 </table>
-<p>变量作用域分为 <code>local</code>（当前脚本可见）和 <code>global</code>（跨脚本共享）。</p>
+<p>变量分两种，<strong>靠"变量名"的填法区分，不需要切换开关</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>填法</th>
+<th>类型</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直接输入名字，如 <code>count</code></td>
+<td><strong>局部变量</strong></td>
+<td>只存在于本次运行的独立空间，多个动作同时运行也互不干扰；同一动作内可跨函数引用</td>
+</tr>
+<tr>
+<td>点 <code>◎</code> 选<strong>变量</strong>标签页里已定义的变量</td>
+<td><strong>全局变量</strong></td>
+<td>跨动作共享，用于动作之间传递数据</td>
+</tr>
+</tbody>
+</table>
+<p>局部变量可以跳过"读取变量"节点，直接在下游节点的 fx 表达式里写名字引用。</p>
 <h3 id="音频与通知">音频与通知</h3>
 <ul>
 <li><strong>播放音效</strong>：系统提示音、do~si 蜂鸣、自定义音频文件</li>
@@ -600,7 +627,13 @@
 <hr />
 <h2 id="八进阶功能">八、进阶功能</h2>
 <h3 id="函数与自定义动作">函数与自定义动作</h3>
-<p><strong>函数</strong>：将一组节点打包成可复用的子流程，支持参数传递。在<strong>函数</strong>标签页（<code>Ctrl+5</code>）新建和编辑。</p>
+<p><strong>函数</strong>：将一组节点打包成可复用的子流程，支持参数传递。在<strong>函数</strong>标签页（<code>Ctrl+5</code>）新建和编辑。可填写<strong>函数说明</strong>，函数列表和"调用函数"节点标题上会一并显示，方便区分用途相近的函数。</p>
+<p><strong>函数返回值</strong>：函数内用<strong>返回</strong>节点返回值。</p>
+<ul>
+<li><strong>调用函数</strong>节点的"返回值变量"（新建时默认填 <code>call_result</code>）决定是否接收返回值。留空则不接收；填了名字，同函数内的后续节点就按这个名字引用（fx 表达式、自定义代码、条件判断都行）。</li>
+<li>返回值是 Lua 局部变量，<strong>仅在同一函数内可见</strong>。要跨函数或跨动作传递，请改用全局变量。</li>
+<li><strong>业务失败</strong>：任务直接调用的那个函数（入口函数）返回 <code>false</code> 时，判定为<strong>业务失败</strong> —— 这次执行<strong>不计完成次数</strong>，并按失败重试机制自动重试。返回 <code>true</code> 或其他值算成功；不写返回节点（返回 nil）则维持原行为，按技术层判定（没报错就算成功）。</li>
+</ul>
 <p><strong>自定义动作</strong>：将函数绑定到浮动面板的一键按钮。在<strong>自定义动作</strong>标签页（<code>Ctrl+6</code>）中设置，运行宏时面板自动显示对应按钮。每个动作可单独设置<strong>运行时显示方式</strong>：</p>
 <table>
 <thead>

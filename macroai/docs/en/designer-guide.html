@@ -191,10 +191,11 @@
 <ol>
 <li>Switch to the <strong>Macro Manager</strong> tab (<code>Ctrl+7</code>), click <strong>+ New Recording</strong></li>
 <li>A green border appears around the design area, with a <strong>「■ Stop Recording」</strong> button at the bottom-left</li>
-<li>Perform the actions you want to automate (clicks, text input, etc.)</li>
+<li>Perform the actions you want to automate (clicks, text input, drags, etc.)</li>
 <li>Click <strong>「■ Stop Recording」</strong> to finish and save to project</li>
 <li>Select the recorded macro in the list and click <strong>▶ Play</strong> to replay it</li>
 </ol>
+<p>Recording <strong>automatically tells clicks and drags apart</strong>: if the mouse moves more than 8 pixels while the button is held, it is recorded as a drag (shown as <code>🖱 拖拽 (start) → (end)</code>); small hand jitter still counts as a normal click. Sliding sliders, box-selecting and dragging windows no longer get lost. Right and middle buttons work the same way.</p>
 <h3 id="24-enhance-your-workflow-with-the-node-editor">2.4 Enhance Your Workflow with the Node Editor</h3>
 <p>A recorded macro can only be replayed as-is. Want to add <strong>conditions, loops, image recognition</strong>, or other logic? Use the node editor:</p>
 <ol>
@@ -368,6 +369,10 @@
 <td>exit a loop early</td>
 </tr>
 <tr>
+<td><strong>Return</strong></td>
+<td>end the current function and return a value. Leave empty for nil; <code>false</code> marks a business failure (a failing entry function is not counted and is retried automatically); <code>true</code> or any other value means success</td>
+</tr>
+<tr>
 <td><strong>Call Function</strong></td>
 <td>execute a reusable sub-workflow</td>
 </tr>
@@ -410,7 +415,29 @@
 </tr>
 </tbody>
 </table>
-<p>Variable scope: <code>local</code> (script-local) or <code>global</code> (shared across scripts).</p>
+<p>There are two kinds of variables, told apart by <strong>how you fill in the variable name</strong> — there is no switch to toggle:</p>
+<table>
+<thead>
+<tr>
+<th>How to fill it</th>
+<th>Kind</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type a name directly, e.g. <code>count</code></td>
+<td><strong>Local variable</strong></td>
+<td>Lives only in this run's own space, so concurrently running actions never interfere; visible across functions within the same action</td>
+</tr>
+<tr>
+<td>Click <code>◎</code> and pick a variable defined in the <strong>Variables</strong> tab</td>
+<td><strong>Global variable</strong></td>
+<td>Shared across actions, used to pass data between actions</td>
+</tr>
+</tbody>
+</table>
+<p>A local variable can skip the "Get Variable" node entirely — just type its name in the fx expression of any downstream node.</p>
 <h3 id="audio-notifications">Audio &amp; Notifications</h3>
 <ul>
 <li><strong>Play Sound</strong>: system sounds, do~si beeps, custom audio files</li>
@@ -601,7 +628,13 @@ User Config
 <hr />
 <h2 id="8-advanced-features">8. Advanced Features</h2>
 <h3 id="functions-custom-actions">Functions &amp; Custom Actions</h3>
-<p><strong>Functions</strong>: package a group of nodes into a reusable sub-workflow with parameter support. Create and edit them in the <strong>Functions</strong> tab (<code>Ctrl+5</code>).</p>
+<p><strong>Functions</strong>: package a group of nodes into a reusable sub-workflow with parameter support. Create and edit them in the <strong>Functions</strong> tab (<code>Ctrl+5</code>). You can add a <strong>description</strong>, which shows up in the function list and in the title of <strong>Call Function</strong> nodes, so functions with similar purposes stay distinguishable.</p>
+<p><strong>Function return values</strong>: use a <strong>Return</strong> node inside a function.</p>
+<ul>
+<li>The <strong>Call Function</strong> node's "return value variable" field (pre-filled with <code>call_result</code> on new nodes) decides whether the return value is captured. Leave it empty to discard it; if filled, later nodes in the same function can reference that name (in fx expressions, custom code, or conditions).</li>
+<li>The return value is a Lua local, visible <strong>only within the same function</strong>. To pass data across functions or actions, use a global variable instead.</li>
+<li><strong>Business failure</strong>: when the entry function (the one a task invokes directly) returns <code>false</code>, the run is treated as a <strong>business failure</strong> — it is <strong>not counted toward completion</strong> and is automatically retried by the failure-retry mechanism. Returning <code>true</code> or any other value counts as success; omitting the Return node (returning nil) keeps the previous behavior and falls back to the technical-layer rule (no error means success).</li>
+</ul>
 <p><strong>Custom Actions</strong>: bind a function to a one-click button on the floating panel. Configure them in the <strong>Custom Actions</strong> tab (<code>Ctrl+6</code>); the buttons appear on the floating panel when running. Each action has its own <strong>runtime display mode</strong>:</p>
 <table>
 <thead>
