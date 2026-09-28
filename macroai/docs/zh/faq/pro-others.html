@@ -65,6 +65,8 @@
             <li>等待变化、等待条块变化</li>
             <li>播放音乐、自定义代码（Lua）</li>
             <li>坐标策略覆盖（节点级 transform_policy）</li>
+            <li>周期任务系统（定时执行、提醒、失败重试、执行日志）</li>
+            <li>运行区域库（多开窗口的区域集中管理）</li>
           </ul>
           <p>具体哪些功能需要 Pro，在界面中会以 🔒 标记显示。</p>
         </div>
@@ -92,6 +94,8 @@
             <li><strong>等待变化</strong>、<strong>等待条块变化</strong>（屏幕监控相关）</li>
             <li><strong>播放音乐</strong>、<strong>自定义代码</strong>（Lua 脚本）</li>
             <li><strong>坐标策略覆盖</strong>（节点级 transform_policy 设置）</li>
+            <li><strong>周期任务系统</strong>（定时执行、到期提醒、失败重试、执行日志）</li>
+            <li><strong>运行区域库</strong>（多开场景下集中管理各窗口的运行区域）</li>
           </ul>
           <p>大部分日常使用的节点（图像查找、颜色检测、点击、等待、循环、条件等）都是免费的。</p>
           <p>如果你不确定某个功能是否需要 Pro，直接点击尝试——需要 Pro 时会弹出提示，不会误操作。</p>
@@ -152,13 +156,15 @@
       <details class="faq-item">
         <summary>脚本能定时执行吗？<span class="faq-platform all">通用</span></summary>
         <div class="faq-answer">
-          <p>MacroAI 目前<strong>不支持定时执行</strong>，后续版本会支持该功能。</p>
-          <p><strong>替代方案：</strong></p>
+          <p><strong>支持。</strong>在<strong>任务</strong>标签页（<code>Ctrl+0</code>）中创建周期任务即可（Pro 功能），可以设置：</p>
           <ul>
-            <li>在脚本内部用"无限循环 + 等待"实现简单定时（如每隔 30 分钟执行一次）</li>
-            <li>Windows 用户可以用系统的任务计划程序（Task Scheduler）定时启动 MacroAI</li>
+            <li><strong>周期</strong>：每天 / 每周几 / 每月几号，可指定周期重置时刻（应对游戏日常凌晨重置这类场景）</li>
+            <li><strong>触发方式</strong>：固定时间点（如 08:00、20:00）或固定间隔（如每 30 分钟）</li>
+            <li><strong>目标次数</strong>：每个周期要完成几次，可设"不限次数"</li>
+            <li><strong>提醒</strong>：周期重置提醒、时间点提醒、间隔提醒</li>
           </ul>
-          <p>目前也不支持命令行直接运行脚本，MacroAI 启动后需要在界面中手动操作运行。</p>
+          <p>任务被标记为完成后计入本期次数；<strong>排队过期、被跳过或执行失败都算"没跑成"</strong>，会按任务里设置的重试间隔和次数上限自动重排。另外，如果函数里用<strong>返回</strong>节点返回 <code>false</code> 表示业务失败，任务同样不计次并进入重试。</p>
+          <p>命令行直接运行脚本目前仍不支持（仅支持双击 <code>.macroai</code> 文件自动导入项目），需要手动点运行。</p>
         </div>
       </details>
 

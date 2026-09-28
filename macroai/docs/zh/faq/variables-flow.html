@@ -51,16 +51,23 @@
           <p><strong>变量</strong>就是一个"有名字的盒子"，用来存储运行时的数据（如图像查找的结果坐标、OCR 识别的文字、计数器等）。</p>
           <p><strong>使用步骤：</strong></p>
           <ol>
-            <li>在"变量"标签页（<code>Ctrl+3</code>）中定义变量：取个名字（如 <code>count</code>），选类型（字符串/数字/布尔），设默认值</li>
-            <li>在节点中<strong>写入</strong>变量：如"设置变量"节点，或图像查找节点的"结果变量"字段</li>
-            <li>在节点中<strong>读取</strong>变量：如条件判断中引用变量做比较，或"输入文本"节点中插入变量值</li>
+            <li>在<strong>设置变量</strong>节点的"变量名"框里<strong>直接输入</strong>名字（如 <code>count</code>），就得到一个<strong>局部变量</strong>，不需要预先定义</li>
+            <li>需要跨动作共享时，先在"变量"标签页（<code>Ctrl+3</code>）定义，再回到"设置变量"节点点变量名框右侧的 <strong>◎</strong> 选中它，就得到一个<strong>全局变量</strong></li>
+            <li>在下游节点中<strong>读取</strong>变量：条件判断里写表达式引用，或"输入文本"节点中插入变量值</li>
           </ol>
+          <p><strong>局部变量 vs 全局变量：</strong></p>
+          <ul>
+            <li><strong>局部变量</strong>（默认）— 直接输入名字即可。它属于<strong>本次运行</strong>，每个动作各自独立，多个动作同时运行也互不干扰；同一次运行内可以跨函数访问</li>
+            <li><strong>全局变量</strong> — 用 <strong>◎</strong> 选"变量"标签页里的项，跨动作共享，用于动作之间传递数据</li>
+          </ul>
+          <p>没有"作用域 local/global"开关，<strong>作用域由是否用 ◎ 选 Tab 变量决定</strong>。变量名不选、也不与 Tab 变量同名时，一律按局部变量处理（这样旧脚本打开运行的行为不变）。</p>
           <p><strong>典型用法：</strong></p>
           <ul>
             <li>图像查找的结果自动存入变量（如 <code>result</code>），包含坐标和置信度</li>
             <li>用"设置变量"节点做计数器：每循环一次 count + 1</li>
             <li>在"输入文本"节点中引用变量，实现动态输入</li>
           </ul>
+          <p><strong>注意：</strong>变量<strong>不做持久化</strong>——每次运行都会重新取"变量"标签页里设的默认值，所以不能靠变量实现"累计次数""今日已领奖"这类跨运行的统计，需要的话请用自定义代码节点读写文件。</p>
         </div>
       </details>
 
@@ -79,6 +86,7 @@
             <li>图像查找：找到 = 成功，没找到 = 失败</li>
             <li>OCR 比对：文字一致 = 成功，不一致 = 失败</li>
             <li>等待变化：检测到变化 = 成功，超时 = 失败</li>
+            <li>调用函数：函数返回 <code>false</code> = 失败，返回 <code>true</code>/其他值，或没返回（内部无失败）= 成功</li>
             <li>等待/点击/日志：永远成功</li>
           </ul>
         </div>
@@ -116,10 +124,31 @@
           <p><strong>使用方法：</strong></p>
           <ol>
             <li>在"函数"标签页（<code>Ctrl+5</code>）中创建函数，编辑其内部节点</li>
+            <li>可以给函数填一段<strong>说明</strong>，会显示在函数列表里，也会作为"调用函数"节点的标题，方便在长流程里分辨相近的函数</li>
             <li>在主流程中添加"调用函数"节点，选择要调用的函数</li>
             <li>函数可以带参数，调用时传入不同的值</li>
+            <li>需要返回值时，在函数内添加"返回"节点（流程控制分组）；新建的"调用函数"节点会自动带一个结果变量 <code>call_result</code> 接收返回值，可在配置里改名，清空则表示不接收</li>
           </ol>
-          <p>函数之间也可以互相调用，可以访问全局变量。</p>
+          <p>函数之间也可以互相调用。函数内可以直接读写本次运行的<strong>局部变量</strong>（同一次运行内跨函数可见）；需要跨动作共享时才用<strong>全局变量</strong>。</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>函数的"返回"节点怎么用？<code>return false</code> 是什么意思？<span class="faq-platform all">通用</span></summary>
+        <div class="faq-answer">
+          <p>函数需要把结果交回给调用方时，在函数内加一个<strong>返回</strong>节点（流程控制分组），在"返回值"里填变量名、表达式或字面量；留空则返回 nil。</p>
+          <p><strong>返回值约定：</strong></p>
+          <ul>
+            <li><code>return false</code> — <strong>业务失败</strong>：脚本没报错，但事情没办成（目标没出现、奖励没领到）。任务判为失败，<strong>不计完成次数</strong>，并按任务设置自动重试</li>
+            <li><code>return true</code> 或其他值 — 成功</li>
+            <li>不加"返回"节点（返回 nil）— 维持原行为，按技术层判定（没报错就算成功）</li>
+          </ul>
+          <p>这条约定只对<strong>任务直接调用的那个函数（入口函数）</strong>生效，用来把"技术成功但业务失败"反馈给任务系统。</p>
+          <p><strong>两个注意点：</strong></p>
+          <ul>
+            <li>"返回"节点<strong>必须放在所在块（函数体 / 循环 / 条件）的最后一条</strong>，放在它后面的节点永远不会执行，代码预览里能看到生成的 Lua</li>
+            <li>返回值只在<strong>同一个函数内</strong>可见（同函数内的后续节点用那个变量名引用）。要传给别的函数或别的动作，请用全局变量</li>
+          </ul>
         </div>
       </details>
 
@@ -132,8 +161,9 @@
             <li><strong>条件判断</strong>的自定义条件：<code>count >= 10 and hp < 30</code></li>
             <li><strong>设置变量</strong>时勾选"表达式"：<code>count + 1</code>、<code>name .. "_done"</code></li>
             <li><strong>日志输出</strong>时勾选"表达式"：<code>"第" .. count .. "次循环"</code></li>
-            <li><strong>等待时间</strong>：<code>math.random(500, 1500)</code>（随机等待）</li>
+            <li><strong>自定义代码</strong>节点（Pro）里可以写任意 Lua，需要随机等待等动态值时用 <code>wait(math.random(500, 1500))</code></li>
           </ul>
+          <p>注意：<strong>等待</strong>节点的时间是固定毫秒数，不支持表达式。</p>
           <p><strong>常用语法：</strong></p>
           <ul>
             <li>数字运算：<code>a + b</code>、<code>a * 2</code>、<code>a % 3</code></li>

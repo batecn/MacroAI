@@ -65,6 +65,8 @@
             <li>Wait for Change, Wait for Bar Change</li>
             <li>Play Music, Custom Code (Lua)</li>
             <li>Coordinate strategy override (node-level transform_policy)</li>
+            <li>Periodic task system (scheduled runs, reminders, failure retry, execution log)</li>
+            <li>Run-area library (centralized run areas for multi-instance windows)</li>
           </ul>
           <p>Features that require Pro are marked with a 🔒 icon in the interface.</p>
         </div>
@@ -92,6 +94,8 @@
             <li><strong>Wait for Change</strong>, <strong>Wait for Bar Change</strong> (screen monitoring related)</li>
             <li><strong>Play Music</strong>, <strong>Custom Code</strong> (Lua scripting)</li>
             <li><strong>Coordinate strategy override</strong> (node-level transform_policy setting)</li>
+            <li><strong>Periodic task system</strong> (scheduled runs, due-time reminders, failure retry, execution log)</li>
+            <li><strong>Run-area library</strong> (centralized run areas for each window in multi-instance setups)</li>
           </ul>
           <p>Most everyday nodes (Find Image, Color Detection, Click, Wait, Loop, Condition, etc.) are free.</p>
           <p>If you're unsure whether a feature requires Pro, just click and try — a notice will pop up if Pro is needed, so you can't accidentally trigger anything.</p>
@@ -152,13 +156,15 @@
       <details class="faq-item">
         <summary>Can scripts run on a schedule?<span class="faq-platform all">All</span></summary>
         <div class="faq-answer">
-          <p>MacroAI currently <strong>doesn't support scheduled execution</strong>. This feature will be supported in a future version.</p>
-          <p><strong>Workarounds:</strong></p>
+          <p><strong>Yes.</strong> Create a periodic task in the <strong>Tasks</strong> tab (<code>Ctrl+0</code>) — this is a Pro feature. You can configure:</p>
           <ul>
-            <li>Use "infinite loop + wait" inside the script for simple timing (e.g. run once every 30 minutes)</li>
-            <li>Windows users can use the system's Task Scheduler to launch MacroAI on a schedule</li>
+            <li><strong>Cycle</strong>: daily / weekly on chosen days / monthly on a chosen date, with an optional reset time (handles cases like in-game dailies resetting at 4 AM)</li>
+            <li><strong>Trigger</strong>: fixed times of day (e.g. 08:00, 20:00) or a fixed interval (e.g. every 30 minutes)</li>
+            <li><strong>Target count</strong>: how many runs to complete per cycle, or "unlimited"</li>
+            <li><strong>Reminders</strong>: cycle-reset, time-point, and interval reminders</li>
           </ul>
-          <p>Running scripts directly from the command line isn't currently supported either — after MacroAI starts, you need to trigger a run manually from the interface.</p>
+          <p>A run counts toward the cycle once it is marked complete; <strong>a queue miss, a skip, or a failed execution all count as "didn't get done"</strong> and are rescheduled automatically using the retry interval and retry limit set on the task. Also, if a function returns <code>false</code> via a <strong>Return</strong> node to signal a business failure, the task likewise doesn't count the run and moves it into retry.</p>
+          <p>Running scripts directly from the command line is still not supported (only double-clicking a <code>.macroai</code> file to import a project); you need to click run manually.</p>
         </div>
       </details>
 

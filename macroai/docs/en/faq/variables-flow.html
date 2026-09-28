@@ -51,16 +51,23 @@
           <p>A <strong>variable</strong> is a "named box" used to store data at runtime (such as the result coordinates of an image search, OCR-recognized text, a counter, and so on).</p>
           <p><strong>How to use one:</strong></p>
           <ol>
-            <li>Define the variable in the "Variables" tab (<code>Ctrl+3</code>): give it a name (e.g. <code>count</code>), choose a type (string/number/boolean), and set a default value</li>
-            <li><strong>Write</strong> to the variable in a node: e.g. a "Set Variable" node, or the "Result Variable" field of a Find Image node</li>
-            <li><strong>Read</strong> the variable in a node: e.g. reference it in a condition for comparison, or insert its value in an "Input Text" node</li>
+            <li><strong>Type a name directly</strong> (e.g. <code>count</code>) into the "Variable Name" field of a <strong>Set Variable</strong> node and you get a <strong>local variable</strong> — no prior definition needed</li>
+            <li>To share a value across actions, first define it in the "Variables" tab (<code>Ctrl+3</code>), then click the <strong>◎</strong> button next to the variable name field of the "Set Variable" node to pick it — that gives you a <strong>global variable</strong></li>
+            <li><strong>Read</strong> the variable downstream: reference it in a condition expression, or insert its value in an "Input Text" node</li>
           </ol>
+          <p><strong>Local vs global variables:</strong></p>
+          <ul>
+            <li><strong>Local variable</strong> (the default) — just type the name. It belongs to <strong>this run</strong>; every action gets its own, so concurrently running actions never interfere. It is visible across functions within the same run.</li>
+            <li><strong>Global variable</strong> — pick an entry from the "Variables" tab via <strong>◎</strong>. Shared across actions, used to pass data between them.</li>
+          </ul>
+          <p>There is no "scope: local/global" switch — <strong>the scope is decided by whether you pick a Variables-tab entry with ◎</strong>. Any name that isn't picked and doesn't match a Variables-tab entry is treated as a local variable, which keeps older projects behaving exactly as before.</p>
           <p><strong>Typical usage:</strong></p>
           <ul>
             <li>The result of an image search is automatically stored in a variable (e.g. <code>result</code>), including coordinates and confidence</li>
             <li>Use a "Set Variable" node as a counter: count + 1 on each loop iteration</li>
             <li>Reference a variable in an "Input Text" node for dynamic input</li>
           </ul>
+          <p><strong>Note:</strong> variables are <strong>not persisted</strong> — every run starts again from the default values set in the Variables tab. So you cannot use variables for run-spanning counters like "times collected today"; use a Custom Code node to read/write a file if you need that.</p>
         </div>
       </details>
 
@@ -79,6 +86,7 @@
             <li>Find Image: found = success, not found = failure</li>
             <li>OCR Compare: text matches = success, doesn't match = failure</li>
             <li>Wait for Change: change detected = success, timed out = failure</li>
+            <li>Call Function: function returns <code>false</code> = failure; returns <code>true</code>/another value, or returns nothing (no failure inside) = success</li>
             <li>Wait / Click / Log: always succeeds</li>
           </ul>
         </div>
@@ -116,10 +124,31 @@
           <p><strong>How to use:</strong></p>
           <ol>
             <li>Create a function in the "Functions" tab (<code>Ctrl+5</code>) and edit its internal nodes</li>
+            <li>You can give a function a <strong>description</strong>, shown in the function list and used as the title of "Call Function" nodes — handy for telling similar functions apart in a long flow</li>
             <li>Add a "Call Function" node in the main flow and select the function to call</li>
             <li>Functions can take parameters, letting you pass different values at each call</li>
+            <li>To return a value, add a <strong>Return</strong> node (Flow Control group) inside the function. A new "Call Function" node comes with a result variable named <code>call_result</code> that captures the return value — rename it in the node config, or clear it to ignore the return value</li>
           </ol>
-          <p>Functions can call each other, and they can access global variables.</p>
+          <p>Functions can call each other. Inside a function you can read and write this run's <strong>local variables</strong> directly (visible across functions within the same run); use <strong>global variables</strong> only when data must be shared across actions.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How do I use a function's "Return" node? What does <code>return false</code> mean?<span class="faq-platform all">All</span></summary>
+        <div class="faq-answer">
+          <p>When a function needs to hand a result back to its caller, add a <strong>Return</strong> node (Flow Control group) inside the function and put a variable name, an expression, or a literal in its "Return Value" field. Leave it empty to return nil.</p>
+          <p><strong>Return value convention:</strong></p>
+          <ul>
+            <li><code>return false</code> — <strong>business failure</strong>: the script raised no error, but the goal wasn't met (the target never appeared, the reward wasn't claimed). The task is treated as failed, the run is <strong>not counted</strong>, and it is retried using the task's retry settings.</li>
+            <li><code>return true</code> or any other value — success</li>
+            <li>No Return node at all (returns nil) — unchanged behaviour, judged at the technical layer (no error means success)</li>
+          </ul>
+          <p>This convention only applies to the <strong>entry function</strong> — the one a task invokes directly. Its purpose is to report "technically fine, business failed" back to the task system.</p>
+          <p><strong>Two things to watch out for:</strong></p>
+          <ul>
+            <li>The Return node <strong>must be the last node of its block</strong> (function body / loop / condition). Anything placed after it never executes — you can check the generated Lua in the code preview.</li>
+            <li>The return value is visible <strong>only within the same function</strong> (later nodes in that function reference it by the result variable name). To hand it to another function or another action, use a global variable.</li>
+          </ul>
         </div>
       </details>
 
@@ -132,8 +161,9 @@
             <li>Custom conditions in a <strong>Condition</strong>: <code>count >= 10 and hp < 30</code></li>
             <li><strong>Set Variable</strong> with "Expression" checked: <code>count + 1</code>, <code>name .. "_done"</code></li>
             <li><strong>Log Output</strong> with "Expression" checked: <code>"Loop #" .. count</code></li>
-            <li><strong>Wait time</strong>: <code>math.random(500, 1500)</code> (random wait)</li>
+            <li><strong>Custom Code</strong> (Pro) accepts any Lua — for dynamic values such as a random wait, use <code>wait(math.random(500, 1500))</code></li>
           </ul>
+          <p>Note: the <strong>Wait</strong> node takes a fixed number of milliseconds and does <strong>not</strong> support expressions.</p>
           <p><strong>Common syntax:</strong></p>
           <ul>
             <li>Arithmetic: <code>a + b</code>, <code>a * 2</code>, <code>a % 3</code></li>

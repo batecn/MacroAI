@@ -58,7 +58,7 @@
             <li>"Image xxx.png not found" → the template image isn't within the search range, or the threshold is too high</li>
             <li>"Execution timed out" → wait-for-image / wait-for-change exceeded the configured timeout</li>
             <li>"Lua syntax error" → there's a code error in a custom code node</li>
-            <li>"Variable xxx is undefined" → you used a variable that isn't defined in the Variables tab</li>
+            <li>"Variable xxx is undefined" → the variable name is misspelled, or you referenced a global variable that isn't defined in the Variables tab (local variables just need the name typed in)</li>
           </ul>
           <p>If the log isn't detailed enough, switch the log level to "Debug" to see more internal information.</p>
         </div>

@@ -126,10 +126,12 @@
             <li>Switch to the "Macro Manager" tab (<code>Ctrl+7</code>)</li>
             <li>Click <strong>+ New Recording</strong></li>
             <li>A green border appears on screen (marking the design region), with a "■ Stop Recording" button in the bottom-left</li>
-            <li>Perform the steps you want to automate as usual (clicks, typing, etc.)</li>
+            <li>Perform the steps you want to automate as usual (clicks, typing, drags)</li>
             <li>When done, click "■ Stop Recording"</li>
             <li>Choose "Save to Project"</li>
           </ol>
+          <p>Recording <strong>automatically tells clicks and drags apart</strong>: if the mouse moves more than <strong>8 pixels</strong> after the button goes down, it is recorded as a <strong>drag</strong> (shown as <code>🖱 拖拽 (start) → (end)</code> in the macro list); a movement under 8 pixels is recorded as a plain <strong>click</strong>. Sliding a slider, box-selecting, or dragging a window is therefore replayed as a drag rather than a click. Right and middle buttons work the same way.</p>
+          <p><strong>Tip:</strong> to record a drag, press the button, move a clear distance, then release. If you only twitch slightly before releasing, it is recorded as an ordinary click.</p>
           <p><strong>Android version:</strong> in the editor, switch to recording mode. Your actions are intercepted and recorded by a full-screen overlay, while the underlying interface simultaneously carries out your actions.</p>
           <p>After recording, you can play it back from the macro list to test, or embed it in the main flow via a "Call Recorded Macro" node.</p>
         </div>
@@ -151,6 +153,7 @@
             <li>If the target window is larger than the design region, you'll need to recreate the project or modify the design region</li>
             <li>Seeing the border flash red = that action wasn't recorded and needs to be redone</li>
           </ul>
+          <p>There is one more case that is easy to mistake for "not recorded": <strong>movement without a release</strong>. MacroAI judges the whole "press → move → release" sequence: a movement under 8 pixels is merged into one click, and only a movement over 8 pixels becomes a separate drag event. The movement in between is never split into multiple events.</p>
         </div>
       </details>
 

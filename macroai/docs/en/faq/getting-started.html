@@ -94,7 +94,7 @@
         <div class="faq-answer">
           <p>MacroAI has two working modes, each aimed at a different role:</p>
           <ul>
-            <li><strong>🔧 Design mode</strong> — for the person who <em>builds</em> the script. Includes all 9 tabs: node editor, variable management, image management, and more. Used for creating and editing scripts.</li>
+            <li><strong>🔧 Design mode</strong> — for the person who <em>builds</em> the script. Includes all 10 tabs: node editor, code preview, variables, image management, functions, custom actions, macro manager, regions, user config, and tasks. Used for creating and editing scripts.</li>
             <li><strong>🏃 Run mode</strong> — for the person who <em>uses</em> the script. Shows only project info, region calibration, personal configuration, and the run button. A clean interface focused on running.</li>
           </ul>
           <p><strong>How to choose?</strong></p>
@@ -150,7 +150,7 @@
             <li><strong>Function</strong> — a group of nodes packaged into a reusable module that can be called multiple times from the main flow. Managed in the "Functions" tab.</li>
             <li><strong>Macro</strong> — a recorded sequence of mouse and keyboard actions. It can be embedded in the main flow via a "Call Recorded Macro" node. Managed in the "Macro Manager" tab.</li>
           </ul>
-          <p>Execution order: when you run a project, it executes from top to bottom in the node editor's order. When it hits a "Call Function" node, it jumps to execute the function's content; when it hits a "Call Recorded Macro" node, it plays back the recorded actions.</p>
+          <p>Execution order: when you run a project, it executes from top to bottom in the node editor's order. When it hits a "Call Function" node, it jumps to execute the function's content; when it hits a "Call Recorded Macro" node, it plays back the recorded actions. A "Return" node inside a function ends that function immediately and hands its value back to the caller.</p>
         </div>
       </details>
 
