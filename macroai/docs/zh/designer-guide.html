@@ -427,7 +427,7 @@
 <tr>
 <td>直接输入名字，如 <code>count</code></td>
 <td><strong>局部变量</strong></td>
-<td>只存在于本次运行的独立空间，多个动作同时运行也互不干扰；同一动作内可跨函数引用</td>
+<td>只在当前所在的<strong>块</strong>内有效（函数体 / 循环体 / 条件分支体），出了这个块就不可见。多个动作同时运行也互不干扰</td>
 </tr>
 <tr>
 <td>点 <code>◎</code> 选<strong>变量</strong>标签页里已定义的变量</td>
@@ -436,6 +436,14 @@
 </tr>
 </tbody>
 </table>
+<p>局部变量的准确规则：</p>
+<ul>
+<li><strong>可见范围</strong>：同一块内随便用；<strong>循环/条件内部的变量，外面读不到</strong>（Lua 语法如此）。要循环外用，必须在循环<strong>外</strong>先建一个同名变量。</li>
+<li><strong>跨函数不可见</strong>：函数 A 里的局部变量，函数 B 读不到（会得到 nil）。函数之间传值请用<strong>参数</strong>和<strong>返回值</strong>，跨动作请用<strong>全局变量</strong>。</li>
+<li><strong>同一块内可重复赋值</strong>：生成的是 <code>local count = 0</code>（首次）后接 <code>count = count + 1</code>（后续），是更新同一个变量，不会出现"赋值后读不到旧值"。</li>
+<li><strong>别和函数参数重名</strong>：函数参数会遮蔽同名的局部变量。</li>
+<li>代码预览里若出现 <code>-- 警告: 局部变量 'x' 未在本作用域声明…</code>，说明你引用了作用域外的变量，运行时会得到 nil。</li>
+</ul>
 <p>局部变量可以跳过"读取变量"节点，直接在下游节点的 fx 表达式里写名字引用。</p>
 <h3 id="音频与通知">音频与通知</h3>
 <ul>

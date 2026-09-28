@@ -428,7 +428,7 @@
 <tr>
 <td>Type a name directly, e.g. <code>count</code></td>
 <td><strong>Local variable</strong></td>
-<td>Lives only in this run's own space, so concurrently running actions never interfere; visible across functions within the same action</td>
+<td>Valid only inside the <strong>block</strong> it is declared in (a function body, a loop body, or a condition branch); it is invisible once you leave that block. Concurrently running actions never interfere.</td>
 </tr>
 <tr>
 <td>Click <code>◎</code> and pick a variable defined in the <strong>Variables</strong> tab</td>
@@ -437,6 +437,14 @@
 </tr>
 </tbody>
 </table>
+<p>The exact rules for local variables:</p>
+<ul>
+<li><strong>Visibility</strong>: freely usable within the same block; a variable declared <strong>inside a loop or condition is not visible outside it</strong> (that's Lua's rule). To use it after the loop, declare a variable of the same name <strong>before</strong> the loop.</li>
+<li><strong>Not visible across functions</strong>: a local variable in function A cannot be read by function B (you get nil). To pass values between functions use <strong>parameters and return values</strong>; across actions use a <strong>global variable</strong>.</li>
+<li><strong>Reassignment within the same block works</strong>: it generates <code>local count = 0</code> (first time) followed by <code>count = count + 1</code> (afterwards), which updates the same variable instead of shadowing it.</li>
+<li><strong>Don't reuse a function parameter's name</strong>: parameters shadow a local variable of the same name.</li>
+<li>If the code preview shows <code>-- Warning: Local variable 'x' is not declared in this scope…</code>, you are referencing a variable from outside its scope and it will be nil at runtime.</li>
+</ul>
 <p>A local variable can skip the "Get Variable" node entirely — just type its name in the fx expression of any downstream node.</p>
 <h3 id="audio-notifications">Audio &amp; Notifications</h3>
 <ul>
