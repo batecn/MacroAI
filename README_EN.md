@@ -6,6 +6,8 @@ A next-generation cross-platform macro automation platform (Windows / Android).
 
 Core positioning: **Visual node-based workflow + Intelligent execution + Cross-platform reusable scripts**. Developers can create automation scripts with MacroAI and distribute them to other users. The same Lua scripts and image templates run on both Windows and Android. Built-in multi-resolution adaptation ensures the same script runs stably across different screen sizes and scaling settings.
 
+**Current version v1.4.2** — the 1.4 line brought the periodic task system, the run-area library, function return values, and local variables (see "Recent Updates" below).
+
 [→ Website](https://sowe.com) · [User Guide](https://sowe.com/macroai/docs/en/user-guide.html) · [API Reference](https://sowe.com/macroai/docs/en/api-reference.html)
 
 ---
@@ -25,20 +27,37 @@ Core positioning: **Visual node-based workflow + Intelligent execution + Cross-p
 
 ---
 
-## 🧪 Google Play Closed Beta Recruitment
+## 🗓️ Periodic Task System (Windows, Pro)
 
-> We are recruiting **20 testers** for a **2-week** closed beta. Complete participants will receive a **lifetime Pro license** (valid on 1 device; it will be sent by email once the Pro mechanism is finalized).
->
-> **Requirements:**
-> - A real Android device running Android 8.0 or later (emulators don't count)
-> - Once you join via the official link, **do not leave the testing program for 14 consecutive days** (opting out resets the testing clock)
-> - Open and use the app at least once daily, noting any issues you encounter
-> - Submit a brief test summary at the end (usage, issue list, and suggestions)
->
-> **How to join:**
-> Send an email to **batecn@gmail.com** from the Gmail account you use on Google Play, including your **device model and Android version**, to confirm participation. We will reply with the store link as soon as it's ready.
->
-> Limited spots — first come, first served. Thank you!
+Hand your script to the scheduler so it **runs on time without you watching it**:
+
+- **Schedules**: daily / weekly on chosen weekdays / monthly on a chosen date, with an optional reset time (handles cases like in-game dailies that reset at 4 AM)
+- **Two trigger modes**: fixed times of day (e.g. 08:00, 20:00) or a fixed interval (e.g. every 30 minutes)
+- **Target count**: how many runs to complete per cycle, or "unlimited"
+- **Three reminder types**: cycle reset, time point, and interval
+- **Status wall**: see every task's progress and pending items for the current cycle at a glance
+- **Automatic retry on failure**: a queue miss, a skip, or a failed execution all count as "didn't get done" and are rescheduled using the interval and retry limit set on the task (v1.4.1)
+- **Business-failure feedback**: when a function returns `false` from a **Return** node to signal "the goal wasn't met", the task doesn't count the run and moves it into retry
+
+## 🖼️ Run-Area Library · Centralized Multi-Instance Management (Windows, Pro)
+
+In multi-instance setups every window needs its own run region, and box-selecting each one is tedious. The run-area library lets you store regions and reuse them: generate them in a grid, recognize and import them from a reference image, and have scripts reference a region by name. **Match-detection nodes can also switch the active run area.**
+
+## 🧩 Functions & Variables · Stronger Reuse (Windows)
+
+- **Return node**: functions can return a value explicitly. `return false` = business failure, `return true` = success. A **Call Function** node captures the value in `call_result` by default
+- **Function descriptions**: describe a function once; the description shows in the function list and in call-node titles, so similar functions are easy to tell apart in a long flow
+- **Local variables**: typing a name directly creates a local variable valid only inside its block, so concurrently running actions never interfere; picking a Variables-tab entry with `◎` creates a global variable shared across actions
+- **Expressions**: conditions, Set Variable, log output, and Custom Code all accept Lua expressions
+
+## 🖱️ Macro Recording · Clicks and Drags Told Apart (Windows)
+
+While recording, moving the mouse more than 8 pixels with the button held is recorded as a **drag** (`mouse_drag`); small hand jitter still counts as a normal click. Sliding a slider, box-selecting, and dragging windows no longer get lost, and right/middle buttons work the same way.
+
+## 🔍 Image Management & Script Preview (Windows)
+
+- **Image management**: search, sort by recent use, and automatic reference sync across all nodes on rename
+- **Script preview upgrades**: jump to a function from a dropdown, global search, function-level folding, and one-click back-to-top
 
 ---
 
