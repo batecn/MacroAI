@@ -27,40 +27,6 @@ Core positioning: **Visual node-based workflow + Intelligent execution + Cross-p
 
 ---
 
-## 🗓️ Periodic Task System (Windows, Pro)
-
-Hand your script to the scheduler so it **runs on time without you watching it**:
-
-- **Schedules**: daily / weekly on chosen weekdays / monthly on a chosen date, with an optional reset time (handles cases like in-game dailies that reset at 4 AM)
-- **Two trigger modes**: fixed times of day (e.g. 08:00, 20:00) or a fixed interval (e.g. every 30 minutes)
-- **Target count**: how many runs to complete per cycle, or "unlimited"
-- **Three reminder types**: cycle reset, time point, and interval
-- **Status wall**: see every task's progress and pending items for the current cycle at a glance
-- **Automatic retry on failure**: a queue miss, a skip, or a failed execution all count as "didn't get done" and are rescheduled using the interval and retry limit set on the task (v1.4.1)
-- **Business-failure feedback**: when a function returns `false` from a **Return** node to signal "the goal wasn't met", the task doesn't count the run and moves it into retry
-
-## 🖼️ Run-Area Library · Centralized Multi-Instance Management (Windows, Pro)
-
-In multi-instance setups every window needs its own run region, and box-selecting each one is tedious. The run-area library lets you store regions and reuse them: generate them in a grid, recognize and import them from a reference image, and have scripts reference a region by name. **Match-detection nodes can also switch the active run area.**
-
-## 🧩 Functions & Variables · Stronger Reuse (Windows)
-
-- **Return node**: functions can return a value explicitly. `return false` = business failure, `return true` = success. A **Call Function** node captures the value in `call_result` by default
-- **Function descriptions**: describe a function once; the description shows in the function list and in call-node titles, so similar functions are easy to tell apart in a long flow
-- **Local variables**: typing a name directly creates a local variable valid only inside its block, so concurrently running actions never interfere; picking a Variables-tab entry with `◎` creates a global variable shared across actions
-- **Expressions**: conditions, Set Variable, log output, and Custom Code all accept Lua expressions
-
-## 🖱️ Macro Recording · Clicks and Drags Told Apart (Windows)
-
-While recording, moving the mouse more than 8 pixels with the button held is recorded as a **drag** (`mouse_drag`); small hand jitter still counts as a normal click. Sliding a slider, box-selecting, and dragging windows no longer get lost, and right/middle buttons work the same way.
-
-## 🔍 Image Management & Script Preview (Windows)
-
-- **Image management**: search, sort by recent use, and automatic reference sync across all nodes on rename
-- **Script preview upgrades**: jump to a function from a dropdown, global search, function-level folding, and one-click back-to-top
-
----
-
 ## ✨ Key Features
 
 ### Cross-Platform Scripts · Write Once, Run Anywhere
@@ -70,6 +36,24 @@ The same **Lua script** runs on both Windows and Android, with image templates s
 ### Visual Node Editor · No-Code / Script Dual Mode (Windows)
 
 Drag-and-drop **tree-container architecture** with 20+ node types. LOOP and CONDITION act as container nodes that nest child nodes, showing the flow hierarchy visually. All node operations automatically generate **Lua code** — approachable for non-programmers, extensible for developers.
+
+- **Functions can return values**: a **Return** node hands a result back to the caller. `return false` means "the goal wasn't met" — the task then **doesn't count the run and retries automatically**; `return true` means success. A **Call Function** node captures the value in `call_result` by default
+- **Function descriptions**: describe a function once; the description shows in the function list and in call-node titles, so similar functions are easy to tell apart in a long flow
+- **Local variables**: typing a name directly creates a local variable valid only inside its block, so concurrently running actions never interfere; picking a Variables-tab entry with `◎` creates a global variable shared across actions
+- **Expressions**: conditions, Set Variable, log output, and Custom Code all accept Lua expressions
+- **Image management**: search templates, sort by recent use, and automatic reference sync across all nodes on rename
+- **Script preview**: jump to a function from a dropdown, global search, function-level folding, and one-click back-to-top
+
+### Periodic Task System · Scheduled Automatic Runs (Windows, Pro)
+
+Hand your script to the scheduler so it **runs on time without you watching it**.
+
+- **Schedules**: daily / weekly on chosen weekdays / monthly on a chosen date, with an optional reset time (handles cases like in-game dailies that reset at 4 AM)
+- **Two trigger modes**: fixed times of day (e.g. 08:00, 20:00) or a fixed interval (e.g. every 30 minutes)
+- **Target count**: how many runs to complete per cycle, or "unlimited"
+- **Three reminder types**: cycle reset, time point, and interval
+- **Status wall**: see every task's progress and pending items for the current cycle at a glance
+- **Automatic retry on failure**: a queue miss, a skip, or a failed execution all count as "didn't get done" and are rescheduled using the interval and retry limit set on the task
 
 ### Background Input Simulation · Zero Focus Stealing (Windows)
 
@@ -87,17 +71,20 @@ The Windows edition uses the built-in **Windows.Media.Ocr (WinRT)** API, while t
 
 **Uniform/desktop dual-mode coordinate transformation** with **DPI awareness**. The recording design area is automatically mapped to the runtime actual area. The same script automatically adapts to different resolutions and scaling ratios — the core enabler for script reusability and distribution.
 
+The **run-area library** (Pro) centralizes window regions in multi-instance setups: generate them in a grid, recognize and import them from a reference image, and let scripts reference a region by name instead of box-selecting each one. **Match-detection nodes can also switch the active run area.**
+
 ### Accessibility Service Driven · No Root Required (Android)
 
 Built on Android **AccessibilityService** for automated gestures such as taps and swipes — no Root access needed. Screen capture permission is requested on-demand only when image recognition is required.
 
 ### Multi-Threaded Architecture · Smooth Performance
 
-Scripts execute in a **dedicated thread** without blocking the UI. ActionManager supports **concurrent execution** of multiple custom actions. Audio and dialogs are bridged back to the main thread via Qt Signal.
+Scripts execute in a **dedicated thread** without blocking the UI. ActionManager supports **concurrent execution** of multiple custom actions. Audio and dialogs are bridged back to the main thread via Qt Signal. Each action gets its own Lua runtime, and local variables keep concurrent data isolated.
 
-### IME Input Method Compatibility · Accurate Chinese Recording (Windows)
+### Macro Recording · Clicks and Drags Told Apart (Windows)
 
-Polls the focused control via **WM_GETTEXT diff** during recording to capture IME text, rather than recording raw key events. Ensures accurate Chinese text capture during input method composition.
+- **IME compatible**: polls the focused control via **WM_GETTEXT diff** during recording to capture IME text, rather than recording raw key events — accurate Chinese text capture during input method composition
+- **Click vs drag**: moving the mouse more than **8 pixels** with the button held is recorded as a drag (`mouse_drag`); small hand jitter still counts as a normal click. Sliding a slider, box-selecting, and dragging windows no longer get lost, and right/middle buttons work the same way
 
 ### Bilingual Interface · Full i18n
 
