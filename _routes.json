@@ -1,5 +1,5 @@
 {
   "version": 1,
-  "include": ["/macroai/v"],
+  "include": ["/macroai/v", "/macroai/a", "/macroai/a.html"],
   "exclude": []
 }
