@@ -268,11 +268,17 @@
           <div class="glass-card download-card stagger-item">
             <div style="font-size: 2.8rem; margin-bottom: 16px;">📱</div>
             <h3>APK 安装包</h3>
-            <p>下载 APK 直接安装，当前版本 v1.1.0</p>
+            <p>下载 APK 直接安装，当前版本 v1.1.4</p>
             <a href="https://gitee.com/batecn/MacroAI/releases" class="btn btn-primary" target="_blank">前往下载</a>
             <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases" target="_blank">备用下载：GitHub</a></p>
           </div>
           <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">🤖</div>
+            <h3>Google Play</h3>
+            <p>通过 Google Play 一键安装，商店自动更新；需可正常访问 Google Play</p>
+            <a href="https://play.google.com/store/apps/details?id=com.sowe.macroai" class="btn btn-primary" target="_blank">前往商店</a>
+          </div>
+          <div class="glass-card download-card stagger-item" style="grid-column: 1 / -1;">
             <div style="font-size: 2.8rem; margin-bottom: 16px;">⚡</div>
             <h3>安卓版特性</h3>
             <p>无障碍服务驱动，无需 Root；与 Windows 版共享 Lua 脚本和图像模板</p>
@@ -296,6 +302,7 @@
 
         <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
           <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;">更新日志</h3>
+          <div class="changelog-item"><strong>v1.1.4</strong> — 流程控制：新增「继续循环」节点，循环内可跳过本轮剩余节点；新增「返回」节点，函数可回传返回值，入口函数返回 false 判定为业务失败并自动重试；计数循环新增「计数器变量名」配置，修复嵌套循环计数器互相遮蔽导致二维遍历行号错乱；局部变量改为真正的块级作用域（函数/循环/分支各自独立），跨函数同名变量不再静默互相覆盖，读取未声明变量会给出警告注释；定时任务：新增失败自动重试与停用任务补跑；脚本预览：新增函数定位、搜索与代码折叠；图像管理：新增搜索过滤、引用扫描与重命名同步；兼容性：加载旧版本项目时给出版本预警，陌生节点改为运行期报错中止；修复多款机型全屏浮层被状态栏挤压、循环内提前返回导致脚本报错等问题；安卓版正式上架 Google Play（com.sowe.macroai），可在商店内一键安装并自动更新，无法访问 Google Play 的用户仍可通过 Gitee / GitHub 下载 APK 安装</div>
           <div class="changelog-item"><strong>v1.1.0</strong> — 任务系统：新增任务功能，可创建定时任务、自动执行并跟踪完成进度；运行区域：新增多运行区域管理，支持自动识别屏幕区域并进行校正；文字识别：识别结果更完整、更准确，包含识别内容和置信度信息；悬浮窗：修复了多个显示问题，如按钮被遮挡、菜单错位、拖动不平滑等</div>
           <div class="changelog-item"><strong>v1.0.8</strong> — 新增录制脚本功能（操作时同步录制脚本，大幅降低使用门槛，生成的脚本可通过原有功能继续加工或修改）；支持多开（自定义动作可设定独立运行区域，适用于安卓平板分屏游戏多开）；图像匹配性能优化，修复图像多点匹配与条块检测 bug；新增新手模式</div>
           <div class="changelog-item"><strong>v1.0.4</strong> — 安卓版首个公开版本，支持 Lua 脚本执行、图像识别、OCR、无障碍服务自动化</div>

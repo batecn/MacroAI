@@ -22,8 +22,9 @@
 
 ### Android
 
+**Google Play**：[MacroAI](https://play.google.com/store/apps/details?id=com.sowe.macroai)（商店安装，自动更新）
+**Gitee**：[Releases](https://gitee.com/batecn/MacroAI/releases)（APK 直接下载，国内推荐）
 **GitHub**：[Releases](https://github.com/batecn/MacroAI/releases)（APK 直接下载）
-**Gitee**：[Releases](https://gitee.com/batecn/MacroAI/releases)（APK 直接下载）
 
 ---
 

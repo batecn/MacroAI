@@ -268,11 +268,17 @@
           <div class="glass-card download-card stagger-item">
             <div style="font-size: 2.8rem; margin-bottom: 16px;">📱</div>
             <h3>APK Download</h3>
-            <p>Download the APK and install directly. Current version: v1.1.0</p>
+            <p>Download the APK and install directly. Current version: v1.1.4</p>
             <a href="https://github.com/batecn/MacroAI/releases" class="btn btn-primary" target="_blank">Go to Download</a>
             <p class="download-mirror"><a href="https://gitee.com/batecn/MacroAI/releases" target="_blank">Mirror: Gitee</a></p>
           </div>
           <div class="glass-card download-card stagger-item">
+            <div style="font-size: 2.8rem; margin-bottom: 16px;">🤖</div>
+            <h3>Google Play</h3>
+            <p>Install from Google Play with automatic store updates; requires access to Google Play</p>
+            <a href="https://play.google.com/store/apps/details?id=com.sowe.macroai" class="btn btn-primary" target="_blank">Go to Store</a>
+          </div>
+          <div class="glass-card download-card stagger-item" style="grid-column: 1 / -1;">
             <div style="font-size: 2.8rem; margin-bottom: 16px;">⚡</div>
             <h3>Android Features</h3>
             <p>Powered by Accessibility Service, no Root required. Shares Lua scripts and image templates with the Windows edition</p>
@@ -296,6 +302,7 @@
 
         <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
           <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;">Changelog</h3>
+          <div class="changelog-item"><strong>v1.1.4</strong> — Flow control: added a Continue node to skip the remaining nodes of the current loop iteration; added a Return node (functions can return values; returning false from the entry function marks a business failure and triggers auto-retry); count loops now take an explicit counter variable name, fixing nested loops from shadowing each other's counter (which produced wrong row numbers in 2D traversal); local variables are now truly block-scoped (per function / loop / branch), so same-named variables in different functions no longer silently overwrite each other, and reading an undeclared variable now emits a warning comment; scheduled tasks now auto-retry failed runs and catch up runs skipped while a task was disabled; script preview gained function navigation, search and code folding; image management added search filtering, reference scanning and rename sync; compatibility: opening a project from an older version now shows a version warning, and unrecognized nodes now abort at runtime with an error; fixed fullscreen overlays being squeezed by the status bar on several phone models and scripts failing to compile when a loop returns early; the Android edition is now on Google Play (com.sowe.macroai) with one-tap install and automatic store updates — users who cannot reach Google Play can still download the APK from Gitee / GitHub</div>
           <div class="changelog-item">v1.1.0 — New task feature: create scheduled tasks that run automatically with progress tracking; new multi-region management with automatic screen area detection and correction; more complete and accurate text recognition, now including confidence information; fixed multiple display issues, such as blocked buttons, misaligned menus, and unsmooth dragging<strong></strong></div>
           <div class="changelog-item">v1.0.8 — Added script recording (record scripts in real time while operating, greatly lowering the learning curve; generated scripts can be further edited or modified with existing features); multi-instance support (set an independent run region per custom action, ideal for split-screen game multi-instancing on Android tablets); image matching performance optimization, fixed multi-point matching and bar segment detection bugs; added beginner mode<strong></strong></div>
           <div class="changelog-item">v1.0.4 — First public Android release: Lua scripting, image recognition, OCR, and Accessibility Service automation<strong></strong></div>

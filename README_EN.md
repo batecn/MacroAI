@@ -22,6 +22,7 @@ Core positioning: **Visual node-based workflow + Intelligent execution + Cross-p
 
 ### Android
 
+**Google Play**: [MacroAI](https://play.google.com/store/apps/details?id=com.sowe.macroai) (store install, auto-updates)
 **GitHub**: [Releases](https://github.com/batecn/MacroAI/releases) (direct APK download)
 **Gitee**: [Releases](https://gitee.com/batecn/MacroAI/releases) (direct APK download)
 
