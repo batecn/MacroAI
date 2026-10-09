@@ -217,15 +217,15 @@
             <div style="font-size: 2.8rem; margin-bottom: 16px;">📦</div>
             <h3>安装包下载</h3>
             <p>Inno Setup 安装包，包含完整组件，推荐新用户使用</p>
-            <a href="https://gitee.com/batecn/MacroAI/releases/tag/v1.4.2" class="btn btn-primary" target="_blank">前往下载</a>
-            <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases/tag/v1.4.2" target="_blank">备用下载：GitHub</a></p>
+            <a href="https://gitee.com/batecn/MacroAI/releases/tag/v1.4.3" class="btn btn-primary" target="_blank">前往下载</a>
+            <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases/tag/v1.4.3" target="_blank">备用下载：GitHub</a></p>
           </div>
           <div class="glass-card download-card stagger-item">
             <div style="font-size: 2.8rem; margin-bottom: 16px;">🗜</div>
             <h3>绿色便携版</h3>
             <p>解压即用，无需安装，适合临时或便携使用</p>
-            <a href="https://gitee.com/batecn/MacroAI/releases/tag/v1.4.2" class="btn btn-primary" target="_blank">前往下载</a>
-            <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases/tag/v1.4.2" target="_blank">备用下载：GitHub</a></p>
+            <a href="https://gitee.com/batecn/MacroAI/releases/tag/v1.4.3" class="btn btn-primary" target="_blank">前往下载</a>
+            <p class="download-mirror"><a href="https://github.com/batecn/MacroAI/releases/tag/v1.4.3" target="_blank">备用下载：GitHub</a></p>
           </div>
           <div class="glass-card download-card stagger-item" style="grid-column: 1 / -1;">
             <div style="font-size: 2.8rem; margin-bottom: 16px;">🏪</div>
@@ -247,6 +247,7 @@
 
         <div class="glass-card" style="max-width:600px; margin:24px auto 0; padding:28px; border-radius:var(--radius);">
           <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; text-align:center;">更新日志</h3>
+          <div class="changelog-item"><strong>v1.4.3</strong> — 新增「继续循环」节点，循环内可跳过本轮剩余节点；计数循环新增「计数器变量名」配置，修复嵌套循环计数器互相遮蔽导致二维遍历行号错乱；局部变量改为真正的块级作用域（函数/循环/分支各自独立），跨函数同名变量不再静默互相覆盖，读取未声明变量会给出警告注释；打开更高版本生成的项目时有两层兼容保护：运行到不认识的节点直接报错中止，且仅在项目确实含未知内容时才提示版本；跨平台项目不再误报「请升级」；修复循环最后一句是「返回」时生成的脚本无法加载、无限循环项目编译失败、宏录制后自定义动作未保存、节点编辑器点击异常等问题</div>
           <div class="changelog-item"><strong>v1.4.2</strong> — 新增返回节点（函数可回传返回值，入口函数返回 false 判定为业务失败并自动重试）；变量节点支持局部变量，多动作并发互不干扰；宏录制可区分点击与拖拽；函数支持填写说明并在调用节点显示；修复多次点击间隔位置、窄长选区截取、深色模式弹窗发白等问题</div>
           <div class="changelog-item"><strong>v1.4.1</strong> — 任务系统新增失败自动重试与启用补跑，图像管理支持搜索排序与引用同步，脚本预览增强；修复云游戏后台点击误判拖拽、深色模式对话框发白等问题</div>
           <div class="changelog-item"><strong>v1.4.0</strong> — 全新周期任务系统（Pro）：每日/每周/每月周期任务、状态墙看板、到点提醒、到期自动执行；新增运行区域库与区域引用，多开场景集中管理运行区域；自动识别运行区域算法增强，识别更准；匹配检测支持切换运行区域；自定义动作显示方式细化为三态（面板按钮/独立悬浮/不显示）</div>
