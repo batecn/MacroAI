@@ -51,7 +51,7 @@
     <div class="section-content">
       <div class="section-label">Privacy Policy</div>
       <h1 class="section-title">Privacy Policy</h1>
-      <p class="last-updated">Last updated: July 2026</p>
+      <p class="last-updated">Last updated: October 2026</p>
     </div>
   </section>
 
@@ -62,20 +62,38 @@
       <p>MacroAI (hereinafter referred to as 'the Software') respects and protects user privacy. This Privacy Policy explains how the Software collects, uses, and stores your information during operation. By using the Software, you agree to the terms of this Privacy Policy.</p>
 
       <h2>2. Information Collection</h2>
-      <p>MacroAI is a locally-run macro automation tool (supporting both Windows and Android platforms). We solemnly commit that:</p>
+      <p>MacroAI is a locally-run macro automation tool (supporting both Windows and Android platforms). Apart from the minimum network information required by the version check request described in Section 3, we solemnly commit that:</p>
       <ul>
-        <li>The Software does not collect any personal information, usage habits, or operation records;</li>
-        <li>The Software does not send any data to any server;</li>
-        <li>The Software does not contain any form of telemetry or statistical analysis;</li>
-        <li>All processing is performed entirely on your local device.</li>
+        <li>The Software does not collect your name, email address, account, or other identity information, nor does it collect your usage habits or operation records;</li>
+        <li>The Software does not send any data to any server other than via the version check request;</li>
+        <li>The Software contains no advertising SDK and integrates no third-party analytics, advertising, or data collection service;</li>
+        <li>All functional processing is performed on your local device.</li>
       </ul>
-      <p>Scripts, images, configuration files, and other data you create during use are stored locally on your computer and are not uploaded to any remote server.</p>
+      <p>Scripts, images, configuration files, and other data you create during use are stored locally on your device and are not uploaded to any remote server. Your screen content, keyboard/mouse input, and script contents never leave your device.</p>
 
       <h2>3. Network Access</h2>
-      <p>The Software does not actively establish any network connections during operation. When installed from an app store (Microsoft Store / Google Play), version updates are handled by the system store app; otherwise you proactively visit the official website, GitHub, or Gitee to download the installer. The Software itself does not have automatic update or network communication capabilities.</p>
+      <p>The Software establishes network connections only for version checks, as follows:</p>
+
+      <h3>Windows (all channels, including Microsoft Store)</h3>
+      <p>Approximately 5 seconds after launch the Software sends one version check request; thereafter, for as long as it keeps running, it sends one every 12 hours to read the latest version number from the server. Updates still require you to download and run the installer yourself — the Software never downloads or installs anything on its own.</p>
+      <p>When installed from the Microsoft Store, the same request is sent, but solely for the counting purpose described at the end of this section: the app does not parse the response, and neither prompts you to download nor performs any update. Store-channel updates are handled by Microsoft Store itself.</p>
+
+      <h3>Android (Google Play channel)</h3>
+      <p>This build establishes no network connections at all; updates are provided entirely by Google Play.</p>
+
+      <h3>Android (official website and other channels)</h3>
+      <p>At most one version check request every 24 hours, to read the latest version number.</p>
+
+      <h3>How version check request data is handled</h3>
+      <ul>
+        <li>The request carries no name, email address, account, device identifier, script content, or screen information;</li>
+        <li>The server combines your IP address and User-Agent with a fixed salt value and computes a one-way hash, used only to count distinct users per day. The server does not store your original IP address, nor your User-Agent in plain text;</li>
+        <li>The Software sets no cookies and uses no third-party tracking identifiers; the hash is not linked to your account or any device identifier, and cannot be used to trace you across days;</li>
+        <li>These data points are stored in Cloudflare Analytics Engine and expire automatically after at most 3 months (the hard limit of that service).</li>
+      </ul>
 
       <h2>4. Third-Party Services</h2>
-      <p>The Software does not integrate any third-party analytics, advertising, or data collection services. Open-source components used by the Software run as local libraries and do not communicate with external servers.</p>
+      <p>The Software integrates no third-party analytics, advertising, or data collection SDK. Version check requests are served by Cloudflare's CDN and analytics service (Analytics Engine), used for edge delivery and the per-day de-duplicated counting described in Section 3; see Section 3 for how that data is handled. Open-source components used by the Software run as local libraries and do not communicate with external servers.</p>
 
       <h2>5. Android Permissions</h2>
       <p>MacroAI for Android uses the following system permissions. All permissions are used solely to enable automation features and are never used to collect personal information:</p>
