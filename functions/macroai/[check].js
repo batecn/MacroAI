@@ -46,6 +46,19 @@ export async function onRequest(context) {
     } catch (e) {
       console.error("dau tracking failed:", e && e.message);
     }
+
+    // 诊断日志：真实 UA + IP 不入数据集（数据集里只有哈希，读不回明文）。
+    // 2026-10-13 出现过单个 index 一天 1400+ 条写入（≈每 5 秒一次）的异常流量，
+    // Analytics Engine 无法回溯来源头部，靠这行日志才能在下次复现时直接定位。
+    // 正常流量下这仅是函数日志输出，不产生任何统计数据，可随时删除。
+    console.log(
+      "cfg",
+      platform,
+      ua,
+      ip,
+      req.cf?.country || "",
+      req.cf?.colo || ""
+    );
   }
 
   return context.next();
