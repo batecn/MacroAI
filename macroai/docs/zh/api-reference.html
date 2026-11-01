@@ -79,24 +79,24 @@
       <main class="docs-content">
         <h1 id="macroai-api-参考">MacroAI API 参考</h1>
 <h2 id="图像识别">图像识别</h2>
-<pre><code>image_find(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
-image_wait(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
-image_find_all(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; table | nil
-image_wait_all(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; table | nil
+<pre><code>image_find(tmpl, region?, threshold?, transform_policy?, match_mode?) -&gt; ImageMatchResult | nil
+image_wait(tmpl, timeout?, region?, threshold?, interval?, transform_policy?, match_mode?) -&gt; ImageMatchResult | nil
+image_find_all(tmpl, region?, threshold?, transform_policy?, match_mode?) -&gt; table | nil
+image_wait_all(tmpl, timeout?, region?, threshold?, interval?, transform_policy?, match_mode?) -&gt; table | nil
 </code></pre>
 <p><strong>参数说明：</strong>
 - <code>tmpl</code> (string | table) — 模板图片，支持以下格式：
   - 单模板字符串（如 <code>"button.png"</code> 或 <code>"button"</code>），自动在 <code>resources/images/</code> 下查找
   - 相对路径 <code>"resources/images/icon.png"</code>，相对项目目录解析
   - 绝对路径 <code>"D:/images/icon.png"</code>，直接使用
-  - 多模板 Lua 表 <code>{"a.png", "b.png"}</code>，截屏一次遍历匹配，返回最佳结果
+  - 多模板 Lua 表 <code>{"a.png", "b.png"}</code>，截屏一次遍历匹配；<code>image_find</code> / <code>image_wait</code> 返回其中最佳的一条，<code>image_find_all</code> / <code>image_wait_all</code> 返回每个模板的全部实例（见"返回全部匹配结果"）
   - 变量引用 <code>var_get('btn_name')</code>、参数引用或 <code>u|var_id</code> 用户配置引用
 - <code>region</code> (table, 可选) — 搜索区域 <code>{left, top, width, height}</code>，不传则搜索全屏或默认区域
 - <code>threshold</code> (number, 可选) — 匹配阈值，范围 0~1，默认 <code>0.85</code>，越低越容易匹配
 - <code>timeout</code> (number, 可选) — 超时秒数，默认 <code>10</code>（仅 image_wait / image_wait_all）
 - <code>interval</code> (number, 可选) — 轮询间隔秒数，默认 <code>0.2</code>（仅 image_wait / image_wait_all）
-- <code>match_mode</code> (string, 可选) — 匹配模式：<code>"grayscale"</code>（灰度，默认）、<code>"luminance"</code>（感知亮度）、<code>"oklab"</code>（OKLab 色彩）
-- <code>transform_policy</code> (string, 可选) — 坐标转换策略：<code>"default"</code>（跟随项目设置，默认）
+- <code>match_mode</code> (string, 可选) — 匹配模式：<code>"grayscale"</code>（灰度，默认）、<code>"perceptual"</code>（感知亮度）、<code>"color"</code>（OKLab 色彩全空间）
+- <code>transform_policy</code> (string, 可选) — 坐标转换策略：<code>"default"</code>（跟随项目设置，默认）、<code>"uniform"</code>（等比缩放）、<code>"desktop"</code>（平移适配）
 - <code>img</code> — 图像数据（numpy 数组）</p>
 <p><strong>返回值 (ImageMatchResult)：</strong>
 - <code>.success</code> (boolean) — 是否找到
@@ -121,6 +121,10 @@ image_wait_all(tmpl, timeout?, region?, threshold?) -&gt; table | nil
 <li>每个元素字段与 <code>ImageMatchResult</code> 相同</li>
 <li>适用于同一模板在屏幕上出现多次的场景</li>
 <li><code>image_wait_all</code> 轮询直到至少一个匹配出现，然后返回全部匹配</li>
+<li>传多模板表时，每个模板都贡献它的<strong>全部</strong>实例，结果数不受模板数量限制</li>
+<li>结果按置信度降序排列；相似模板命中屏幕上同一个实例时，只保留置信度最高的一条，
+  因此 <code>results[1]</code> 恒为全局最佳，可直接作为"只点最佳"的锚点</li>
+<li>单次调用最多返回 50 条</li>
 </ul>
 <p><strong>示例（查找并点击全部匹配）：</strong></p>
 <pre><code class="language-lua">local results = image_find_all(&quot;icon.png&quot;)
@@ -294,6 +298,8 @@ end
 getRegion(name?) -&gt; {left, top, width, height} | nil
 to_runtime_region(region) -&gt; {left, top, width, height}
 to_runtime_point(x, y) -&gt; number, number
+scale_offset(dx, dy) -&gt; number, number
+scale_offset(dx, dy, transform_policy) -&gt; number, number
 </code></pre>
 <p><strong>参数说明：</strong>
 - <code>name</code> (string) — 区域名称
@@ -302,7 +308,8 @@ to_runtime_point(x, y) -&gt; number, number
 <p><strong>说明：</strong>
 - <code>region_get</code> 返回 Region 对象（带 <code>.left</code>, <code>.top</code>, <code>.width</code>, <code>.height</code> 属性）
 - <code>getRegion</code> 返回 Lua table，可指定名称，不传或传 <code>"__effective__"</code> 返回默认搜索区域
-- <code>to_runtime_region</code> / <code>to_runtime_point</code> 将设计区域坐标转换为运行时坐标（多分辨率适配）</p>
+- <code>to_runtime_region</code> / <code>to_runtime_point</code> 将设计区域坐标转换为运行时坐标（多分辨率适配）
+- <code>scale_offset</code> 把设计区域的<strong>相对偏移量</strong>换算成运行时偏移量：只乘比例、不平移（偏移量不含原点信息）；desktop 模式内容不随区域缩放，偏移量原样返回。第三参可选 "uniform" / "desktop"，不传则用项目设置</p>
 <p><strong>示例：</strong></p>
 <pre><code class="language-lua">local r = region_get(&quot;dialog&quot;)
 if r then
@@ -312,6 +319,12 @@ end
 local rt = getRegion(&quot;dialog&quot;)           -- {left, top, width, height}
 local eff = getRegion()                  -- 默认搜索区域
 local pt_x, pt_y = to_runtime_point(500, 300)  -- 转换为运行区域坐标
+
+local res = findImage(&quot;btn&quot;)                    -- 点击图像右侧 40px 的固定位置
+if res.found then
+    local ox, oy = scale_offset(40, 0)          -- 设计 40px → 当前运行区域实际像素
+    mouse_click(res.center_x + ox, res.center_y + oy, &quot;left&quot;, 1)
+end
 </code></pre>
 <hr />
 <h2 id="变化检测">变化检测</h2>

@@ -79,24 +79,24 @@
       <main class="docs-content">
         <h1 id="macroai-api-reference">MacroAI API Reference</h1>
 <h2 id="image-recognition">Image Recognition</h2>
-<pre><code>image_find(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
-image_wait(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; ImageMatchResult | nil
-image_find_all(tmpl, region?, threshold?, match_mode?, transform_policy?) -&gt; table | nil
-image_wait_all(tmpl, timeout?, region?, threshold?, interval?, match_mode?, transform_policy?) -&gt; table | nil
+<pre><code>image_find(tmpl, region?, threshold?, transform_policy?, match_mode?) -&gt; ImageMatchResult | nil
+image_wait(tmpl, timeout?, region?, threshold?, interval?, transform_policy?, match_mode?) -&gt; ImageMatchResult | nil
+image_find_all(tmpl, region?, threshold?, transform_policy?, match_mode?) -&gt; table | nil
+image_wait_all(tmpl, timeout?, region?, threshold?, interval?, transform_policy?, match_mode?) -&gt; table | nil
 </code></pre>
 <p><strong>Parameters:</strong>
 - <code>tmpl</code> (string | table) — template image. Accepts:
   - Single template string: <code>"button.png"</code> or <code>"button"</code> (auto-resolved in <code>resources/images/</code>)
   - Relative path: <code>"resources/images/icon.png"</code> (resolved relative to project dir)
   - Absolute path: <code>"D:/images/icon.png"</code> (used as-is)
-  - Multi-template Lua table <code>{"a.png", "b.png"}</code> — screenshots once, iterates all, returns best match
+  - Multi-template Lua table <code>{"a.png", "b.png"}</code> — screenshots once, iterates all; <code>image_find</code> / <code>image_wait</code> return the best match, <code>image_find_all</code> / <code>image_wait_all</code> return every instance of every template (see "Returning all matches")
   - Variable/parameter/user config reference: <code>var_get('name')</code>, <code>u|var_id</code>
 - <code>region</code> (table, optional) — search area <code>{left, top, width, height}</code>, defaults to full screen
 - <code>threshold</code> (number, optional) — match threshold 0~1, default <code>0.85</code>, lower = more tolerant
 - <code>timeout</code> (number, optional) — timeout in seconds, default <code>10</code> (image_wait / image_wait_all only)
 - <code>interval</code> (number, optional) — poll interval in seconds, default <code>0.2</code> (image_wait / image_wait_all only)
-- <code>match_mode</code> (string, optional) — match mode: <code>"grayscale"</code> (default), <code>"luminance"</code>, <code>"oklab"</code>
-- <code>transform_policy</code> (string, optional) — coordinate transform policy: <code>"default"</code> (follow project setting, default)
+- <code>match_mode</code> (string, optional) — match mode: <code>"grayscale"</code> (default), <code>"perceptual"</code> (luminance), <code>"color"</code> (full OKLab color)
+- <code>transform_policy</code> (string, optional) — coordinate transform policy: <code>"default"</code> (follow project setting, default), <code>"uniform"</code> (uniform scaling), <code>"desktop"</code> (offset-only adaptation)
 - <code>img</code> — image data (numpy array)</p>
 <p><strong>Return Value (ImageMatchResult):</strong>
 - <code>.success</code> (boolean) — whether found
@@ -121,6 +121,12 @@ image_wait_all(tmpl, timeout?, region?, threshold?) -&gt; table | nil
 <li>Each element has the same fields as <code>ImageMatchResult</code></li>
 <li>Useful when multiple instances of the same template exist on screen</li>
 <li><code>image_wait_all</code> polls until at least one match is found, then returns all matches</li>
+<li>With a multi-template table, every template contributes <strong>all</strong> of its instances — the
+  result count is not capped by the number of templates</li>
+<li>Results are sorted by confidence (descending); when similar templates hit the same
+  on-screen instance, only the highest-confidence one is kept. So <code>results[1]</code> is always
+  the global best match</li>
+<li>At most 50 results are returned per call</li>
 </ul>
 <p><strong>Example (find and click all matches):</strong></p>
 <pre><code class="language-lua">local results = image_find_all(&quot;icon.png&quot;)
@@ -294,6 +300,8 @@ end
 getRegion(name?) -&gt; {left, top, width, height} | nil
 to_runtime_region(region) -&gt; {left, top, width, height}
 to_runtime_point(x, y) -&gt; number, number
+scale_offset(dx, dy) -&gt; number, number
+scale_offset(dx, dy, transform_policy) -&gt; number, number
 </code></pre>
 <p><strong>Parameters:</strong>
 - <code>name</code> (string) — region name
@@ -302,7 +310,8 @@ to_runtime_point(x, y) -&gt; number, number
 <p><strong>Notes:</strong>
 - <code>region_get</code> returns a Region object with <code>.left</code>, <code>.top</code>, <code>.width</code>, <code>.height</code> properties
 - <code>getRegion</code> returns a Lua table; omit name or use <code>"__effective__"</code> for the default search area
-- <code>to_runtime_region</code> / <code>to_runtime_point</code> convert design-space coordinates to runtime (for multi-resolution support)</p>
+- <code>to_runtime_region</code> / <code>to_runtime_point</code> convert design-space coordinates to runtime (for multi-resolution support)
+- <code>scale_offset</code> converts a design-space <strong>relative offset</strong> into runtime pixels: it only multiplies by the area ratio and never applies the origin shift (an offset carries no origin); in desktop mode content does not scale with the area, so the offset is returned unchanged. The optional third argument is "uniform" or "desktop"; omit it to use the project setting.</p>
 <p><strong>Example:</strong></p>
 <pre><code class="language-lua">local r = region_get(&quot;dialog&quot;)
 if r then
@@ -312,6 +321,12 @@ end
 local rt = getRegion(&quot;dialog&quot;)            -- {left, top, width, height}
 local eff = getRegion()                   -- default search area
 local px, py = to_runtime_point(500, 300) -- convert to runtime coordinates
+
+local res = findImage(&quot;btn&quot;)              -- click a fixed spot 40px to the right of the image
+if res.found then
+    local ox, oy = scale_offset(40, 0)    -- design 40px -&gt; current runtime pixels
+    mouse_click(res.center_x + ox, res.center_y + oy, &quot;left&quot;, 1)
+end
 </code></pre>
 <hr />
 <h2 id="change-detection">Change Detection</h2>
