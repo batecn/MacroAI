@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroAI - Match Pairs Demo</title>
+  <meta name="description" content="MacroAI match-pairs demo — a responsive automation sandbox for MacroAI demos on Windows and Android">
+  <link rel="icon" href="../../assets/macroai.png" type="image/png">
+  <style>
+    :root {
+      --bg-deep: #07060b;
+      --bg-surface: #14121f;
+      --border-canvas: #3ec6ff;
+      --ctl-start: #e5484d;      /* 脚本控制区：开始/重开按钮（红块） */
+      --ctl-card: #f5f7fa;       /* 脚本控制区：翻开的卡牌（浅色块） */
+      --card-back: #3a4256;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg-deep); height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: #9494b8; overflow: hidden;
+    }
+    a { color: #4777ff; text-decoration: none; }
+
+    /* 设计画布：固定 640x740，由 JS 按窗口等比缩放（uniform 脚本以此为设计区域） */
+    #stage-wrap { height: 100%; display: flex; align-items: center; justify-content: center; }
+    #stage {
+      width: 640px; height: 740px; flex: none;
+      border: 4px solid var(--border-canvas); border-radius: 18px;
+      background: var(--bg-surface);
+      padding: 24px;
+    }
+    .ctl { border: 1px solid rgba(255,255,255,0.28); }   /* 所有可点击控制块的统一描边 */
+    .top {
+      height: 84px; margin-bottom: 16px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    #start-btn {
+      width: 150px; height: 60px; border: none; border-radius: 14px;
+      background: var(--ctl-start); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #start-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    #start-btn .tri {
+      width: 0; height: 0; margin-left: 8px;
+      border-left: 26px solid #fff; border-top: 17px solid transparent;
+      border-bottom: 17px solid transparent;
+    }
+    .stats { display: flex; gap: 26px; font-size: 20px; color: #b9b9d8; }
+    .stats b { color: #fff; font-size: 26px; font-variant-numeric: tabular-nums; display: inline-block; min-width: 3ch; text-align: right; }
+
+    /* 网格与卡牌 */
+    #grid {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
+    }
+    .card {
+      aspect-ratio: 1; border-radius: 12px;
+      background: var(--card-back);
+      display: flex; align-items: center; justify-content: center;
+      user-select: none; -webkit-tap-highlight-color: transparent;
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    .card svg { width: 88%; height: 88%; display: none; }
+    .card.up { background: var(--ctl-card); }
+    .card.up svg { display: block; }
+    .card.sel { outline: 5px solid #f472b6; }
+    .card.gone { opacity: 0; transform: scale(.4); pointer-events: none; }
+
+    #result {
+      position: absolute; display: none;
+      text-align: center; color: #fff; font-size: 22px;
+    }
+    #result.show { display: block; }
+  </style>
+</head>
+<body>
+  <div id="stage-wrap">
+    <div id="stage" style="position:relative;">
+      <div class="top">
+        <button class="ctl" id="start-btn" aria-label="start"><span class="tri"></span></button>
+        <div class="stats">
+          <span id="lbl-left"></span><b id="stat-left">36</b>
+          <span id="lbl-time"></span><b id="stat-time">0s</b>
+        </div>
+      </div>
+      <div id="grid"></div>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    // ===== i18n：URL 传参 ?lang=zh|en，缺省 zh =====
+    var I18N = {
+      zh: { left: '剩余', time: '用时', win: '完成！用时 {t} 秒' },
+      en: { left: 'Left',  time: 'Time', win: 'Done in {t}s' }
+    };
+    function getParam(name) {
+      var m = location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    }
+    var LANG = (getParam('lang') === 'en') ? 'en' : 'zh';
+    var T = I18N[LANG];
+    document.documentElement.lang = LANG;
+
+    // ===== 动物图标：内嵌 SVG（不用 emoji，保证 Win/安卓渲染一致，模板跨端可用） =====
+    // 全部形状带深色描边（浅色卡底上白脸才立得住）；每个物种独立绘制，特征做足以保辨识度
+    var OL = '#262a31', SW = 3;   // 统一描边色/宽
+    function S(inner) {
+      return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g>' +
+             (inner || '') + '</g></svg>';
+    }
+    function eyes() { return '<circle cx="38" cy="55" r="5.5" fill="#1c1f26"/><circle cx="62" cy="55" r="5.5" fill="#1c1f26"/>'; }
+    function dots(list, col) {
+      var s = '';
+      for (var i = 0; i < list.length; i++) {
+        s += '<circle cx="' + list[i][0] + '" cy="' + list[i][1] + '" r="' + list[i][2] + '" fill="' + col + '"/>';
+      }
+      return s;
+    }
+    var ANIMALS = [
+      // 虎：橙脸黑三道纹 + 奶油口鼻
+      S(        '<circle cx="26" cy="32" r="12" fill="#e8903c" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<circle cx="74" cy="32" r="12" fill="#e8903c" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<circle cx="50" cy="60" r="30" fill="#e8903c" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<path d="M36 38 h12 v7 H36 Z M52 34 h13 v7 H52 Z M36 78 h13 v7 H36 Z M60 74 h14 v7 H60 Z" fill="#2b3038"/>' +
+        '<ellipse cx="50" cy="66" rx="19" ry="13" fill="#f6e3c8" stroke="' + OL + '" stroke-width="2"/>' +
+        eyes() + '<ellipse cx="50" cy="62" rx="5.5" ry="4" fill="#c22530"/>'),
+      // 熊：深棕圆耳 + 浅色口鼻
+      S(        '<circle cx="26" cy="32" r="12" fill="#7a4b2e" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<circle cx="74" cy="32" r="12" fill="#7a4b2e" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<circle cx="50" cy="60" r="30" fill="#7a4b2e" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<ellipse cx="50" cy="68" rx="17" ry="12" fill="#d7b98f"/>' +
+        eyes() + '<ellipse cx="50" cy="63" rx="6" ry="4.5" fill="#1c1f26"/><path d="M50 68 v6 M44 76 q6 5 12 0" stroke="#1c1f26" stroke-width="2.5" fill="none" stroke-linecap="round"/>'),
+      // 熊猫：白脸黑耳黑眼罩（描边撑起轮廓）
+      S(        '<circle cx="29" cy="30" r="12" fill="#1e2126"/><circle cx="71" cy="30" r="12" fill="#1e2126"/>' +
+        '<circle cx="50" cy="60" r="31" fill="#f8fafc" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<ellipse cx="36" cy="53" rx="9.5" ry="12" fill="#1e2126" transform="rotate(18 36 53)"/>' +
+        '<ellipse cx="64" cy="53" rx="9.5" ry="12" fill="#1e2126" transform="rotate(-18 64 53)"/>' +
+        '<ellipse cx="50" cy="66" rx="6.5" ry="4.5" fill="#1e2126"/>'),
+      // 斑马：白脸 + 额头黑纹 + 深灰口鼻
+      S(        '<path d="M18 42 L26 10 L42 36 Z" fill="#f1f3f6" stroke="' + OL + '" stroke-width="' + SW + '"/><path d="M58 36 L74 10 L82 42 Z" fill="#f1f3f6" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<path d="M56 34 L70 12 L74 20 L61 38 Z" fill="#1e2126"/><path d="M44 34 L30 12 L26 20 L39 38 Z" fill="#1e2126"/>' +
+        '<circle cx="50" cy="60" r="30" fill="#f6f7f9" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<path d="M42 30 q3 12 -1 22 M50 28 q3 13 0 24 M58 30 q-3 12 1 22" stroke="#33363d" stroke-width="4.5" fill="none"/>' +
+        '<ellipse cx="50" cy="71" rx="16" ry="10" fill="#3a3f47"/>' + eyes() +
+        '<circle cx="44" cy="70" r="2.2" fill="#c8ccd2"/><circle cx="56" cy="70" r="2.2" fill="#c8ccd2"/>'),
+      // 长颈鹿：黄脸棕斑块 + 角
+      S(        '<rect x="31" y="8" width="6" height="16" fill="#e5b83f" stroke="' + OL + '" stroke-width="2.5"/><circle cx="34" cy="8" r="5" fill="#8a5a1d" stroke="' + OL + '" stroke-width="2"/>' +
+        '<rect x="63" y="8" width="6" height="16" fill="#e5b83f" stroke="' + OL + '" stroke-width="2.5"/><circle cx="66" cy="8" r="5" fill="#8a5a1d" stroke="' + OL + '" stroke-width="2"/>' +
+        '<circle cx="50" cy="60" r="30" fill="#e5b83f" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        dots([[34,44,5.5],[64,42,5.5],[40,72,5.5],[62,70,4.5]], '#8a5a1d') +
+        eyes() + '<circle cx="43" cy="78" r="3" fill="#6b3410"/><circle cx="57" cy="78" r="3" fill="#6b3410"/>'),
+      // 狮：深棕鬃毛圈 + 金脸
+      S(        '<circle cx="50" cy="58" r="40" fill="#9a6420"/>' +
+        '<circle cx="50" cy="58" r="30" fill="#e9c064" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<ellipse cx="50" cy="70" rx="16" ry="11" fill="#f6e3c8"/>' + eyes() +
+        '<path d="M44 60 L50 66 L56 60" stroke="#8a5a18" stroke-width="3" fill="none" stroke-linecap="round"/>'),
+      // 猴：浅棕脸 + 大圆耳（内耳粉）+ 心形口鼻
+      S(        '<circle cx="22" cy="40" r="14" fill="#caa27e" stroke="' + OL + '" stroke-width="' + SW + '"/><circle cx="22" cy="40" r="7" fill="#f0b6a4"/>' +
+        '<circle cx="78" cy="40" r="14" fill="#caa27e" stroke="' + OL + '" stroke-width="' + SW + '"/><circle cx="78" cy="40" r="7" fill="#f0b6a4"/>' +
+        '<circle cx="50" cy="58" r="28" fill="#caa27e" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<path d="M50 44 C64 44 70 56 68 64 C66 72 58 76 50 76 C42 76 34 72 32 64 C30 56 36 44 50 44 Z" fill="#efe0cd"/>' +
+        eyes() + '<path d="M46 64 q4 4 8 0" stroke="#5d3f26" stroke-width="2.5" fill="none" stroke-linecap="round"/>'),
+      // 狐：红橙尖耳（内耳深）+ 白脸颊
+      S(        '<path d="M16 44 L24 8 L44 36 Z" fill="#e0592f" stroke="' + OL + '" stroke-width="' + SW + '"/><path d="M27 34 L25 20 L34 32 Z" fill="#571f10"/>' +
+        '<path d="M84 44 L76 8 L56 36 Z" fill="#e0592f" stroke="' + OL + '" stroke-width="' + SW + '"/><path d="M73 34 L75 20 L66 32 Z" fill="#571f10"/>' +
+        '<circle cx="50" cy="62" r="28" fill="#e0592f" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        '<path d="M30 62 C30 74 38 80 46 80 L46 64 Z" fill="#f6e4d8"/><path d="M70 62 C70 74 62 80 54 80 L54 64 Z" fill="#f6e4d8"/>' +
+        eyes() + '<circle cx="50" cy="70" r="5" fill="#1c1f26"/>'),
+      // 兔：白长耳粉内耳 + 粉鼻
+      S(        '<ellipse cx="34" cy="18" rx="9" ry="19" fill="#fbfcfd" stroke="' + OL + '" stroke-width="' + SW + '"/><ellipse cx="34" cy="19" rx="4" ry="12" fill="#f2a7c3"/>' +
+        '<ellipse cx="66" cy="18" rx="9" ry="19" fill="#fbfcfd" stroke="' + OL + '" stroke-width="' + SW + '"/><ellipse cx="66" cy="19" rx="4" ry="12" fill="#f2a7c3"/>' +
+        '<circle cx="50" cy="60" r="28" fill="#fbfcfd" stroke="' + OL + '" stroke-width="' + SW + '"/>' +
+        eyes() + '<ellipse cx="50" cy="64" rx="5" ry="4" fill="#e887a8"/><path d="M50 68 v6 M44 76 q6 5 12 0" stroke="#55585f" stroke-width="2.5" fill="none" stroke-linecap="round"/>')
+    ];
+    // 9 种 x 4 张 = 36 张牌；每张各出现 4 次，find_all 一轮点击即消除两对
+    var DECK = [];
+    ANIMALS.forEach(function(svg, i) {
+      for (var k = 0; k < 4; k++) DECK.push({ s: i, svg: svg });
+    });
+
+    // ===== 布局：按窗口等比缩放设计画布（窗口大小与浏览器 zoom 收敛为同一缩放维度） =====
+    var DESIGN_W = 640, DESIGN_H = 740;
+    function fitStage() {
+      var s = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H);
+      document.getElementById('stage').style.transform = 'scale(' + s + ')';
+    }
+
+    // ===== 游戏 =====
+    function shuffle(a) {
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+    }
+    var game = {
+      state: 'idle',            // idle | run
+      deck: [],
+      openIdx: null,
+      t0: 0,
+      timer: null,
+
+      deal: function(faceUp) {
+        var grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        this.deck.forEach(function(card) {
+          var el = document.createElement('div');
+          el.className = 'card ctl' + (faceUp ? ' up' : '');
+          el.innerHTML = faceUp ? card.svg : '';
+          el.onclick = function() { game.tap(el, card); };
+          grid.appendChild(el);
+        });
+      },
+
+      start: function() {
+        this.deck = DECK.slice(); shuffle(this.deck);
+        this.deck.forEach(function(c) { c.gone = false; });   // deck 复用 DECK 对象，必须复位上局的 gone
+        this.openIdx = null; this.t0 = Date.now(); this.state = 'run';
+        document.getElementById('result').classList.remove('show');
+        document.getElementById('start-btn').disabled = true;
+        this.deal(true);
+        this.setStats(36, '0s');
+        var self = this;
+        clearInterval(this.timer);
+        this.timer = setInterval(function() {
+          if (self.state === 'run') {
+            self.setStats(null, Math.floor((Date.now() - self.t0) / 1000) + 's');
+          }
+        }, 400);
+      },
+
+      setStats: function(left, time) {
+        // 值没变不碰 DOM，消牌连点时统计区不抖动
+        if (left !== null && this._shownLeft !== left) {
+          this._shownLeft = left;
+          document.getElementById('stat-left').textContent = left;
+        }
+        if (time !== null && this._shownTime !== time) {
+          this._shownTime = time;
+          document.getElementById('stat-time').textContent = time;
+        }
+      },
+
+      tap: function(el, card) {
+        if (this.state !== 'run' || card.gone) return;
+        if (this.openIdx && this.openIdx.card === card) {
+          // 点自己 → 取消选中
+          el.classList.remove('sel'); this.openIdx = null; return;
+        }
+        if (!this.openIdx) {
+          this.openIdx = { card: card, el: el };
+          el.classList.add('sel');
+          return;
+        }
+        var prev = this.openIdx;
+        this.openIdx = null;
+        prev.el.classList.remove('sel');
+        if (prev.card.s === card.s) {
+          prev.card.gone = card.gone = true;
+          prev.el.classList.add('gone');
+          el.classList.add('gone');
+          var left = this.deck.filter(function(c) { return !c.gone; }).length;
+          this.setStats(left, null);
+          if (left === 0) this.win();
+        }
+      },
+
+      win: function() {
+        this.state = 'idle';
+        clearInterval(this.timer); this.timer = null;
+        var s = Math.floor((Date.now() - this.t0) / 1000);
+        var r = document.getElementById('result');
+        r.textContent = T.win.replace('{t}', s);
+        r.classList.add('show');
+        document.getElementById('start-btn').disabled = false;
+        document.getElementById('start-btn').focus();
+      }
+    };
+
+    document.getElementById('lbl-left').textContent = T.left;
+    document.getElementById('lbl-time').textContent = T.time;
+    document.getElementById('start-btn').onclick = function() { game.start(); };
+    game.deck = DECK.slice();
+    game.deal(false);
+    fitStage();
+    window.addEventListener('resize', fitStage);
+    // ?autostart=1：供应工具自动化与截模板使用
+    if (getParam('autostart') === '1') game.start();
+  </script>
+</body>
+</html>

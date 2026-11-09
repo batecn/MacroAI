@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroAI - 自动战斗演示</title>
+  <meta name="description" content="MacroAI uniform 血条监控演示——条块变化检测 + 条件点击药水，随窗口等比缩放">
+  <link rel="icon" href="../../assets/macroai.png" type="image/png">
+  <style>
+    :root {
+      --bg-deep: #07060b;
+      --bg-surface: #14121f;
+      --border-canvas: #3ec6ff;
+      --ctl-start: #e5484d;      /* 脚本控制区：药水/开始按钮（红块白图形） */
+      --bar-track: #23202e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg-deep); height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: #9494b8; overflow: hidden;
+    }
+
+    /* 设计画布：固定 640x740，JS 按窗口等比缩放（uniform 脚本以此为设计区域）
+       低对比固定网格纹理：纯 CSS 确定性图案，给参考图增加特征、不影响模板匹配 */
+    #stage-wrap { height: 100%; display: flex; align-items: center; justify-content: center; }
+    #stage {
+      width: 640px; height: 740px; flex: none;
+      border: 4px solid var(--border-canvas); border-radius: 18px;
+      background-color: var(--bg-surface);
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 44px);
+      padding: 24px;
+      position: relative;
+    }
+
+    /* ----- 血条（条块变化检测目标：高对比填充 + 深色轨道） ----- */
+    .unit { margin-bottom: 26px; }
+    .unit-head { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+    .unit-head svg { width: 56px; height: 56px; flex: none; }
+    .unit-name { font-size: 20px; font-weight: 700; color: #b9b9d8; }
+    .unit-hp { font-size: 17px; color: #b9b9d8; font-variant-numeric: tabular-nums; min-width: 9ch; }
+    .hp-track {
+      height: 36px; border-radius: 18px; position: relative; overflow: hidden;
+      outline: 2px solid rgba(255,255,255,0.28);
+      background: var(--bar-track);
+    }
+    /* 左侧填充、右端外凸圆弧端头；渐变 background-size 固定到轨道全长（592px），
+       颜色位置不随血量宽度压缩，边界端头为凸弧 */
+    .hp-fill {
+      position: absolute; top: 0; left: 0; height: 100%;
+      border-radius: 0 18px 18px 0;
+      transition: width .35s ease;
+      background-repeat: no-repeat;
+    }
+    .hp-fill.hero-color { background-image: linear-gradient(90deg, #e74c3c, #f1c40f 45%, #2ecc71 100%); background-size: 592px 100%; }
+    .hp-fill.boss-color { background-image: linear-gradient(90deg, #c0392b, #8e44ad 100%); background-size: 592px 100%; }
+
+    /* ----- 战斗中心：伤害飞字 ----- */
+    #battle-center {
+      height: 210px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 8px;
+    }
+    #damage-fly { font-size: 36px; font-weight: 800; color: #e74c3c; min-height: 1.25em; }
+    #damage-fly.heal { color: #2ecc71; }
+    #vs-label { font-size: 20px; color: #6f6f92; letter-spacing: 3px; }
+
+    /* ----- 脚本控制按钮：红块 + 白图形（语言无关模板）；
+       红/白交界自带高对比纹理（灰度匹配原则：避免大面积平坦色块） ----- */
+    #potion-btn, #start-btn {
+      width: 320px; height: 84px; border: none; border-radius: 14px;
+      background-color: var(--ctl-start);
+      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.07) 0 6px, transparent 6px 14px);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #potion-btn { margin: 14px auto 0; }
+    #potion-btn:disabled, #start-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    #potion-btn svg { width: 44px; height: 44px; }
+    #potion-note { text-align: center; font-size: 15px; color: #8f8fb0; min-height: 20px; margin-top: 8px; font-variant-numeric: tabular-nums; }
+
+    /* ----- 统计（等宽数字防抖，样式沿用 match-pairs） ----- */
+    .stats { display: flex; gap: 34px; font-size: 18px; color: #b9b9d8; margin-top: 14px; }
+    .stats b { color: #fff; font-size: 22px; font-variant-numeric: tabular-nums; display: inline-block; min-width: 3ch; text-align: right; }
+
+    /* ----- 日志（低饱和，仅供参考） ----- */
+    #game-log {
+      margin-top: 10px; height: 70px; overflow: hidden;
+      font-family: Consolas, Menlo, monospace; font-size: 14px; line-height: 1.7;
+      color: #7c7ca0;
+    }
+
+    /* ----- 开始按钮（battle-center 内，闲置/死亡共用同一张模板） ----- */
+    #start-btn svg { width: 44px; height: 44px; }
+    #lbl-defeated { font-size: 24px; font-weight: 700; color: #e74c3c; min-height: 1.3em; }
+  </style>
+</head>
+<body>
+  <div id="stage-wrap">
+    <div id="stage">
+      <!-- 勇者 -->
+      <div class="unit">
+        <div class="unit-head">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="44" r="24" fill="#f6d7b0" stroke="#262a31" stroke-width="3"/>
+            <path d="M28 36 q22 -22 44 0 q-10 -12 -44 0 Z" fill="#8a5a1d" stroke="#262a31" stroke-width="2"/>
+            <circle cx="41" cy="44" r="4" fill="#1c1f26"/><circle cx="59" cy="44" r="4" fill="#1c1f26"/>
+            <path d="M44 56 q6 5 12 0" stroke="#262a31" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M26 82 a24 16 0 0 1 48 0 Z" fill="#4777ff" stroke="#262a31" stroke-width="3"/>
+          </svg>
+          <span class="unit-name" id="lbl-hero"></span>
+          <span class="unit-hp" id="hero-hp-text">100 / 100</span>
+        </div>
+        <div class="hp-track"><div class="hp-fill hero-color" id="hero-hp-fill" style="width:100%"></div></div>
+      </div>
+
+      <!-- 怪物 -->
+      <div class="unit">
+        <div class="unit-head">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" id="boss-svg">
+            <g id="boss-face">
+              <circle cx="50" cy="52" r="26" fill="#7a4fc9" stroke="#262a31" stroke-width="3"/>
+              <path d="M32 34 L26 16 L40 28 Z" fill="#7a4fc9" stroke="#262a31" stroke-width="2.5"/>
+              <path d="M68 34 L74 16 L60 28 Z" fill="#7a4fc9" stroke="#262a31" stroke-width="2.5"/>
+              <circle cx="41" cy="48" r="5" fill="#f8e71c"/><circle cx="59" cy="48" r="5" fill="#f8e71c"/>
+              <circle cx="41" cy="48" r="2" fill="#1c1f26"/><circle cx="59" cy="48" r="2" fill="#1c1f26"/>
+              <path d="M36 64 L64 64 L58 72 L42 72 Z" fill="#2b2f38" stroke="#262a31" stroke-width="2"/>
+              <path d="M40 64 v7 M47 64 v8 M54 64 v8 M61 64 v7" stroke="#f8fafc" stroke-width="2.4"/>
+            </g>
+          </svg>
+          <span class="unit-name" id="lbl-boss"></span>
+          <span class="unit-hp" id="boss-hp-text">80 / 80</span>
+        </div>
+        <div class="hp-track"><div class="hp-fill boss-color" id="boss-hp-fill" style="width:100%"></div></div>
+      </div>
+
+      <!-- 战斗中心：开始按钮 + 伤害飞字 + 死亡提示 -->
+      <div id="battle-center">
+        <div id="vs-label" data-i18n="vs">VS</div>
+        <div id="lbl-defeated"></div>
+        <div id="damage-fly" class="heal"></div>
+        <button id="start-btn" aria-label="start">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M28 16 L82 50 L28 84 Z" fill="#fff"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 药水按钮（脚本目标：红块白瓶，语言无关） -->
+      <button id="potion-btn" aria-label="potion">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="2" width="40" height="16" rx="4" fill="#fff"/>
+          <path d="M34 18 h32 v16 q20 11 20 34 a36 32 0 0 1 -72 0 q0 -23 20 -34 Z" fill="#fff"/>
+          <path d="M40 48 h36 v28 a24 26 0 0 1 -48 0 v-14 Z" fill="#e5484d" opacity="0.35"/>
+        </svg>
+      </button>
+      <div id="potion-note"></div>
+
+      <!-- 统计 -->
+      <div class="stats">
+        <span id="lbl-wave"></span><b id="stat-wave">1</b>
+        <span id="lbl-kills"></span><b id="stat-kills">0</b>
+      </div>
+
+      <!-- 日志 -->
+      <div id="game-log"></div>
+    </div>
+  </div>
+
+  <script>
+    // ===== i18n：?lang=zh|en，缺省跟随浏览器 =====
+    var I18N = {
+      zh: {
+        hero: '勇者', boss: '怪物', vs: 'VS', wave: '波次', kills: '击杀',
+        potionReady: '', potionCd: '冷却 {t}s', potionFull: '血量已满',
+        defeated: '你被击败了！',
+        heal: '使用药水，恢复 +{n}', atk: '{a} 攻击，造成 {n} 伤害', kill: '击杀！第 {w} 波来袭',
+        dead: '被击败！游戏结束', restart: '游戏重新开始', full: '血量已满，无需使用药水'
+      },
+      en: {
+        hero: 'Hero', boss: 'Monster', vs: 'VS', wave: 'Wave', kills: 'Kills',
+        potionReady: '', potionCd: 'Cooling {t}s', potionFull: 'HP full',
+        defeated: 'You were defeated!',
+        heal: 'Potion used, +{n} HP', atk: '{a} attacks, {n} dmg', kill: 'Killed! Wave {w} incoming',
+        dead: 'Defeated! Game over', restart: 'Game restarted', full: 'HP already full'
+      }
+    };
+    function getParam(name) {
+      var m = location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    }
+    var LANG = getParam('lang') === 'en' ? 'en' : (navigator.language.indexOf('zh') === 0 ? 'zh' : 'en');
+    if (getParam('lang') === 'zh') LANG = 'zh';
+    var T = I18N[LANG];
+    document.documentElement.lang = LANG;
+
+    // ===== 布局：按窗口等比缩放设计画布（contain） =====
+    var DESIGN_W = 640, DESIGN_H = 740;
+    function fitStage() {
+      var s = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H);
+      var st = document.getElementById('stage');
+      st.style.transform = 'scale(' + s + ')';
+      st.style.transformOrigin = 'center center';
+    }
+
+    // ===== 战斗逻辑（与旧版同构：自动互击 / 药水冷却 / 波次递进 / 死亡重开） =====
+    // 怪物换波换色相（SVG fill 替换），模板始终对药水/重开按钮与血条区域，不受影响
+    var BOSS_COLORS = ['#7a4fc9', '#c2452d', '#2f8f4e', '#9a3a6e', '#3a6db3'];
+    var game = {
+      hero:  { hp: 100, maxHp: 100, minDmg: 5,  maxDmg: 15, atkInterval: 1500, name: 'hero' },
+      boss:  { hp: 80,  maxHp: 80,  minDmg: 3,  maxDmg: 10, atkInterval: 2000, name: 'boss' },
+      potion: { cooldown: 0, duration: 5000, heal: 40 },
+      wave: 1, kills: 0, running: false,
+      timers: []
+    };
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function updateHp(e, id) {
+      var pct = Math.max(0, Math.min(100, (e.hp / e.maxHp) * 100));
+      document.getElementById(id + '-hp-fill').style.width = pct + '%';
+      document.getElementById(id + '-hp-text').textContent = Math.max(0, e.hp) + ' / ' + e.maxHp;
+    }
+    function log(msg) {
+      var el = document.getElementById('game-log');
+      var div = document.createElement('div');
+      div.textContent = msg;
+      el.appendChild(div);
+      while (el.children.length > 5) el.removeChild(el.firstChild);
+    }
+    function showDamage(text, isHeal) {
+      var el = document.getElementById('damage-fly');
+      el.textContent = text; el.className = isHeal ? 'heal' : '';
+    }
+    function drawTankBar() {
+      var btn = document.getElementById('potion-btn');
+      var note = document.getElementById('potion-note');
+      if (!game.running) { btn.disabled = true; note.textContent = ''; return; }
+      if (game.potion.cooldown > 0) {
+        btn.disabled = true;
+        note.textContent = T.potionCd.replace('{t}', (game.potion.cooldown / 1000).toFixed(1));
+      } else {
+        btn.disabled = false;
+        note.textContent = game.hero.hp >= game.hero.maxHp ? T.full : T.potionReady;
+      }
+    }
+    function healHero(n) {
+      if (!game.running) return;
+      game.hero.hp = Math.min(game.hero.maxHp, game.hero.hp + n);
+      updateHp(game.hero, 'hero');
+      log(T.heal.replace('{n}', n));
+      showDamage('+' + n, true);
+    }
+    function usePotion() {
+      if (game.potion.cooldown > 0 || !game.running) return;
+      if (game.hero.hp >= game.hero.maxHp) { log(T.full); return; }
+      healHero(game.potion.heal);
+      game.potion.cooldown = game.potion.duration;
+      drawTankBar();
+      var t = setInterval(function() {
+        game.potion.cooldown = Math.max(0, game.potion.cooldown - 100);
+        drawTankBar();
+        if (game.potion.cooldown <= 0) clearInterval(t);
+      }, 100);
+      game.timers.push(t);
+    }
+    function spawnBoss() {
+      var base = 60 + game.wave * 20;
+      game.boss.maxHp = Math.min(base, 200); game.boss.hp = game.boss.maxHp;
+      var c = BOSS_COLORS[(game.wave - 1) % BOSS_COLORS.length];
+      document.getElementById('boss-svg').querySelector('g').innerHTML =
+        document.getElementById('boss-svg').querySelector('g').innerHTML
+          .replace(/#[0-9a-fA-F]{6}/g, function(hex) {
+            return (hex.toLowerCase() === '#f8e71c' || hex === '#2b2f38' || hex === '#f8fafc' || hex.toLowerCase() === '#1c1f26' || hex === '#262a31') ? hex : c;
+          });
+      updateHp(game.boss, 'boss');
+      document.getElementById('stat-wave').textContent = game.wave;
+      log(T.kill.replace('{w}', game.wave));
+    }
+    function heroAttack() {
+      if (!game.running || game.hero.hp <= 0) return;
+      var n = rand(game.hero.minDmg, game.hero.maxDmg);
+      game.boss.hp -= n; showDamage('-' + n);
+      updateHp(game.boss, 'boss');
+      log(T.atk.replace('{a}', T.hero).replace('{n}', n));
+      if (game.boss.hp <= 0) {
+        game.kills++; game.wave++;
+        document.getElementById('stat-kills').textContent = game.kills;
+        spawnBoss();
+      }
+    }
+    function bossAttack() {
+      if (!game.running || game.boss.hp <= 0) return;
+      var n = rand(game.boss.minDmg, game.boss.maxDmg);
+      game.hero.hp -= n; showDamage('-' + n);
+      updateHp(game.hero, 'hero');
+      log(T.atk.replace('{a}', T.boss).replace('{n}', n));
+      if (game.hero.hp <= 0) {
+        game.hero.hp = 0; updateHp(game.hero, 'hero');
+        game.running = false;
+        game.timers.forEach(clearInterval); game.timers = [];
+        document.getElementById('potion-btn').disabled = true;
+        // 开始按钮重新可用：同一张模板承担「开始/死亡后重开」，脚本自动复活无限挂机
+        document.getElementById('start-btn').disabled = false;
+        document.getElementById('lbl-defeated').textContent = T.defeated;
+        log(T.dead);
+      }
+    }
+    // 开始 = 重开：同一入口，运行期间按钮 disabled 变暗（当局闸门/防止脚本重复点击）
+    function start() {
+      game.hero.hp = game.hero.maxHp;
+      game.wave = 1; game.kills = 0; game.running = true; game.potion.cooldown = 0;
+      document.getElementById('start-btn').disabled = true;
+      document.getElementById('lbl-defeated').textContent = '';
+      document.getElementById('stat-kills').textContent = '0';
+      document.getElementById('stat-wave').textContent = '1';
+      document.getElementById('damage-fly').textContent = '';
+      updateHp(game.hero, 'hero');
+      spawnBoss();
+      drawTankBar();
+      game.timers.forEach(clearInterval); game.timers = [];
+      game.timers.push(setInterval(heroAttack, game.hero.atkInterval));
+      game.timers.push(setInterval(bossAttack, game.boss.atkInterval));
+      log(T.restart);
+    }
+    function applyI18n() {
+      document.getElementById('lbl-hero').textContent = T.hero;
+      document.getElementById('lbl-boss').textContent = T.boss;
+      document.getElementById('lbl-wave').textContent = T.wave;
+      document.getElementById('lbl-kills').textContent = T.kills;
+      document.getElementById('lbl-defeated').textContent = '';
+      document.getElementById('vs-label').textContent = T.vs;
+    }
+
+    document.getElementById('potion-btn').addEventListener('click', usePotion);
+    document.getElementById('start-btn').addEventListener('click', start);
+    applyI18n();
+    fitStage();
+    drawTankBar();
+    window.addEventListener('resize', fitStage);
+    // 默认静态待点击（初始画面不动，供自动识别/截参考图）；?autostart=1 自动开局
+    if (getParam('autostart') === '1') start();
+  </script>
+</body>
+</html>

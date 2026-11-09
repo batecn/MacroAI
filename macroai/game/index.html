@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 游戏区 - MacroAI</title>
+  <meta name="description" content="MacroAI AI 游戏区：附带现成脚本示例的小游戏，下载导入即可学习自动化">
+  <link rel="icon" href="../../assets/macroai.png" type="image/png">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    /* 页面增量样式（品牌组件复用 css/style.css） */
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; max-width: 1120px; margin: 0 auto; }
+    .game-card { padding: 22px; display: flex; flex-direction: column; gap: 14px; cursor: default; }
+    .game-card .shot { border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 960/604; background: #14121f; }
+    .game-card .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .game-card h3 { font-size: 1.15rem; }
+    .game-card .desc { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.65; flex: 1; }
+    .game-card .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .platform-tag { background: rgba(71,119,255,0.18); color: #8fb0ff; border-radius: 999px; padding: 3px 10px; font-size: 0.78rem; }
+    .game-card .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .ghost-card { display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.95rem; min-height: 220px; border-style: dashed; }
+    .steps-grid { max-width: 860px; margin: 0 auto; }
+    .steps-grid .glass-card { padding: 26px; }
+    @media (max-width: 720px) { .games-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="../../" class="navbar-logo">
+        <img src="../../assets/macroai.png" alt="MacroAI">
+        <span>MacroAI</span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <a href="#games" class="active" data-t="nav_games"></a>
+        <a href="#howto" data-t="nav_howto"></a>
+        <a href="../../#download" data-t="nav_download"></a>
+        <a href="../../" data-t="nav_home"></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <section class="full-section" id="games" style="padding-top: 140px;">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label" data-t="label"></div>
+        <h2 class="section-title" data-t="title"></h2>
+        <p class="section-desc" data-t="desc"></p>
+      </div>
+      <div class="games-grid">
+        <div class="glass-card game-card reveal stagger-item">
+          <div class="shot"><img id="shot-match" src="../../assets/screenshots/zh/match-pairs.png" alt="Match Pairs"></div>
+          <h3 data-t="mp_name"></h3>
+          <p class="desc" data-t="mp_desc"></p>
+          <div class="tags"><span class="platform-tag">Windows</span><span class="platform-tag">Android</span><span class="platform-tag" style="opacity:.75;" data-t="tag_universal"></span></div>
+          <div class="actions">
+            <a href="match-pairs.html" target="_blank" rel="noopener" class="btn btn-primary" data-t="btn_play"></a>
+            <a href="downloads/match-pairs.macroai" download class="btn btn-secondary" data-t="btn_dl"></a>
+          </div>
+        </div>
+        <div class="glass-card game-card reveal stagger-item">
+          <div class="shot"><img id="shot-battle" src="../../assets/screenshots/zh/battle.png" alt="Auto Battle"></div>
+          <h3 data-t="bt_name"></h3>
+          <p class="desc" data-t="bt_desc"></p>
+          <div class="tags"><span class="platform-tag">Windows</span><span class="platform-tag">Android</span><span class="platform-tag" style="opacity:.75;" data-t="tag_universal"></span></div>
+          <div class="actions">
+            <a href="battle.html" target="_blank" rel="noopener" class="btn btn-primary" data-t="btn_play"></a>
+            <a href="downloads/battle.macroai" download class="btn btn-secondary" data-t="btn_dl"></a>
+          </div>
+        </div>
+        <div class="glass-card ghost-card reveal stagger-item" data-t="ghost"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== How-to ===== -->
+  <section class="full-section" id="howto">
+    <div class="section-content">
+      <div class="section-header reveal">
+        <div class="section-label" data-t="how_label"></div>
+        <h2 class="section-title" data-t="how_title"></h2>
+        <p class="section-desc" data-t="how_desc"></p>
+      </div>
+      <div class="platform-tabs reveal">
+        <button class="platform-tab active" data-platform="windows" data-t="tab_win"></button>
+        <button class="platform-tab" data-platform="android" data-t="tab_android"></button>
+      </div>
+      <div class="platform-panel active" id="panel-windows">
+        <div class="steps-grid">
+          <div class="glass-card">
+            <div class="quickstart-steps">
+              <div class="step"><div class="step-number">1</div><div><h4 data-t="w1h"></h4><p data-t="w1p"></p></div></div>
+              <div class="step"><div class="step-number">2</div><div><h4 data-t="w2h"></h4><p data-t="w2p"></p></div></div>
+              <div class="step"><div class="step-number">3</div><div><h4 data-t="w3h"></h4><p data-t="w3p"></p></div></div>
+              <div class="step"><div class="step-number">4</div><div><h4 data-t="w4h"></h4><p data-t="w4p"></p></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="platform-panel" id="panel-android">
+        <div class="steps-grid">
+          <div class="glass-card">
+            <div class="quickstart-steps">
+              <div class="step"><div class="step-number">1</div><div><h4 data-t="a1h"></h4><p data-t="a1p"></p></div></div>
+              <div class="step"><div class="step-number">2</div><div><h4 data-t="a2h"></h4><p data-t="a2p"></p></div></div>
+              <div class="step"><div class="step-number">3</div><div><h4 data-t="a3h"></h4><p data-t="a3p"></p></div></div>
+              <div class="step"><div class="step-number">4</div><div><h4 data-t="a4h"></h4><p data-t="a4p"></p></div></div>
+              <div class="step"><div class="step-number">5</div><div><h4 data-t="a5h"></h4><p data-t="a5p"></p></div></div>
+              <div class="step"><div class="step-number">6</div><div><h4 data-t="a6h"></h4><p data-t="a6p"></p></div></div>
+              <div class="step"><div class="step-number">7</div><div><h4 data-t="a7h"></h4><p data-t="a7p"></p></div></div>
+              <div class="step"><div class="step-number">8</div><div><h4 data-t="a8h"></h4><p data-t="a8p"></p></div></div>
+              <p style="color:var(--text-secondary); font-size:0.88rem; margin-top:14px;" data-t="a_note"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 MacroAI. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="../../">MacroAI</a>
+      <a href="../../privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    // i18n：?lang=zh|en，缺省 zh（与 match-pairs.html 同机制）
+    var I18N = {
+      zh: {
+        nav_games: '游戏', nav_howto: '上手步骤', nav_download: '下载应用', nav_home: '官网首页',
+        label: 'AI 游戏区', title: '带脚本的小游戏，边玩边学自动化',
+        desc: '每个游戏都附带现成的脚本示例：下载导入 MacroAI，识别运行区域后即可自动游玩。适合学习图像识别与自动点击的入门玩法。',
+        mp_name: '对对碰 · Match Pairs',
+        mp_desc: '36 张卡牌（9 种动物各 4 张），点击两张同种即消除。9 张模板配合「点击全部匹配」，一轮即可全部消除——最适合展示图像识别多点点击的入门 Demo。游戏画布随窗口等比缩放，任意窗口大小和浏览器缩放下均可自动识别运行区域。',
+        bt_name: '自动战斗 · Battle',
+        bt_desc: '勇者与怪物自动互击，血条随战斗实时变化。「等待条块变化」持续监控勇者血条，血量低于 30% 自动点击药水恢复并播放音效，战败后还能自动点击重开无限挂机——条块变化检测与条件点击的进阶 Demo。游戏画布随窗口等比缩放，任意窗口大小和浏览器缩放下均可自动识别运行区域。',
+        btn_play: '打开游戏', btn_dl: '下载脚本包',
+        ghost: '更多游戏开发中 ▸',
+        how_label: '上手步骤', how_title: '下载脚本包后如何使用', how_desc: '不同平台操作略有差异，请选择您使用的版本即可',
+        tab_win: 'Windows 版', tab_android: 'Android 版',
+        tag_universal: '同一份脚本包通用',
+        w1h: '下载脚本包', w1p: '点上方游戏的「下载脚本包」，得到 .macroai 工程文件（含全部模板与脚本）。',
+        w2h: '导入工程', w2p: '在 Windows 资源管理器中直接双击 .macroai 文件，即可在 MacroAI 中创建该项目。',
+        w3h: '打开游戏页面', w3p: '点游戏卡片上的「打开游戏」，在浏览器中打开游戏；让游戏窗口保持可见，不要被其他窗口完全遮挡。',
+        w4h: '识别运行区域并自动化', w4p: '打开项目的项目设置，点「自动识别运行区域」，确认识别框落在青色描边的游戏画布上；回到编辑器按 F5 运行，脚本即自动游玩。',
+        a1h: '打开 MacroAI 安卓 App', a1p: '确保已从官网/Gitee/GitHub/Google Play 安装 MacroAI 安卓版。',
+        a2h: '导入项目', a2p: '点 App 右上角「导入项目」，选择刚下载到手机的 .macroai 文件（与 Windows 版是同一个包）。',
+        a3h: '点运行按钮', a3p: '选中刚导入的游戏项目，点「运行」。',
+        a4h: '按提示完成授权', a4p: '首次运行会依次请求：无障碍服务（用于自动点击操作）与屏幕录制（用于截图识别），分别跳转系统设置一键开启即可。',
+        a5h: '进入游戏', a5p: '切换到浏览器打开游戏页面（卡片上的「打开游戏」），让青色描边的游戏画布完整可见。',
+        a6h: '点开运行条设置', a6p: '点击屏幕上的悬浮运行条中的设置图标，进入运行区域设置。',
+        a7h: '自动识别运行区域', a7p: '点「自动识别运行区域」，确认识别框落在青色描边的游戏画布上；可换不同窗口大小/浏览器缩放验证一次成功率。',
+        a8h: '执行', a8p: '确认区域后回到游戏页，脚本即自动执行——悬浮窗会显示运行状态，随时可停止。',
+        a_note: '脚本包双平台通用：Windows 版导入即可用；安卓端多一步授权与悬浮窗操作，流程如上。'
+      },
+      en: {
+        nav_games: 'Games', nav_howto: 'How to Use', nav_download: 'Get MacroAI', nav_home: 'Home',
+        label: 'AI Games Zone', title: 'Scripted mini-games — learn automation by playing',
+        desc: 'Every game ships with a ready-made script example: import it into MacroAI, let the run area be auto-detected, and the automation plays the game for you. A friendly introduction to image recognition and auto-clicking.',
+        mp_name: 'Match Pairs',
+        mp_desc: '36 cards (9 animals × 4). Clicking two of the same kind removes them. With 9 templates plus Click-All-Matches, one sweep clears the board — the perfect intro demo for multi-target image matching. The canvas scales uniformly with any window size or browser zoom, so auto area detection always succeeds.',
+        bt_name: 'Auto Battle',
+        bt_desc: 'The hero and the monster trade blows as HP bars shift in real time. Wait-for-Bar-Change keeps watching the hero\'s HP: below 30% the script clicks the potion and plays a sound, and on defeat it clicks Start again for endless waves — an intermediate demo of bar-change detection plus conditional clicking. The canvas scales uniformly with any window size or browser zoom, so auto area detection always succeeds.',
+        btn_play: 'Open Game', btn_dl: 'Download Script',
+        ghost: 'More games coming ▸',
+        how_label: 'How to Use', how_title: 'After downloading the script package', how_desc: 'Steps differ slightly per platform — pick yours',
+        tab_win: 'Windows', tab_android: 'Android',
+        tag_universal: 'One package for both platforms',
+        w1h: 'Download the script package', w1p: 'Click "Download Script" on the game card above to get the .macroai project file (all templates and scripts included).',
+        w2h: 'Import the project', w2p: 'Double-click the .macroai file in Windows Explorer to create the project inside MacroAI.',
+        w3h: 'Open the game page', w3p: 'Click "Open Game" on the card to open the game in your browser window; keep it visible, not fully covered.',
+        w4h: 'Detect the run area and automate', w4p: 'Open Project Settings, click "Auto-detect Run Area", confirm it wraps the cyan-bordered game canvas, then press F5 in the editor — the script plays automatically.',
+        a1h: 'Open the MacroAI app', a1p: 'Make sure the MacroAI Android app is installed (site / Gitee / GitHub / Google Play).',
+        a2h: 'Import the project', a2p: 'Tap "Import Project" at the top right of the app and pick the .macroai file you downloaded (the same package as on Windows).',
+        a3h: 'Tap Run', a3p: 'Select the imported game project and tap "Run".',
+        a4h: 'Grant permissions as prompted', a4p: 'On first run the app requests: Accessibility (automated taps) and Screen Recording (screenshots) — enable each from the jump prompt.',
+        a5h: 'Enter the game', a5p: 'Switch to the browser and open the game page (the card\'s "Open Game"); keep the cyan-bordered canvas fully visible.',
+        a6h: 'Open the run-bar settings', a6p: 'Tap the settings icon on the floating run bar to open run-area settings.',
+        a7h: 'Auto-detect the run area', a7p: 'Tap "Auto-detect Run Area" and confirm the box wraps the cyan game canvas; try different window sizes/zoom to check the one-shot success rate.',
+        a8h: 'Execute', a8p: 'Back on the game page the automation runs by itself — the floating window shows the run status and can stop it anytime.',
+        a_note: 'One package for both platforms: on Windows it runs right after import; Android adds permission grants and floating-window steps as above.'
+      }
+    };
+    var m = location.search.match(/[?&]lang=(en|zh)/);
+    var LANG = m ? m[1] : (navigator.language.indexOf('zh') === 0 ? 'zh' : 'en');
+    var T = I18N[LANG];
+    document.documentElement.lang = LANG;
+    document.title = LANG === 'en' ? 'AI Games Zone - MacroAI' : 'AI 游戏区 - MacroAI';
+    document.querySelectorAll('[data-t]').forEach(function(el) {
+      var k = el.getAttribute('data-t');
+      if (T[k] !== undefined) el.textContent = T[k];
+    });
+    document.getElementById('shot-match').src = '../../assets/screenshots/' + LANG + '/match-pairs.png';
+    document.getElementById('shot-battle').src = '../../assets/screenshots/' + LANG + '/battle.png';
+    // 平台 Tab 切换（与官网下载区交互一致：js/main.js 已绑定）
+  </script>
+  <script src="../../js/main.js?v=2"></script>
+</body>
+</html>
