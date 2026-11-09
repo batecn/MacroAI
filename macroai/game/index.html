@@ -185,7 +185,8 @@
       }
     };
     var m = location.search.match(/[?&]lang=(en|zh)/);
-    var LANG = m ? m[1] : (navigator.language.indexOf('zh') === 0 ? 'zh' : 'en');
+    // 缺省 zh：与全站约定一致（中文为根路径默认语言，英文入口均显式带 ?lang=en），不跟随浏览器语言
+    var LANG = m ? m[1] : 'zh';
     var T = I18N[LANG];
     document.documentElement.lang = LANG;
     document.title = LANG === 'en' ? 'AI Games Zone - MacroAI' : 'AI 游戏区 - MacroAI';
@@ -195,6 +196,10 @@
     });
     document.getElementById('shot-match').src = '../../assets/screenshots/' + LANG + '/match-pairs.png';
     document.getElementById('shot-battle').src = '../../assets/screenshots/' + LANG + '/battle.png';
+    // 「打开游戏」把当前语言传给游戏页（游戏页缺省跟随浏览器，需显式带上避免语言跳变）
+    document.querySelectorAll('.game-card .actions .btn-primary').forEach(function(a) {
+      a.href = a.getAttribute('href') + '?lang=' + LANG;
+    });
     // 平台 Tab 切换（与官网下载区交互一致：js/main.js 已绑定）
   </script>
   <script src="../../js/main.js?v=2"></script>

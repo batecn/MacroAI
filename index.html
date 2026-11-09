@@ -412,17 +412,6 @@
     </div>
   </footer>
 
-  <script>
-    // Language auto-detect & redirect (only on first visit, no stored preference)
-    (function() {
-      var stored = localStorage.getItem('macroai-lang');
-      if (!stored && navigator.language && navigator.language.indexOf('zh') === -1) {
-        location.replace('/en/');
-      } else {
-        localStorage.setItem('macroai-lang', 'zh');
-      }
-    })();
-  </script>
   <script src="js/main.js?v=2"></script>
 </body>
 </html>
