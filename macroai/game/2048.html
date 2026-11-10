@@ -50,12 +50,6 @@
 
     .top2 { display: flex; justify-content: space-between; align-items: center; margin: 12px 0 8px 0; }
     .intro { font-size: 15px; line-height: 1.5; color: #8f8fb0; max-width: 400px; }
-    /* 新游戏按钮：人类入口，低饱和（不是脚本模板目标，与红块重开按钮区分） */
-    #new-btn {
-      border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #b9b9d8;
-      border-radius: 10px; padding: 9px 18px; font-size: 15px; cursor: pointer;
-    }
-    #new-btn:hover { background: rgba(255,255,255,0.06); }
 
     /* ----- 棋盘（经典配色；数字为 DOM 文本，OCR 友好） ----- */
     #board {
@@ -135,7 +129,6 @@
       </div>
       <div class="top2">
         <p class="intro" id="intro"></p>
-        <button id="new-btn"></button>
       </div>
       <div id="board">
         <div id="grid-bg"></div>
@@ -159,13 +152,13 @@
     // ===== i18n：?lang=zh|en，缺省跟随浏览器（游戏区入口会显式带 lang） =====
     var I18N = {
       zh: {
-        score: '得分', best: '最高分', newGame: '新游戏',
+        score: '得分', best: '最高分',
         intro: '合并相同数字，直到 2048！',
         over: '游戏结束', win: '达成 2048！',
         foot: '方向键或滑动操作'
       },
       en: {
-        score: 'SCORE', best: 'BEST', newGame: 'New Game',
+        score: 'SCORE', best: 'BEST',
         intro: 'Join the numbers and get to 2048!',
         over: 'Game over', win: 'You win!',
         foot: 'Arrow keys or swipe'
@@ -466,14 +459,12 @@
     function applyI18n() {
       document.getElementById('lbl-score').textContent = T.score;
       document.getElementById('lbl-best').textContent = T.best;
-      document.getElementById('new-btn').textContent = T.newGame;
       document.getElementById('intro').textContent = T.intro;
       document.getElementById('over-title').textContent = T.over;
       document.getElementById('win-flash').textContent = T.win;
       document.getElementById('foot').textContent = T.foot;
       document.title = 'MacroAI - 2048';
     }
-    document.getElementById('new-btn').addEventListener('click', reset);
     document.getElementById('retry-btn').addEventListener('click', reset);
     applyI18n();
     (function() {

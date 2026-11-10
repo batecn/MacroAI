@@ -69,6 +69,16 @@
             <a href="downloads/battle.macroai" download class="btn btn-secondary" data-t="btn_dl"></a>
           </div>
         </div>
+        <div class="glass-card game-card reveal stagger-item">
+          <div class="shot"><img id="shot-2048" src="../../assets/screenshots/zh/2048.png" alt="2048"></div>
+          <h3 data-t="e048_name"></h3>
+          <p class="desc" data-t="e048_desc"></p>
+          <div class="tags"><span class="platform-tag">Windows</span><span class="platform-tag">Android</span><span class="platform-tag" style="opacity:.75;" data-t="tag_universal"></span></div>
+          <div class="actions">
+            <a href="2048.html" target="_blank" rel="noopener" class="btn btn-primary" data-t="btn_play"></a>
+            <a href="downloads/2048.macroai" download class="btn btn-secondary" data-t="btn_dl"></a>
+          </div>
+        </div>
         <div class="glass-card ghost-card reveal stagger-item" data-t="ghost"></div>
       </div>
     </div>
@@ -137,6 +147,8 @@
         mp_desc: '36 张卡牌（9 种动物各 4 张），点击两张同种即消除。9 张模板配合「点击全部匹配」，一轮即可全部消除——最适合展示图像识别多点点击的入门 Demo。游戏画布随窗口等比缩放，任意窗口大小和浏览器缩放下均可自动识别运行区域。',
         bt_name: '自动战斗 · Battle',
         bt_desc: '勇者与怪物自动互击，血条随战斗实时变化。「等待条块变化」持续监控勇者血条，血量低于 30% 自动点击药水恢复并播放音效，战败后还能自动点击重开无限挂机——条块变化检测与条件点击的进阶 Demo。游戏画布随窗口等比缩放，任意窗口大小和浏览器缩放下均可自动识别运行区域。',
+        e048_name: '2048',
+        e048_desc: '经典数字合并。脚本循环「下滑 + 左滑」，用「等待界面变化」识别每次滑动是否生效，连续两次滑空自动插入上/右救援滑动拆开僵局，游戏结束后靠图像识别自动点击红色重开按钮续局——变化反馈自适应策略的进阶 Demo。游戏画布随窗口等比缩放，任意窗口大小和浏览器缩放下均可自动识别运行区域。',
         btn_play: '打开游戏', btn_dl: '下载脚本包',
         ghost: '更多游戏开发中 ▸',
         how_label: '上手步骤', how_title: '下载脚本包后如何使用', how_desc: '不同平台操作略有差异，请选择您使用的版本即可',
@@ -164,6 +176,8 @@
         mp_desc: '36 cards (9 animals × 4). Clicking two of the same kind removes them. With 9 templates plus Click-All-Matches, one sweep clears the board — the perfect intro demo for multi-target image matching. The canvas scales uniformly with any window size or browser zoom, so auto area detection always succeeds.',
         bt_name: 'Auto Battle',
         bt_desc: 'The hero and the monster trade blows as HP bars shift in real time. Wait-for-Bar-Change keeps watching the hero\'s HP: below 30% the script clicks the potion and plays a sound, and on defeat it clicks Start again for endless waves — an intermediate demo of bar-change detection plus conditional clicking. The canvas scales uniformly with any window size or browser zoom, so auto area detection always succeeds.',
+        e048_name: '2048',
+        e048_desc: 'The classic number merge. The script loops "slide down + slide left" and uses Wait-for-Screen-Change to tell whether each slide actually moved tiles; after two dead slides it inserts an up/right rescue slide to break the deadlock, and when the game ends, image recognition auto-clicks the red retry button to start a new round — an advanced demo of change-feedback adaptive strategy. The canvas scales uniformly with any window size or browser zoom, so auto area detection always succeeds.',
         btn_play: 'Open Game', btn_dl: 'Download Script',
         ghost: 'More games coming ▸',
         how_label: 'How to Use', how_title: 'After downloading the script package', how_desc: 'Steps differ slightly per platform — pick yours',
@@ -196,6 +210,7 @@
     });
     document.getElementById('shot-match').src = '../../assets/screenshots/' + LANG + '/match-pairs.png';
     document.getElementById('shot-battle').src = '../../assets/screenshots/' + LANG + '/battle.png';
+    document.getElementById('shot-2048').src = '../../assets/screenshots/' + LANG + '/2048.png';
     // 「打开游戏」把当前语言传给游戏页（游戏页缺省跟随浏览器，需显式带上避免语言跳变）
     document.querySelectorAll('.game-card .actions .btn-primary').forEach(function(a) {
       a.href = a.getAttribute('href') + '?lang=' + LANG;
