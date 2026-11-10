@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-nothing">
+  <title>MacroAI - 速算挑战</title>
+  <meta name="description" content="MacroAI 速算挑战演示——OCR 识别算式 + Lua 计算 + 自动输入答案，随窗口等比缩放">
+  <link rel="icon" href="../../assets/macroai.png" type="image/png">
+  <style>
+    :root {
+      --bg-deep: #07060b;
+      --bg-surface: #14121f;
+      --border-canvas: #3ec6ff;
+      --ctl-start: #e5484d;      /* 脚本控制区：开始/重开按钮（红块白图形） */
+      --zone-flash-ok: #2ecc71;
+      --zone-flash-bad: #e74c3c;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg-deep); height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: #9494b8; overflow: hidden;
+    }
+
+    /* 设计画布：固定 640x740，JS 按窗口等比缩放（uniform 脚本以此为设计区域）；
+       viewport 带 interactive-widget=resizes-nothing：安卓软键盘弹出不改视口、画布不重缩放 */
+    #stage-wrap { height: 100%; display: flex; align-items: center; justify-content: center; }
+    #stage {
+      width: 640px; height: 740px; flex: none;
+      border: 4px solid var(--border-canvas); border-radius: 18px;
+      background-color: var(--bg-surface);
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 44px);
+      padding: 26px 24px;
+      position: relative;
+      display: flex; flex-direction: column;
+    }
+
+    /* ----- 统计 ----- */
+    .stats { display: flex; gap: 12px; }
+    .stat-box {
+      flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; padding: 8px 0; text-align: center;
+    }
+    .stat-box span { display: block; font-size: 14px; color: #8f8fb0; }
+    .stat-box b { display: block; font-size: 28px; color: #fff; font-variant-numeric: tabular-nums; margin-top: 2px; }
+    .stat-box b.warn { color: #f1c40f; }
+
+    /* ----- 算式区（OCR 目标：大号等宽高对比文本） ----- */
+    #expr-zone {
+      height: 220px; margin-top: 26px;
+      border: 1px solid rgba(255,255,255,0.14); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s ease, background-color .2s ease;
+    }
+    #expr-zone.ok  { border-color: var(--zone-flash-ok);  background: rgba(46,204,113,0.10); }
+    #expr-zone.bad { border-color: var(--zone-flash-bad); background: rgba(231,76,60,0.10); }
+    #expr-text {
+      font-family: Consolas, Menlo, 'Courier New', monospace;
+      font-size: 66px; font-weight: 700; color: #fff;
+      letter-spacing: 4px; white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ----- 开始/重开按钮（红块 + 白图形，语言无关模板；运行期禁用变暗=局间闸门） ----- */
+    #start-btn {
+      width: 200px; height: 66px; border: none; border-radius: 14px;
+      background-color: var(--ctl-start);
+      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.07) 0 6px, transparent 6px 14px);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      margin: 26px auto 0;
+    }
+    #start-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    #start-btn svg { width: 38px; height: 38px; }
+    #status {
+      text-align: center; font-size: 16px; color: #b9b9d8; margin-top: 14px; min-height: 22px;
+    }
+    #status.over { color: #f1c40f; font-size: 18px; font-weight: 700; }
+
+    /* ----- 答案输入（真输入框：安卓无障碍文本注入目标；每题自动聚焦） ----- */
+    #answer-row { display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 30px; }
+    #answer {
+      display: block; width: 320px; height: 68px;
+      background: rgba(255,255,255,0.04); color: #fff;
+      border: 2px solid rgba(255,255,255,0.30); border-radius: 14px;
+      font-size: 40px; font-weight: 700; text-align: center;
+      font-family: Consolas, Menlo, 'Courier New', monospace;
+      outline: none; caret-color: #3ec6ff;
+    }
+    #answer:disabled { opacity: 0.35; }
+    #answer::placeholder { color: #6f6f92; font-size: 24px; font-weight: 400; }
+    /* 确认按钮：触屏无回车键时的提交入口（与输入框同行，桌面按回车等价） */
+    #submit-btn {
+      height: 68px; padding: 0 24px; border-radius: 14px; border: none; cursor: pointer;
+      background: #4777ff; color: #fff; font-size: 22px; font-weight: 700;
+    }
+    #submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .foot { margin-top: auto; text-align: center; font-size: 14px; color: #8f8fb0; }  </style>
+</head>
+<body>
+  <div id="stage-wrap">
+    <div id="stage">
+      <div class="stats">
+        <div class="stat-box"><span id="lbl-score"></span><b id="score">0</b></div>
+        <div class="stat-box"><span id="lbl-streak"></span><b id="streak">0</b></div>
+        <div class="stat-box"><span id="lbl-time"></span><b id="time">60</b></div>
+      </div>
+
+      <div id="expr-zone"><span id="expr-text">12 + 34 = ?</span></div>
+
+      <button id="start-btn" aria-label="start">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M28 16 L82 50 L28 84 Z" fill="#fff"/>
+        </svg>
+      </button>
+      <div id="status"></div>
+
+      <div id="answer-row">
+        <input id="answer" type="text" inputmode="numeric" maxlength="3" autocomplete="off" disabled>
+        <button id="submit-btn" disabled></button>
+      </div>
+
+      <p class="foot" id="foot"></p>
+    </div>
+  </div>
+
+  <script>
+    // ===== i18n：?lang=zh|en，缺省跟随浏览器（游戏区入口会显式带 lang） =====
+    var I18N = {
+      zh: {
+        score: '得分', streak: '连对', time: '剩余时间', submit: '提交',
+        statusIdle: '点开始挑战：60 秒内答对尽可能多的算式',
+        statusGo: '答题中……算出结果，输入后确认',
+        over: '时间到！本局得分', bestStreak: '，最佳连对',
+        foot: '输入答案后按回车或点提交'
+      },
+      en: {
+        score: 'Score', streak: 'Streak', time: 'Time', submit: 'Submit',
+        statusIdle: 'Press start: answer as many as you can in 60s',
+        statusGo: 'Playing… type the answer and confirm',
+        over: "Time's up! Score", bestStreak: ', best streak ',
+        foot: 'Type the answer and press Enter or tap Submit'
+      }
+    };
+    function getParam(name) {
+      var m = location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    }
+    var LANG = getParam('lang') === 'en' ? 'en' : (navigator.language.indexOf('zh') === 0 ? 'zh' : 'en');
+    if (getParam('lang') === 'zh') LANG = 'zh';
+    var T = I18N[LANG];
+    document.documentElement.lang = LANG;
+
+    // ===== 布局：按窗口等比缩放设计画布（contain） =====
+    var DESIGN_W = 640, DESIGN_H = 740;
+    function fitStage() {
+      var s = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H);
+      var st = document.getElementById('stage');
+      st.style.transform = 'scale(' + s + ')';
+      st.style.transformOrigin = 'center center';
+    }
+
+    // ===== 游戏逻辑：60 秒限时速算（OCR 读算式 → 计算 → 输入答案） =====
+    var GAME_SECONDS = 60;
+    var game = { running: false, score: 0, streak: 0, best: 0, left: GAME_SECONDS, a: 0, b: 0, op: '+', timer: null };
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function newQuestion() {
+      // 固定加法：Windows 中文 OCR 语言包把减号/readable '-' 整行丢掉，
+      // 减法题在 demo 环境不可识别（装 en 语言包后可把 '-' 分支加回来）
+      game.op = '+';
+      game.a = rand(11, 99);
+      game.b = rand(11, 99);
+      renderQuestion();
+    }
+    function renderQuestion() {
+      document.getElementById('expr-text').textContent = game.a + ' ' + game.op + ' ' + game.b + ' = ?';
+    }
+    function answer() { return game.op === '+' ? game.a + game.b : game.a - game.b; }
+    function drawStats() {
+      document.getElementById('score').textContent = game.score;
+      document.getElementById('streak').textContent = game.streak;
+      var tEl = document.getElementById('time');
+      tEl.textContent = game.left;
+      tEl.className = game.left <= 10 ? 'warn' : '';
+    }
+    function flash(ok) {
+      var z = document.getElementById('expr-zone');
+      z.classList.remove('ok', 'bad');
+      // 强制重排以重触发过渡
+      void z.offsetWidth;
+      z.classList.add(ok ? 'ok' : 'bad');
+      setTimeout(function() { z.classList.remove('ok', 'bad'); }, 280);
+    }
+    function nextQuestion(focusInput) {
+      newQuestion();
+      var inp = document.getElementById('answer');
+      inp.value = '';
+      if (focusInput !== false) { inp.focus(); }
+    }
+    function submit() {
+      if (!game.running) return;
+      var inp = document.getElementById('answer');
+      var v = (inp.value || '').trim();
+      if (!v) return;
+      var ok = parseInt(v, 10) === answer();
+      if (ok) { game.score++; game.streak++; if (game.streak > game.best) game.best = game.streak; }
+      else { game.streak = 0; }
+      flash(ok);
+      drawStats();
+      nextQuestion();
+    }
+    function gameOver() {
+      game.running = false;
+      clearInterval(game.timer);
+      var inp = document.getElementById('answer');
+      inp.disabled = true; inp.value = '';
+      document.getElementById('submit-btn').disabled = true;
+      document.getElementById('start-btn').disabled = false;
+      var st = document.getElementById('status');
+      st.textContent = T.over + ' ' + game.score + T.bestStreak + ' ' + game.best;
+      st.className = 'over';
+    }
+    function start() {
+      game.running = true; game.score = 0; game.streak = 0; game.best = 0; game.left = GAME_SECONDS;
+      document.getElementById('start-btn').disabled = true;
+      document.getElementById('submit-btn').disabled = false;
+      var st = document.getElementById('status');
+      st.textContent = T.statusGo; st.className = '';
+      var inp = document.getElementById('answer');
+      inp.disabled = false;
+      nextQuestion();
+      drawStats();
+      clearInterval(game.timer);
+      game.timer = setInterval(function() {
+        game.left--;
+        drawStats();
+        if (game.left <= 0) gameOver();
+      }, 1000);
+    }
+
+    document.getElementById('start-btn').addEventListener('click', start);
+    document.getElementById('submit-btn').addEventListener('click', submit);
+    document.getElementById('answer').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); submit(); }
+    });
+    // 点击画布任意处，若在游戏中则把焦点还给输入框
+    document.getElementById('stage').addEventListener('click', function(e) {
+      if (game.running && e.target.id !== 'answer') document.getElementById('answer').focus();
+    });
+
+    function applyI18n() {
+      document.getElementById('lbl-score').textContent = T.score;
+      document.getElementById('lbl-streak').textContent = T.streak;
+      document.getElementById('lbl-time').textContent = T.time;
+      document.getElementById('submit-btn').textContent = T.submit;
+      document.getElementById('status').textContent = T.statusIdle;
+      document.getElementById('foot').textContent = T.foot;
+      renderQuestion();
+    }
+    applyI18n();
+    fitStage();
+    drawStats();
+    window.addEventListener('resize', fitStage);
+    // ?autostart=1：自动开局并示范答对 3 题（供截图/参考图使用）
+    if (getParam('autostart') === '1') {
+      start();
+      var demoT = setInterval(function() {
+        if (game.score >= 3 || !game.running) { clearInterval(demoT); return; }
+        var inp = document.getElementById('answer');
+        inp.value = String(answer());
+        submit();
+      }, 750);
+    }
+  </script>
+</body>
+</html>
