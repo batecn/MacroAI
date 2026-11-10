@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacroAI - 2048</title>
+  <meta name="description" content="MacroAI 2048 演示——按键循环 + 图像识别重开，随窗口等比缩放，适合按键与图像识别自动化练习">
+  <link rel="icon" href="../../assets/macroai.png" type="image/png">
+  <style>
+    :root {
+      --bg-deep: #07060b;
+      --bg-surface: #14121f;
+      --border-canvas: #3ec6ff;
+      --ctl-start: #e5484d;      /* 脚本控制区：重开按钮（红块白图形） */
+      --board-bg: #bbada0;        /* 经典 2048 米色棋盘 */
+      --cell-bg: #cdc1b4;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg-deep); height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: #9494b8; overflow: hidden;
+    }
+
+    /* 设计画布：固定 640x740，JS 按窗口等比缩放（uniform 脚本以此为设计区域） */
+    #stage-wrap { height: 100%; display: flex; align-items: center; justify-content: center; }
+    #stage {
+      width: 640px; height: 740px; flex: none;
+      border: 4px solid var(--border-canvas); border-radius: 18px;
+      background-color: var(--bg-surface);
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 44px);
+      padding: 16px 44px;
+      position: relative;
+      touch-action: none;
+      user-select: none;
+    }
+
+    /* ----- 顶部：标题 + 分数 ----- */
+    .top { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 50px; font-weight: 800; color: #edc22e; letter-spacing: 2px; line-height: 1; }
+    .scores { display: flex; gap: 10px; }
+    .score-box {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; padding: 6px 16px; text-align: center; min-width: 88px;
+    }
+    .score-box span { display: block; font-size: 13px; color: #8f8fb0; }
+    .score-box b { font-size: 22px; color: #fff; font-variant-numeric: tabular-nums; display: block; margin-top: 2px; }
+
+    .top2 { display: flex; justify-content: space-between; align-items: center; margin: 12px 0 8px 0; }
+    .intro { font-size: 15px; line-height: 1.5; color: #8f8fb0; max-width: 400px; }
+    /* 新游戏按钮：人类入口，低饱和（不是脚本模板目标，与红块重开按钮区分） */
+    #new-btn {
+      border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #b9b9d8;
+      border-radius: 10px; padding: 9px 18px; font-size: 15px; cursor: pointer;
+    }
+    #new-btn:hover { background: rgba(255,255,255,0.06); }
+
+    /* ----- 棋盘（经典配色；数字为 DOM 文本，OCR 友好） ----- */
+    #board {
+      position: relative; width: 552px; height: 552px; flex: none;
+      background: var(--board-bg); border-radius: 12px; padding: 10px;
+    }
+    .cell-bg, .tile {
+      position: absolute; border-radius: 8px;
+      width: 124px; height: 124px;
+    }
+    .cell-bg { background: var(--cell-bg); }
+    .tile {
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; color: #776e65;
+      transition: left .11s ease, top .11s ease;
+      z-index: 2;
+    }
+    .tile span { line-height: 1; }
+    /* 字号按位数（1~4 位）分档，与色阶类解耦 */
+    .tile.d1 span { font-size: 64px; }
+    .tile.d2 span { font-size: 52px; }
+    .tile.d3 span { font-size: 40px; }
+    .tile.d4 span { font-size: 30px; }
+    /* 经典色阶（语言无关；数字牌即识别目标） */
+    .tile.v2   { background: #eee4da; }
+    .tile.v4   { background: #ede0c8; }
+    .tile.v8   { background: #f2b179; color: #f9f6f2; }
+    .tile.v16  { background: #f59563; color: #f9f6f2; }
+    .tile.v32  { background: #f67c5f; color: #f9f6f2; }
+    .tile.v64  { background: #f65e3b; color: #f9f6f2; }
+    .tile.v128 { background: #edcf72; color: #f9f6f2; }
+    .tile.v256 { background: #edcc61; color: #f9f6f2; }
+    .tile.v512 { background: #edc850; color: #f9f6f2; }
+    .tile.v1024{ background: #edc53f; color: #f9f6f2; }
+    .tile.v2048{ background: #edc22e; color: #f9f6f2; }
+    .tile.vbig { background: #3c3a32; color: #f9f6f2; }
+    .tile.new { animation: pop .13s ease; }
+    @keyframes pop { from { transform: scale(.4); } to { transform: scale(1); } }
+
+    /* ----- 游戏结束浮层（脚本目标：重开按钮红块 + 白色图形） ----- */
+    #overlay {
+      position: absolute; inset: 0; z-index: 5; border-radius: 12px;
+      background: rgba(238,228,218,0.78);
+      display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    }
+    #overlay.show { display: flex; }
+    #over-title { font-size: 38px; font-weight: 800; color: #776e65; }
+    #retry-btn {
+      width: 190px; height: 66px; border: none; border-radius: 14px;
+      background-color: var(--ctl-start);
+      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.07) 0 6px, transparent 6px 14px);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    #retry-btn svg { width: 38px; height: 38px; }
+
+    /* ----- 达成 2048 金色横幅（自动继续，不打断游玩） ----- */
+    #win-flash {
+      position: absolute; left: 0; right: 0; top: 46%; z-index: 6;
+      text-align: center; font-size: 40px; font-weight: 800; color: #edc22e;
+      opacity: 0; pointer-events: none; transition: opacity .25s ease;
+      text-shadow: 0 0 24px rgba(237,194,46,0.45);
+    }
+    #win-flash.show { opacity: 1; }
+
+    .foot { margin-top: 8px; text-align: center; font-size: 14px; color: #8f8fb0; }
+  </style>
+</head>
+<body>
+  <div id="stage-wrap">
+    <div id="stage">
+      <div class="top">
+        <div class="logo">2048</div>
+        <div class="scores">
+          <div class="score-box"><span id="lbl-score"></span><b id="score">0</b></div>
+          <div class="score-box"><span id="lbl-best"></span><b id="best">0</b></div>
+        </div>
+      </div>
+      <div class="top2">
+        <p class="intro" id="intro"></p>
+        <button id="new-btn"></button>
+      </div>
+      <div id="board">
+        <div id="grid-bg"></div>
+        <div id="tiles"></div>
+        <div id="overlay">
+          <div id="over-title"></div>
+          <button id="retry-btn" aria-label="retry">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 18 a32 32 0 1 0 32 32" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+              <path d="M84 20 L84 50 L54 50 Z" fill="#fff"/>
+            </svg>
+          </button>
+        </div>
+        <div id="win-flash"></div>
+      </div>
+      <p class="foot" id="foot"></p>
+    </div>
+  </div>
+
+  <script>
+    // ===== i18n：?lang=zh|en，缺省跟随浏览器（游戏区入口会显式带 lang） =====
+    var I18N = {
+      zh: {
+        score: '得分', best: '最高分', newGame: '新游戏',
+        intro: '合并相同数字，直到 2048！',
+        over: '游戏结束', win: '达成 2048！',
+        foot: '方向键或滑动操作'
+      },
+      en: {
+        score: 'SCORE', best: 'BEST', newGame: 'New Game',
+        intro: 'Join the numbers and get to 2048!',
+        over: 'Game over', win: 'You win!',
+        foot: 'Arrow keys or swipe'
+      }
+    };
+    function getParam(name) {
+      var m = location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    }
+    var LANG = getParam('lang') === 'en' ? 'en' : (navigator.language.indexOf('zh') === 0 ? 'zh' : 'en');
+    if (getParam('lang') === 'zh') LANG = 'zh';
+    var T = I18N[LANG];
+    document.documentElement.lang = LANG;
+
+    // ===== 布局：按窗口等比缩放设计画布（contain） =====
+    var DESIGN_W = 640, DESIGN_H = 740;
+    function fitStage() {
+      var s = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H);
+      var st = document.getElementById('stage');
+      st.style.transform = 'scale(' + s + ')';
+      st.style.transformOrigin = 'center center';
+    }
+
+    // ===== CORE-BEGIN =====
+    // 纯逻辑：4x4 数字矩阵 + 方向 → 新的矩阵 / 得分增量 / 是否移动 / 每格来源。
+    // 不依赖 DOM 与全局状态，Node 测试直接提取本段做对拍。
+    var SIZE = 4;
+    var D_UP = 0, D_RIGHT = 1, D_DOWN = 2, D_LEFT = 3;
+
+    // 某条线（行或列）的格子坐标，顺序为「移动方向的终点在前」：
+    // 左移取行内 c=0→3，右移取 c=3→0，上移取列内 r=0→3，下移取 r=3→0。
+    // 这样第 i 个存活牌合并后落在该线的第 i 个坐标上，无需再区分正反向。
+    function lineCoords(k, dir) {
+      var out = [];
+      for (var i = 0; i < SIZE; i++) {
+        if (dir === D_LEFT) out.push([k, i]);
+        else if (dir === D_RIGHT) out.push([k, SIZE - 1 - i]);
+        else if (dir === D_UP) out.push([i, k]);
+        else out.push([SIZE - 1 - i, k]);
+      }
+      return out;
+    }
+
+    function emptyGrid() {
+      var g = [];
+      for (var r = 0; r < SIZE; r++) {
+        g.push([]);
+        for (var c = 0; c < SIZE; c++) g[r].push(0);
+      }
+      return g;
+    }
+
+    function computeMove(values, dir) {
+      var next = emptyGrid();
+      var srcs = [];
+      for (var r0 = 0; r0 < SIZE; r0++) {
+        srcs.push([]);
+        for (var c0 = 0; c0 < SIZE; c0++) srcs[r0].push([]);
+      }
+      var gained = 0, moved = false;
+
+      for (var k = 0; k < SIZE; k++) {
+        var coords = lineCoords(k, dir);
+        var live = [];
+        for (var i = 0; i < SIZE; i++) {
+          var rc = coords[i];
+          var v = values[rc[0]][rc[1]];
+          if (v) live.push({ v: v, from: rc, idx: i });
+        }
+        var slots = [];
+        var j = 0;
+        while (j < live.length) {
+          if (j + 1 < live.length && live[j].v === live[j + 1].v) {
+            var nv = live[j].v * 2;
+            slots.push({ v: nv, from: [live[j].from, live[j + 1].from], idx: -1 });
+            gained += nv;
+            moved = true;
+            j += 2;
+          } else {
+            slots.push({ v: live[j].v, from: [live[j].from], idx: live[j].idx });
+            j += 1;
+          }
+        }
+        for (var s = 0; s < slots.length; s++) {
+          var target = coords[s];
+          next[target[0]][target[1]] = slots[s].v;
+          srcs[target[0]][target[1]] = slots[s].from;
+          if (slots[s].idx !== s) moved = true;
+        }
+      }
+      return { next: next, gained: gained, moved: moved, srcs: srcs };
+    }
+
+    // 无空格且横竖均无可合并对 → 死局
+    function isGameOver(values) {
+      for (var r = 0; r < SIZE; r++) {
+        for (var c = 0; c < SIZE; c++) {
+          if (!values[r][c]) return false;
+        }
+      }
+      for (var r2 = 0; r2 < SIZE; r2++) {
+        for (var c2 = 0; c2 < SIZE; c2++) {
+          if (c2 + 1 < SIZE && values[r2][c2] === values[r2][c2 + 1]) return false;
+          if (r2 + 1 < SIZE && values[r2][c2] === values[r2 + 1][c2]) return false;
+        }
+      }
+      return true;
+    }
+    // ===== CORE-END =====
+
+    // ===== 渲染层：牌面对象 + DOM 元素 =====
+    var PAD = 10, GAP = 12, CELL = 124;
+    var board = emptyGrid();      // 4x4 牌面对象（null = 空）
+    var tiles = [];               // 存活牌面（含 el/r/c/value）
+    var score = 0, best = 0, over = false, wonShown = false;
+
+    function tilePos(r, c) { return { left: PAD + c * (CELL + GAP), top: PAD + r * (CELL + GAP) }; }
+    function tileClass(value) {
+      var v = value <= 2048 ? 'v' + value : 'vbig';
+      var digits = String(value).length;
+      return 'tile ' + v + ' d' + Math.min(digits, 4);
+    }
+    function valuesOf() {
+      var g = emptyGrid();
+      for (var r = 0; r < SIZE; r++) for (var c = 0; c < SIZE; c++) {
+        if (board[r][c]) g[r][c] = board[r][c].value;
+      }
+      return g;
+    }
+    function emptyCells() {
+      var out = [];
+      for (var r = 0; r < SIZE; r++) for (var c = 0; c < SIZE; c++) if (!board[r][c]) out.push([r, c]);
+      return out;
+    }
+    function createTile(r, c, value) {
+      var t = { r: r, c: c, value: value };
+      board[r][c] = t;
+      tiles.push(t);
+      var el = document.createElement('div');
+      el.className = tileClass(value) + ' new';
+      var span = document.createElement('span');
+      span.textContent = value;
+      el.appendChild(span);
+      var p = tilePos(r, c);
+      el.style.left = p.left + 'px';
+      el.style.top = p.top + 'px';
+      document.getElementById('tiles').appendChild(el);
+      t.el = el;
+      return t;
+    }
+    function drawScores() {
+      document.getElementById('score').textContent = score;
+      document.getElementById('best').textContent = best;
+    }
+    function spawn() {
+      var empty = emptyCells();
+      if (!empty.length) return null;
+      var cell = empty[Math.floor(Math.random() * empty.length)];
+      return createTile(cell[0], cell[1], Math.random() < 0.9 ? 2 : 4);
+    }
+    function syncTile(t) {
+      var p = tilePos(t.r, t.c);
+      t.el.style.left = p.left + 'px';
+      t.el.style.top = p.top + 'px';
+      if (t.el.className.indexOf(' new') === -1) t.el.className = tileClass(t.value);
+      else t.el.className = tileClass(t.value) + ' new';
+      t.el.firstChild.textContent = t.value;
+    }
+    function showOverlay() {
+      document.getElementById('overlay').classList.add('show');
+    }
+    function checkWin() {
+      if (wonShown) return;
+      for (var i = 0; i < tiles.length; i++) {
+        if (tiles[i].value >= 2048) {
+          wonShown = true;
+          var f = document.getElementById('win-flash');
+          f.classList.add('show');
+          setTimeout(function() { f.classList.remove('show'); }, 900);
+          return;
+        }
+      }
+    }
+
+    // dir: 0=上 1=右 2=下 3=左；返回是否发生移动
+    function move(dir) {
+      if (over) return false;
+      var res = computeMove(valuesOf(), dir);
+      if (!res.moved) return false;
+
+      var before = [];
+      for (var r0 = 0; r0 < SIZE; r0++) {
+        before.push([]);
+        for (var c0 = 0; c0 < SIZE; c0++) before[r0].push(board[r0][c0]);
+      }
+      var dying = [];
+      var newBoard = emptyGrid();
+      for (var r = 0; r < SIZE; r++) {
+        for (var c = 0; c < SIZE; c++) {
+          var from = res.srcs[r][c];
+          if (!from.length) continue;
+          var keep = before[from[0][0]][from[0][1]];
+          if (from.length > 1) {
+            var gone = before[from[1][0]][from[1][1]];
+            gone.r = r;
+            gone.c = c;
+            dying.push(gone);
+          }
+          keep.r = r;
+          keep.c = c;
+          keep.value = res.next[r][c];
+          newBoard[r][c] = keep;
+        }
+      }
+      board = newBoard;
+
+      for (var i = 0; i < tiles.length; i++) syncTile(tiles[i]);
+      for (var d = 0; d < dying.length; d++) {
+        var p = tilePos(dying[d].r, dying[d].c);
+        dying[d].el.style.left = p.left + 'px';
+        dying[d].el.style.top = p.top + 'px';
+      }
+      setTimeout(function() {
+        for (var d2 = 0; d2 < dying.length; d2++) {
+          var el = dying[d2].el;
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+        }
+      }, 115);
+
+      tiles = tiles.filter(function(t) { return dying.indexOf(t) === -1; });
+
+      score += res.gained;
+      if (score > best) {
+        best = score;
+        try { localStorage.setItem('macroai-2048-best', String(best)); } catch (e) {}
+      }
+      drawScores();
+      spawn();
+      checkWin();
+      if (isGameOver(valuesOf())) {
+        over = true;
+        showOverlay();
+      }
+      return true;
+    }
+
+    function reset() {
+      tiles = [];
+      board = emptyGrid();
+      score = 0; over = false; wonShown = false;
+      document.getElementById('tiles').innerHTML = '';
+      document.getElementById('overlay').classList.remove('show');
+      try { best = parseInt(localStorage.getItem('macroai-2048-best') || '0', 10) || 0; } catch (e) { best = 0; }
+      spawn(); spawn();
+      drawScores();
+    }
+
+    // ===== 输入：方向键 + 触屏滑动（安卓端可用滑动脚本） =====
+    var KEYS = { ArrowUp: D_UP, ArrowRight: D_RIGHT, ArrowDown: D_DOWN, ArrowLeft: D_LEFT };
+    document.addEventListener('keydown', function(e) {
+      var d = KEYS[e.key];
+      if (d === undefined) return;
+      e.preventDefault();
+      move(d);
+    });
+    var touchX = null, touchY = null;
+    document.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) {
+        touchX = e.touches[0].clientX;
+        touchY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+    document.addEventListener('touchend', function(e) {
+      if (touchX === null || !e.changedTouches.length) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      var dy = e.changedTouches[0].clientY - touchY;
+      touchX = touchY = null;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+      if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? D_RIGHT : D_LEFT);
+      else move(dy > 0 ? D_DOWN : D_UP);
+    }, { passive: true });
+
+    // 鼠标拖拽 → 与触屏同一套滑动判定（mouse_drag 自动化指令/无触屏桌面均可操作）
+    var mdX = null, mdY = null;
+    document.addEventListener('mousedown', function(e) {
+      if (e.button === 0) { mdX = e.clientX; mdY = e.clientY; }
+    });
+    document.addEventListener('mouseup', function(e) {
+      if (mdX === null || e.button !== 0) return;
+      var dx = e.clientX - mdX, dy = e.clientY - mdY;
+      mdX = mdY = null;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+      if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? D_RIGHT : D_LEFT);
+      else move(dy > 0 ? D_DOWN : D_UP);
+    });
+
+    // ===== 初始化 =====
+    function applyI18n() {
+      document.getElementById('lbl-score').textContent = T.score;
+      document.getElementById('lbl-best').textContent = T.best;
+      document.getElementById('new-btn').textContent = T.newGame;
+      document.getElementById('intro').textContent = T.intro;
+      document.getElementById('over-title').textContent = T.over;
+      document.getElementById('win-flash').textContent = T.win;
+      document.getElementById('foot').textContent = T.foot;
+      document.title = 'MacroAI - 2048';
+    }
+    document.getElementById('new-btn').addEventListener('click', reset);
+    document.getElementById('retry-btn').addEventListener('click', reset);
+    applyI18n();
+    (function() {
+      var g = document.getElementById('grid-bg');
+      for (var r = 0; r < SIZE; r++) for (var c = 0; c < SIZE; c++) {
+        var d = document.createElement('div');
+        d.className = 'cell-bg';
+        var p = tilePos(r, c);
+        d.style.left = p.left + 'px';
+        d.style.top = p.top + 'px';
+        g.appendChild(d);
+      }
+    })();
+    fitStage();
+    reset();
+    window.addEventListener('resize', fitStage);
+
+    // ?autostart=1：按「左、下」循环策略自动走到中局并静止（供截图/参考图使用）
+    if (getParam('autostart') === '1') {
+      var plan = [D_LEFT, D_DOWN, D_LEFT, D_DOWN, D_LEFT, D_DOWN];
+      var step = 0;
+      (function autoStep() {
+        if (step >= plan.length * 8) return;
+        move(plan[step % plan.length]);
+        step++;
+        setTimeout(autoStep, 70);
+      })();
+    }
+    // ?seed=N：用固定序列铺一个中局（截图复现用，与 autostart 二选一）
+    if (getParam('seed') !== null) {
+      var moves = (getParam('seed') || '').split('').map(function(ch) {
+        return { L: D_LEFT, R: D_RIGHT, U: D_UP, D: D_DOWN }[ch];
+      }).filter(function(v) { return v !== undefined; });
+      for (var mi = 0; mi < moves.length; mi++) move(moves[mi]);
+    }
+  </script>
+</body>
+</html>
